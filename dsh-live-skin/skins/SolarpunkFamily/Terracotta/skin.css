@@ -1,0 +1,43 @@
+/* Terracotta —— 陶土
+   去掉玻璃，只留手工。陶土、赭石、木构 —— 社区自建的那一面。
+   这是家族里 craft 最高的一支（88），也是对抗「绿色版清新极简」的主力：
+   它的识别完全不来自绿，来自**手**。
+   动效签名：窑火微光（底部赭石渐变以 10s 周期做极小幅度的明暗起伏）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: sp-kiln-glow;
+  --ls-fx-duration: 10s;
+  background-image:
+    /* 明显的编织纹理：两层交叉的斜线，比家族层更密更实 */
+    repeating-linear-gradient(38deg, rgba(158, 74, 40, .12) 0 1px, rgba(158, 74, 40, 0) 1px 5px),
+    repeating-linear-gradient(-52deg, rgba(61, 90, 52, .09) 0 1px, rgba(61, 90, 52, 0) 1px 7px),
+    /* 底部一片赭石色的暖渐变 */
+    radial-gradient(120% 44% at 50% 112%, rgba(201, 162, 39, .3) 0%, rgba(201, 162, 39, 0) 72%),
+    linear-gradient(180deg, #f2e9dd 0%, #ece0cf 100%);
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 窑火：底部一层更窄的暖光，与壁纸的宽渐变错开周期地起伏 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(70% 26% at 50% 106%, rgba(255, 176, 92, .24) 0%, rgba(255, 176, 92, 0) 74%);
+  background-size: 100% 100%;
+}
+
+/* 陶土的表面：圆角的差值拉到最大 —— 这不像被机器裁出来的 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .42),
+    inset 0 -2px 0 0 rgba(158, 74, 40, .16),
+    var(--dsw-shadow-lv2);
+}
+
+@keyframes sp-kiln-glow {
+  from {
+    opacity: .76;
+  }
+  to {
+    opacity: 1;
+  }
+}

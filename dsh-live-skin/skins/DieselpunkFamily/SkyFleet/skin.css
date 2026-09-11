@@ -1,0 +1,39 @@
+/* SkyFleet —— 天空舰队
+   冒险英雄尺度：人物与建筑同高，城市是游乐场、飞艇是交通工具、巨构只是背景板。
+   继承连环画与 1939 年世博会的乐观遗产。
+   动效签名：云带位移（90s 极缓慢地横向漂移，幅度 4%）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: diesel-fleet-drift;
+  --ls-fx-duration: 90s;
+  background-image:
+    radial-gradient(90% 46% at 50% -6%, rgba(255, 252, 244, .22) 0%, rgba(255, 252, 244, 0) 68%),
+    linear-gradient(180deg, #5a5f62 0%, #454a4d 42%, #34383a 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 流线型云带：三条等距平行细线 + 一条柔和的横向亮带 */
+html[data-live-skin] body::after {
+  background-image:
+    repeating-linear-gradient(180deg,
+      rgba(226, 232, 236, .10) 0 1px,
+      rgba(226, 232, 236, 0) 1px 26px);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: calc(var(--ls-grain-eff, .19) * .7);
+}
+
+/* 云带的第二条：更宽更柔，与上面那条错开周期 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-bottom: 1px solid rgba(200, 204, 208, .18);
+}
+
+@keyframes diesel-fleet-drift {
+  from {
+    transform: translateX(-2%);
+  }
+  to {
+    transform: translateX(2%);
+  }
+}

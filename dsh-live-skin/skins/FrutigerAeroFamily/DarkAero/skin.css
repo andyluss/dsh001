@@ -1,0 +1,103 @@
+/* ==========================================================================
+   DarkAero —— 小类层
+   这一支不跟随系统亮暗：无论官方壳层在哪个模式，都强制深海调色板。
+   ========================================================================== */
+
+/* 把深海调色板同时钉在亮色与暗色两条路径上。
+   大类层只在 body[data-ds-dark-theme] 分支里给了深海值，这里把同一组值
+   提到 html[data-live-skin] 上，于是系统处于亮色时也是深海。 */
+html[data-live-skin] body {
+  --dsw-alias-bg-base: rgba(5, 30, 45, calc(var(--ls-glass-alpha) + .16));
+  --dsw-alias-bg-layer-1: rgba(12, 48, 68, calc(var(--ls-glass-alpha) + .20));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(16, 58, 80, calc(var(--ls-glass-alpha) + .34)), rgba(10, 42, 60, calc(var(--ls-glass-alpha) + .30)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(18, 64, 88, calc(var(--ls-glass-alpha) + .40)), rgba(11, 45, 64, calc(var(--ls-glass-alpha) + .36)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(14, 56, 78, calc(var(--ls-glass-alpha) + .44)), rgba(9, 38, 55, calc(var(--ls-glass-alpha) + .40)));
+  --dsw-alias-bg-module-platform: rgba(14, 56, 78, calc(var(--ls-glass-alpha) + .10));
+  --dsw-alias-bg-multi-select: rgba(18, 66, 90, calc(var(--ls-glass-alpha) + .36));
+  --dsw-alias-bg-skeleton: rgba(120, 220, 255, .12);
+
+  --dsw-alias-border-inverted: rgba(160, 240, 255, .16);
+  --dsw-alias-border-inverted2: rgba(160, 240, 255, .1);
+  --dsw-alias-border-l1: rgba(150, 235, 255, .16);
+  --dsw-alias-border-l2: rgba(150, 235, 255, .26);
+  --dsw-alias-border-l2-darkmode-thin: rgba(150, 235, 255, .16);
+  --dsw-alias-border-l3: rgba(150, 235, 255, .22);
+  --dsw-alias-border-l4: rgba(150, 235, 255, .34);
+
+  --dsw-alias-brand-primary-invert: #04202f;
+  --dsw-alias-brand-text: #d8f6ff;
+  --dsw-alias-state-business-tertiary: rgba(20, 70, 96, .6);
+
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, rgba(24, 74, 100, .95), rgba(13, 50, 70, .95));
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(22, 70, 95, .98), rgba(11, 44, 62, .96));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, rgba(30, 86, 114, 1), rgba(15, 56, 78, 1));
+  --dsw-alias-button-ghost-active-fill: rgba(30, 96, 128, .85);
+  --dsw-alias-button-ghost-active-border: rgba(96, 214, 252, .5);
+  --dsw-alias-button-ghost-active-hover: rgba(36, 110, 146, .9);
+
+  --dsw-alias-interactive-bg-active: rgba(90, 210, 255, .22);
+  --dsw-alias-interactive-bg-hover: rgba(150, 235, 255, .14);
+  --dsw-alias-interactive-bg-hover-accent: rgba(90, 210, 255, .28);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(22, 70, 96, .95), rgba(12, 48, 68, .92));
+
+  --dsw-alias-label-caption: #6fa6bd;
+  --dsw-alias-label-dimmed: #275c74;
+  --dsw-alias-label-primary: #eaf8ff;
+  --dsw-alias-label-primary-bluish: #cdeeff;
+  --dsw-alias-label-primary-dimmed: #d3eefb;
+  --dsw-alias-label-primary-foreground: #032130;
+  --dsw-alias-label-primary-inverted: #062838;
+  --dsw-alias-label-secondary: #a6d3e6;
+  --dsw-alias-label-tertiary: #7fb2c9;
+
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(10, 40, 58, calc(var(--ls-glass-alpha) + .40)), rgba(6, 30, 45, calc(var(--ls-glass-alpha) + .40)));
+  --dsw-alias-markdown-code-block-banner: rgba(16, 54, 74, .95);
+  --dsw-alias-markdown-inline-code: rgba(24, 72, 96, .85);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(24, 74, 98, .95), rgba(14, 52, 72, .92));
+
+  --dsw-alias-state-error-primary: #ff6b7d;
+  --dsw-alias-state-error-secondary: #ff8f9c;
+  --dsw-alias-state-success-primary: #4ede8a;
+  --dsw-alias-state-warn-label: #ffce6b;
+  --dsw-alias-state-warn-primary: #f5b942;
+  --dsw-alias-state-warn-tertiary: rgba(90, 66, 16, .55);
+  --dsw-alias-toast-bg: rgba(10, 46, 66, .96);
+  --dsw-alias-tooltip-bg: rgba(10, 46, 66, .97);
+
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(20, 66, 90, calc(var(--ls-glass-alpha) + .36)), rgba(12, 46, 64, calc(var(--ls-glass-alpha) + .34)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(30, 92, 120, calc(var(--ls-glass-alpha) + .40)), rgba(18, 66, 90, calc(var(--ls-glass-alpha) + .36)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(16, 56, 78, calc(var(--ls-glass-alpha) + .40)), rgba(9, 38, 55, calc(var(--ls-glass-alpha) + .38)));
+  --dsw-specific-menu: linear-gradient(180deg, rgba(16, 58, 80, calc(var(--ls-glass-alpha) + .44)), rgba(9, 38, 55, calc(var(--ls-glass-alpha) + .42)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(18, 62, 84, calc(var(--ls-glass-alpha) + .38)), rgba(10, 42, 60, calc(var(--ls-glass-alpha) + .34)));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(9, 40, 58, calc(var(--ls-glass-alpha) + .18)), rgba(5, 28, 42, calc(var(--ls-glass-alpha) + .06)));
+  --dsw-specific-sidebar-nav-item-active: rgba(30, 92, 122, .85);
+  --dsw-specific-sidebar-nav-item-hover: rgba(20, 66, 90, .6);
+  --dsw-specific-tip: rgba(16, 58, 80, calc(var(--ls-glass-alpha) + .32));
+
+  --dsw-elevation-stroke-color: rgba(150, 235, 255, .22);
+  --dsw-shadow-lv1: 0 2px 6px 0 rgba(0, 14, 24, .4);
+  --dsw-shadow-lv2: 0 6px 16px 0 rgba(0, 14, 24, .45), 0 2px 8px 0 rgba(0, 14, 24, .35);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(120, 220, 255, .28), 0 14px 34px 0 rgba(0, 12, 22, .55);
+}
+
+/* 亮色路径下也要拿到深海壁纸与底色 */
+html[data-live-skin] body {
+  background-color: #03202f;
+  background-image: var(--ls-wallpaper-dark, var(--ls-wallpaper, none));
+}
+
+/* 冷光：左上大片青蓝、右下一点青绿，夜里的水族箱灯 */
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 46% at 12% -8%, rgba(60, 200, 255, .26) 0%, rgba(60, 200, 255, 0) 64%),
+    radial-gradient(90% 42% at 90% 108%, rgba(0, 220, 180, .16) 0%, rgba(0, 220, 180, 0) 66%);
+}
+
+/* 深色底上文字靠一点向下投影立住 */
+html[data-live-skin] [data-dsh-part='message-row'] {
+  text-shadow: 0 1px 0 rgba(0, 20, 32, .45);
+}

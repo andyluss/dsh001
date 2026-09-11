@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "TapeDeck",
+  "nameEn": "Tape Deck",
+  "description": "磁带机 · 消费电子的正面 · 拉丝铝面板、橙色 LED 与卷带轮",
+  "accent": "#ff7a18",
+  "tags": ["consumer", "brushed-metal", "led"],
+  "defaults": {
+    "accent": "#ff7a18",
+    "glass": 30,
+    "phosphor": 62,
+    "scanline": 20,
+    "warmth": 66,
+    "intensity": 58
+  },
+  "styles": ["skin.css"]
+}

@@ -1,0 +1,49 @@
+/* TapeDeck —— 磁带机
+   80 年代消费电子的正面：拉丝铝面板、橙色 LED 数字显示、机械按键、磁带仓。
+   这是家族里唯一用金属质感的一支（ControlRoom 是哑光灰、米白终端是塑料），
+   也是唯一有「机械行程」的一支 —— 按键按下会真的位移。
+   动效签名：磁带转动（左下角一枚卷带轮以 4s 一圈自转）。
+   注意 transform-origin 必须与圆锥渐变的圆心对齐，否则轮子会绕画面中心公转。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cf-reel-turn;
+  --ls-fx-duration: 4s;
+  background-image:
+    /* 拉丝铝：极细的横向纹理，低对比、无方向性高光 */
+    repeating-linear-gradient(0deg, rgba(200, 205, 210, .06) 0 1px, rgba(200, 205, 210, 0) 1px 3px),
+    /* 右下角一片橙色辉光：LED 数字显示洒出来的光 */
+    radial-gradient(38% 26% at 84% 88%, rgba(255, 122, 24, .16) 0%, rgba(255, 122, 24, 0) 74%),
+    linear-gradient(180deg, #26221f 0%, #1c1917 100%);
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 卷带轮：一枚带辐条的轮子，圆心与 transform-origin 对齐在左下 */
+html[data-live-skin] body::after {
+  background-image: repeating-conic-gradient(from 0deg at 13% 84%,
+      rgba(200, 205, 210, .16) 0deg 6deg,
+      rgba(200, 205, 210, 0) 6deg 30deg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transform-origin: 13% 84%;
+}
+
+/* 机械行程：按键按下会真的下沉 1px —— 这是这一支的交互签名 */
+html[data-live-skin] [data-dsh-surface='composer'] {
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255, 122, 24, .22), inset 0 -2px 0 0 rgba(0, 0, 0, .4), var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 4px;
+  border-bottom: 1px solid rgba(255, 122, 24, .26);
+}
+
+@keyframes cf-reel-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

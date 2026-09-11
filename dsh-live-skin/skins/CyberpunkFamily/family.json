@@ -1,0 +1,121 @@
+{
+  "manifestVersion": 1,
+  "name": "赛博朋克家族",
+  "nameEn": "Cyberpunk Family",
+  "description": "高科技，低生活。它的核心不是一个年代，而是一个倒计时——设定年份写死在标题里，时间一到，「预言」当场变成「账本」。所以这个家族的未来感自带墓碑：质感里必须同时有许诺与被霓虹照亮的破败。",
+  "accent": "#ff2d95",
+  "tags": ["cyberpunk", "neon", "rain", "noir"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 52
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "默认品红；换成青或青绿会得到完全不同的气质",
+      "group": "材质",
+      "default": "#ff2d95"
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "氛围总强度",
+      "description": "统一缩放霓虹、雨幕与扫描线",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 62
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "标志性动效",
+      "description": "霓虹呼吸、光标、全息或数据流；关掉即静止",
+      "group": "氛围",
+      "default": true
+    },
+    {
+      "key": "neon",
+      "type": "number",
+      "label": "霓虹强度",
+      "description": "向外扩散的 bloom 半径与色光饱和度。这是本家族唯一的发光方式",
+      "group": "霓虹",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 68
+    },
+    {
+      "key": "rain",
+      "type": "number",
+      "label": "雨幕",
+      "description": "雨丝密度、湿噪点与面板底部的竖向倒影",
+      "group": "霓虹",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 55
+    },
+    {
+      "key": "scanline",
+      "type": "number",
+      "label": "CRT 扫描线",
+      "description": "细横纹的透明度。它是氛围不是滤镜 —— 默认压在 35",
+      "group": "霓虹",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 35
+    },
+    {
+      "key": "tiering",
+      "type": "boolean",
+      "label": "垂直分层",
+      "description": "顶部冷净（资本高空）／底部霓虹浸染（雨里街道）。用密度对比表达权力落差",
+      "group": "霓虹",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "霓虹与雨压到最低、扫描线几乎关闭，可读性优先",
+      "values": { "glass": 72, "blur": 8, "intensity": 26, "neon": 27, "rain": 17, "scanline": 11, "motion": false }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "该支皮肤的设计意图原样呈现",
+      "values": { "glass": 52, "blur": 12, "intensity": 62, "neon": 68, "rain": 55, "scanline": 35, "motion": true }
+    },
+    {
+      "id": "cinematic",
+      "name": "浓烈",
+      "description": "霓虹、雨幕与倒影拉满，适合展示",
+      "values": { "glass": 36, "blur": 18, "intensity": 92, "neon": 92, "rain": 82, "scanline": 49, "motion": true }
+    }
+  ]
+}

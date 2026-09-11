@@ -1,0 +1,68 @@
+/* BeigeTerminal —— 米白终端
+   Apple II / Commodore 64 的米白机箱 + 单色屏。这一支就是「可修、可懂的暖」本身。
+   家族里唯一一支浅色的，也是最平的：没有渐变、没有噪点、没有暗角。
+   动效签名：光标闪烁 —— 一块很小的方块（不是全屏层），用 steps(2) 做方波。
+   之所以强调「很小」：全屏层做 opacity 动画等于整个屏幕明灭，那是错的做法。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cf-cursor-blink;
+  --ls-fx-duration: 1.2s;
+  background-image:
+    /* 模具缝：一条极细的凹陷线，不是渐变 */
+    repeating-linear-gradient(0deg, rgba(150, 138, 122, .16) 0 1px, rgba(150, 138, 122, 0) 1px 148px),
+    linear-gradient(0deg, #f5f0e8, #f5f0e8);
+  background-repeat: repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 系统处于深色时也维持米白 —— 这一支就是米白，不该被系统设置翻掉 */
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(245, 240, 232, calc(var(--ls-glass-alpha) + .4));
+  --dsw-alias-bg-layer-1: rgba(237, 232, 224, calc(var(--ls-glass-alpha) + .46));
+  --dsw-alias-bg-layer-2: rgba(250, 248, 244, calc(var(--ls-glass-alpha) + .5));
+  --dsw-alias-bg-layer-3: rgba(232, 224, 214, calc(var(--ls-glass-alpha) + .52));
+  --dsw-alias-bg-overlay: rgba(212, 200, 184, calc(var(--ls-glass-alpha) + .54));
+  --dsw-alias-bg-module-platform: rgba(237, 232, 224, calc(var(--ls-glass-alpha) + .44));
+  --dsw-alias-bg-multi-select: rgba(232, 224, 214, calc(var(--ls-glass-alpha) + .48));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(237, 232, 224, .92), rgba(226, 218, 208, .86));
+  --dsw-specific-input-major: #ffffff;
+  --dsw-specific-menu: #faf8f4;
+  --dsw-specific-bubble: #faf8f4;
+  --dsw-specific-bubble-highlight: #e8e0d6;
+  --dsw-specific-selector: #e8e0d6;
+  --dsw-specific-tip: #ede8e0;
+  --dsw-alias-label-primary: #2d2a27;
+  --dsw-alias-label-secondary: #6b6560;
+  --dsw-alias-label-tertiary: #857f78;
+  --dsw-alias-label-caption: #928374;
+  --dsw-alias-label-dimmed: #c9bfb0;
+  --dsw-alias-label-primary-inverted: #f5f0e8;
+  --dsw-alias-border-l1: rgba(196, 184, 168, .5);
+  --dsw-alias-border-l2: rgba(196, 184, 168, .72);
+  --dsw-alias-border-l3: rgba(196, 184, 168, .62);
+  --dsw-alias-border-l4: rgba(150, 138, 122, .82);
+  --dsw-alias-elevation-stroke-color: rgba(255, 255, 255, .8);
+  --dsw-shadow-lv1: 0 1px 0 0 rgba(120, 110, 96, .18);
+  --dsw-shadow-lv2: 0 2px 0 0 rgba(120, 110, 96, .2), 0 0 0 1px rgba(196, 184, 168, .5);
+  --dsw-shadow-lv3: 0 0 0 1px rgba(150, 138, 122, .5), 0 8px 0 -4px rgba(120, 110, 96, .26);
+  --dsw-alias-toast-bg: #3a342e;
+  --dsw-alias-tooltip-bg: #332e29;
+}
+
+/* 光标：右下角一小块单色方块。小到不会干扰阅读，大到能被认出来。 */
+html[data-live-skin] body::after {
+  background-image: linear-gradient(0deg, rgba(47, 122, 62, .78), rgba(47, 122, 62, .78));
+  background-size: 8px 17px;
+  background-position: right 30px bottom 28px;
+  background-repeat: no-repeat;
+  animation-timing-function: steps(2, end);
+}
+
+@keyframes cf-cursor-blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

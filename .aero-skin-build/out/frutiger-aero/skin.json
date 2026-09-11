@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.linxin666.org/dsh-skin/v2.json",
+  "skinManifestVersion": 2,
+  "id": "frutiger-aero",
+  "name": "Frutiger Aero · 标准",
+  "nameEn": "Frutiger Aero",
+  "version": "1.0.0",
+  "author": "dsh001 · 由动态 Cordis 插件固化",
+  "tagline": "天蓝草地 · 玻璃拟态 · 上浮气泡",
+  "description": "2004–2013 年 Frutiger Aero 时代美学：天空到草地的渐变壁纸、水面光泽、半透明玻璃面板与不断上浮的气泡。浅色是「白天水族箱」，深色是「深海夜光」，跟随系统亮暗自动切换。接入了皮肤中心的两支滑杆：背景遮蔽控制面板遮住壁纸的程度，气泡不透明度控制上浮气泡的强弱（拉到 0 即关闭）。",
+  "tags": [
+    "frutiger-aero",
+    "glass",
+    "aqua",
+    "translucent",
+    "y2k"
+  ],
+  "accent": "#0f7fc4",
+  "order": 10,
+  "license": "MIT",
+  "contributes": {
+    "stylesheet": "skin.css",
+    "patches": "patches.css"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "Brassworks",
+  "nameEn": "Brassworks",
+  "description": "黄铜工坊 · 煤气灯拱廊车站 · 外露的齿轮与管道",
+  "accent": "#b08d57",
+  "tags": ["standard", "brass", "gear"],
+  "defaults": {
+    "accent": "#b08d57",
+    "glass": 52,
+    "patina": 45,
+    "gaslight": 62,
+    "haze": 40
+  },
+  "styles": ["skin.css"]
+}

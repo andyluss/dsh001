@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "Gaslight",
+  "nameEn": "Gaslight",
+  "description": "煤气灯 · 唯一光源 · 浓雾与暗角，全家族最暗的一支",
+  "accent": "#ffc46b",
+  "tags": ["noir", "gaslight", "fog"],
+  "defaults": {
+    "accent": "#ffc46b",
+    "glass": 34,
+    "patina": 30,
+    "gaslight": 88,
+    "haze": 72
+  },
+  "styles": ["skin.css"]
+}

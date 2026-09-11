@@ -1,0 +1,38 @@
+/* ==========================================================================
+   AeroGlass —— 小类层
+   家族里最克制的一支：不要壁纸、不要柔光层，只留玻璃质感本身。
+   面板做实（glass 调到 10），所以正文是直接压在实色面上的，长文最省眼睛。
+   ========================================================================== */
+
+/* 纯色底：不给 body 任何图层，只留一个干净的水色 */
+html[data-live-skin] body {
+  background-color: #dceff8;
+  background-image: none;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-color: #07202c;
+  background-image: none;
+}
+
+/* 用一条极窄的顶部高光代替整片柔光，避免大色块 */
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .5) 0px, rgba(255, 255, 255, 0) 120px);
+}
+
+html[data-live-skin] body[data-ds-dark-theme]::before {
+  background: linear-gradient(180deg, rgba(150, 235, 255, .1) 0px, rgba(150, 235, 255, 0) 120px);
+}
+
+/* 平面化：这一支不需要立体投影，边框已经足够分层 */
+html[data-live-skin] body {
+  --dsw-elevation-stroke-color: rgba(26, 138, 190, .28);
+  --dsw-shadow-lv1: 0 1px 2px 0 rgba(14, 96, 138, .06);
+  --dsw-shadow-lv2: 0 2px 6px 0 rgba(14, 96, 138, .07);
+  --dsw-shadow-lv3: 0 1px 2px 0 rgba(10, 80, 120, .1), 0 6px 18px 0 rgba(12, 90, 130, .1);
+}

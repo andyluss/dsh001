@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "Glasshouse",
+  "nameEn": "Glasshouse",
+  "description": "温室 · 玻璃与绿植共生 · 社区尺度的共享种植空间",
+  "accent": "#c1663b",
+  "tags": ["standard", "glass", "garden"],
+  "defaults": {
+    "accent": "#c1663b",
+    "glass": 60,
+    "canopy": 50,
+    "sun": 62,
+    "craft": 58
+  },
+  "styles": ["skin.css"]
+}

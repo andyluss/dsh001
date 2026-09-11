@@ -1,0 +1,113 @@
+{
+  "manifestVersion": 1,
+  "name": "太阳朋克家族",
+  "nameEn": "Solarpunk Family",
+  "description": "近未来，可再生技术 + 社区尺度 + 生态修复。同样的问题，相反的答案：其余六支设想的未来全部可疑（阶级、威权、双面核能、不平等、身体商品化、怀旧），只有它设想一个可向往的未来。核心张力不在技术而在分配——丰裕如何分配、技术是集中还是分散。",
+  "accent": "#c1663b",
+  "tags": ["solarpunk", "art-nouveau", "craft", "community"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 58
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "默认赤陶。**绿色是环境、赤陶是行动**——把绿色当强调色会立刻退化成环保主题网站",
+      "group": "材质",
+      "default": "#c1663b"
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "氛围总强度",
+      "description": "统一缩放日照、绿意与手工质感",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "标志性动效",
+      "description": "日照位移、窑火、叶片或晨光；关掉即静止",
+      "group": "氛围",
+      "default": true
+    },
+    {
+      "key": "canopy",
+      "type": "number",
+      "label": "绿植覆盖",
+      "description": "植物纹样与绿意的密度。纹样只出现在分隔线与边框收束上",
+      "group": "园子",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 50
+    },
+    {
+      "key": "sun",
+      "type": "number",
+      "label": "日照强度",
+      "description": "暖渐变的强度与方向感。太阳朋克的光只有一个来源：太阳",
+      "group": "园子",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 62
+    },
+    {
+      "key": "craft",
+      "type": "number",
+      "label": "手工质感",
+      "description": "本家族的身份证：不规则圆角的差值与编织纹理的明显程度。拉到 0 就会退化成普通的小清新绿色主题",
+      "group": "园子",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 58
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "纹理与绿意压到最低、边缘接近规整，可读性优先",
+      "values": { "glass": 74, "blur": 8, "intensity": 26, "canopy": 14, "sun": 41, "craft": 20, "motion": false }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "该支皮肤的设计意图原样呈现",
+      "values": { "glass": 58, "blur": 12, "intensity": 60, "canopy": 50, "sun": 62, "craft": 58, "motion": true }
+    },
+    {
+      "id": "cinematic",
+      "name": "浓烈",
+      "description": "日照、绿意与手工质感拉满，适合展示",
+      "values": { "glass": 40, "blur": 16, "intensity": 92, "canopy": 82, "sun": 82, "craft": 88, "motion": true }
+    }
+  ]
+}

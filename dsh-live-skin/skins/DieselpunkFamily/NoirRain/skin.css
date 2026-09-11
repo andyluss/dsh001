@@ -1,0 +1,59 @@
+/* NoirRain —— 黑色电影
+   以 noir 的高反差、雨夜、烟雾、霓虹重写战间，最「类型化」的一支。
+   对照：蒸汽朋克的煤气灯是暖黄低照度、雾中散射；这里是硬边分光 + 雨幕 + 湿面倒影。
+   动效签名：霓虹闪烁（用 steps() 做不规则节律，模拟接触不良的招牌）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: diesel-neon-flicker;
+  --ls-fx-duration: 7s;
+  background-image:
+    /* 湿路面：底部一条竖向的暖黄倒影 + 一条猩红倒影，都在画面下缘 */
+    radial-gradient(22% 40% at 34% 104%, rgba(232, 176, 75, .22) 0%, rgba(232, 176, 75, 0) 74%),
+    radial-gradient(14% 32% at 62% 104%, rgba(176, 56, 47, .18) 0%, rgba(176, 56, 47, 0) 76%),
+    /* 雨丝：极细的斜向条纹 */
+    repeating-linear-gradient(74deg, rgba(226, 232, 236, .045) 0 1px, rgba(226, 232, 236, 0) 1px 7px),
+    linear-gradient(180deg, #17191a 0%, #0f1112 62%, #0a0b0c 100%);
+  background-repeat: no-repeat, no-repeat, repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 霓虹的第二层：倒影上再叠一层更窄更亮的核心 */
+html[data-live-skin] body::after {
+  background-image:
+    radial-gradient(8% 22% at 34% 103%, rgba(255, 214, 140, .16) 0%, rgba(255, 214, 140, 0) 76%),
+    radial-gradient(6% 18% at 62% 103%, rgba(220, 96, 82, .12) 0%, rgba(220, 96, 82, 0) 78%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation-timing-function: steps(8, end);
+}
+
+/* noir：面板接近实色，只有边缘被照亮 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  box-shadow: inset 0 0 0 1px rgba(232, 176, 75, .22), 4px 4px 0 0 rgba(4, 5, 5, .58);
+}
+
+@keyframes diesel-neon-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  12% {
+    opacity: .55;
+  }
+  25% {
+    opacity: 1;
+  }
+  37% {
+    opacity: .72;
+  }
+  50% {
+    opacity: 1;
+  }
+  62% {
+    opacity: .48;
+  }
+  79% {
+    opacity: .96;
+  }
+}

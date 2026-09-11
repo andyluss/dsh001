@@ -1,0 +1,249 @@
+/* ==========================================================================
+   SteampunkFamily —— 家族层（维多利亚 · 黄铜 · 煤气灯）
+   依据：doc/punks/steampunk/ ｜ 规格：doc/live-skin/02_蒸汽朋克.md
+
+   材质签名：高光只沿金属边缘走，平面上什么都不留。
+   与其它家族的硬分界：不用镀铬镜面（原子朋克）、不用胶片颗粒（柴油朋克）、
+   不用向外 bloom（赛博朋克）、不用向内发光的膜（生物朋克）。
+   ========================================================================== */
+
+html[data-live-skin] body {
+  /* —— 由参数派生的中间量 —— */
+  --ls-glass-alpha: calc(.90 - var(--ls-glass, 52) * .0060);
+  /* gaslight 0→几乎无光 100→明亮的暖黄范围 */
+  --ls-gas-alpha: calc(var(--ls-gaslight, 62) * .0072);
+  /* haze 0→clear 100→浓雾 */
+  --ls-haze-alpha: calc(var(--ls-haze, 40) * .0055);
+  /* patina 0→新铜 100→重氧化 */
+  --ls-patina-wash: rgba(122, 139, 111, calc(var(--ls-patina, 45) * .0052));
+  /* intensity 是氛围总控：缩放一切「氛围性」的叠加层 */
+  --ls-int: calc(var(--ls-intensity, 60) * .01);
+  /* 由 intensity 缩放后的实际叠加强度 */
+  --ls-gas-a: calc(var(--ls-gas-alpha) * var(--ls-int));
+  --ls-haze-a: calc(var(--ls-haze-alpha) * var(--ls-int));
+
+  /* variant 私有动效的挂点：各 variant 覆盖这两个变量并自带 @keyframes，
+     animation-duration 会再乘上 --ls-motion（0 时不动）。 */
+  --ls-fx-name: none;
+  --ls-fx-duration: 0s;
+
+  /* 黄铜：只用在边缘与数值上，绝不做整面 */
+  --ls-brass: #b08d57;
+  --ls-brass-lit: #d8b978;
+  --ls-brass-edge: color-mix(in srgb, var(--ls-brass) 58%, transparent);
+  --ls-brass-soft: color-mix(in srgb, var(--ls-brass) 20%, transparent);
+  --ls-brass-line: color-mix(in srgb, var(--ls-brass) 34%, transparent);
+
+  /* —— 底与面板（煤烟灰系） —— */
+  --dsw-alias-bg-base: rgba(42, 38, 34, var(--ls-glass-alpha));
+  --dsw-alias-bg-layer-1: rgba(58, 50, 42, calc(var(--ls-glass-alpha) + .16));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(66, 57, 48, calc(var(--ls-glass-alpha) + .26)), rgba(48, 42, 36, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(72, 62, 52, calc(var(--ls-glass-alpha) + .32)), rgba(52, 45, 38, calc(var(--ls-glass-alpha) + .28)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(76, 66, 55, calc(var(--ls-glass-alpha) + .36)), rgba(54, 47, 40, calc(var(--ls-glass-alpha) + .32)));
+  --dsw-alias-bg-module-platform: rgba(58, 50, 42, calc(var(--ls-glass-alpha) + .08));
+  --dsw-alias-bg-multi-select: rgba(70, 61, 51, calc(var(--ls-glass-alpha) + .30));
+  --dsw-alias-bg-skeleton: rgba(176, 141, 87, .14);
+  --dsw-alias-bg-mask-1: rgba(12, 11, 9, .5);
+  --dsw-alias-bg-mask-2: rgba(12, 11, 9, .28);
+  --dsw-alias-bg-mask-3: rgba(8, 7, 6, .68);
+  --dsw-alias-bg-mask-drop: rgba(28, 25, 21, .72);
+  --dsw-alias-bg-mask-photo: rgba(6, 5, 4, .9);
+
+  /* —— 描边：外圈是暗铜，内圈一道黄铜高光（「金属包边」） —— */
+  --dsw-alias-border-inverted: var(--ls-brass-soft);
+  --dsw-alias-border-inverted2: color-mix(in srgb, var(--ls-brass) 12%, transparent);
+  --dsw-alias-border-l1: rgba(216, 185, 120, .16);
+  --dsw-alias-border-l2: rgba(176, 141, 87, .30);
+  --dsw-alias-border-l2-darkmode-thin: rgba(176, 141, 87, .20);
+  --dsw-alias-border-l3: rgba(176, 141, 87, .26);
+  --dsw-alias-border-l4: rgba(216, 185, 120, .40);
+
+  /* —— 品牌与强调 —— */
+  --dsw-alias-brand-primary: var(--ls-accent, #b08d57);
+  --dsw-alias-brand-primary-invert: #2a2622;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #b08d57);
+  --dsw-alias-brand-text: #f2e7d3;
+  --dsw-alias-link: var(--ls-brass-lit);
+  --dsw-alias-state-business-primary: var(--ls-brass-lit);
+  --dsw-alias-state-business-tertiary: rgba(176, 141, 87, .28);
+
+  /* —— 按钮：填充色必须够深（C4 守着），文字用暖白 —— */
+  --dsw-alias-button-contrast-fill: #1c1915;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, rgba(78, 68, 56, .96), rgba(56, 48, 41, .96));
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(72, 62, 52, .98), rgba(50, 43, 37, .96));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, rgba(86, 74, 62, 1), rgba(60, 52, 44, 1));
+  --dsw-alias-button-ghost-active-fill: rgba(96, 80, 60, .76);
+  --dsw-alias-button-ghost-active-border: rgba(216, 185, 120, .48);
+  --dsw-alias-button-ghost-active-hover: rgba(112, 94, 70, .82);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #b08d57) 45%, #100d09);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #b08d57) 38%, #100d09);
+  --dsw-alias-button-primary-dimmed: rgba(176, 141, 87, .34);
+  /* 黄铜是中调（L≈0.23）：74% 的黄铜既不满足白字也不满足深字。
+     压到 45% 混深色后 L≈0.067，白字 8.9:1 ✓。C4 会逐 variant 复核。 */
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #b08d57) 45%, #100d09);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #b08d57) 38%, #100d09);
+  --dsw-alias-button-tool-bar-fill: rgba(28, 25, 21, .62);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(28, 25, 21, .38);
+  --dsw-alias-button-tool-bar-hover: rgba(28, 25, 21, .76);
+
+  /* —— 交互态 —— */
+  --dsw-alias-interactive-bg-active: rgba(176, 141, 87, .20);
+  --dsw-alias-interactive-bg-hover: rgba(216, 185, 120, .12);
+  --dsw-alias-interactive-bg-hover-accent: rgba(176, 141, 87, .24);
+  --dsw-alias-interactive-bg-hover-danger: rgba(193, 102, 59, .16);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(72, 62, 52, .96), rgba(52, 45, 38, .94));
+
+  /* —— 文本（暖白系，保证在煤烟灰底上达标） —— */
+  --dsw-alias-label-caption: #a2937c;
+  --dsw-alias-label-dimmed: #6d6355;
+  --dsw-alias-label-primary: #ede3d2;
+  --dsw-alias-label-primary-bluish: #f2e7d3;
+  --dsw-alias-label-primary-dimmed: #d8ccb6;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #2a2622;
+  --dsw-alias-label-secondary: #c4b6a0;
+  --dsw-alias-label-tertiary: #a2937c;
+
+  /* —— Markdown —— */
+  --dsw-alias-markdown-citation: rgba(176, 141, 87, .20);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(40, 36, 31, calc(var(--ls-glass-alpha) + .34)), rgba(30, 27, 23, calc(var(--ls-glass-alpha) + .34)));
+  --dsw-alias-markdown-code-block-banner: rgba(52, 45, 38, .92);
+  --dsw-alias-markdown-code-segment-selected: rgba(86, 74, 62, .9);
+  --dsw-alias-markdown-code-segment-unselected: rgba(48, 42, 36, .84);
+  --dsw-alias-markdown-inline-code: rgba(76, 66, 54, .8);
+  --dsw-alias-markdown-placeholder: rgba(60, 52, 44, .78);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(78, 68, 56, .92), rgba(54, 47, 40, .88));
+
+  /* —— 滚动条 —— */
+  --dsw-alias-scrollbar-bg-l1: rgba(176, 141, 87, .26);
+  --dsw-alias-scrollbar-bg-l2: rgba(176, 141, 87, .3);
+  --dsw-alias-scrollbar-hover-l1: rgba(216, 185, 120, .44);
+  --dsw-alias-scrollbar-hover-l2: rgba(216, 185, 120, .5);
+
+  /* —— 状态色 —— */
+  --dsw-alias-state-error-primary: #d8664a;
+  --dsw-alias-state-error-secondary: #e88a72;
+  --dsw-alias-state-success-primary: #7d9c52;
+  --dsw-alias-state-success-secondary: #9bb96b;
+  --dsw-alias-state-success-tertiary: rgba(125, 156, 82, .22);
+  --dsw-alias-state-warn-label: #d8b978;
+  --dsw-alias-state-warn-primary: #d8952f;
+  --dsw-alias-state-warn-secondary: #e8b45c;
+  --dsw-alias-state-warn-tertiary: rgba(216, 149, 47, .22);
+  --dsw-alias-toast-bg: rgba(28, 25, 21, .96);
+  --dsw-alias-tooltip-bg: rgba(24, 21, 18, .97);
+
+  /* —— 语义面 —— */
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(66, 57, 48, calc(var(--ls-glass-alpha) + .26)), rgba(48, 42, 36, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(78, 68, 56, calc(var(--ls-glass-alpha) + .30)), rgba(56, 48, 41, calc(var(--ls-glass-alpha) + .26)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(70, 61, 51, calc(var(--ls-glass-alpha) + .32)), rgba(50, 43, 37, calc(var(--ls-glass-alpha) + .30)));
+  --dsw-specific-login-input: rgba(52, 45, 38, .9);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(76, 66, 55, calc(var(--ls-glass-alpha) + .36)), rgba(54, 47, 40, calc(var(--ls-glass-alpha) + .34)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(70, 61, 51, calc(var(--ls-glass-alpha) + .30)), rgba(52, 45, 38, calc(var(--ls-glass-alpha) + .28)));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(48, 42, 36, calc(var(--ls-glass-alpha) + .12)), rgba(34, 30, 26, calc(var(--ls-glass-alpha) + .04)));
+  --dsw-specific-sidebar-nav-item-active: rgba(86, 74, 62, .82);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(176, 141, 87, .42);
+  --dsw-specific-sidebar-nav-item-hover: rgba(70, 61, 51, .6);
+  --dsw-specific-tip: rgba(60, 52, 44, calc(var(--ls-glass-alpha) + .28));
+
+  /* —— 高度与阴影：铜的暖阴影，不用纯黑 —— */
+  --dsw-elevation-stroke-color: rgba(216, 185, 120, .22);
+  --dsw-shadow-lv1: 0 2px 5px 0 rgba(10, 8, 6, .5);
+  --dsw-shadow-lv2: 0 5px 14px 0 rgba(10, 8, 6, .5), 0 2px 6px 0 rgba(10, 8, 6, .4);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(216, 185, 120, .26), 0 12px 30px 0 rgba(8, 6, 4, .62);
+  --dsw-mask-blur: blur(var(--ls-blur, 12px)) saturate(1.1);
+}
+
+/* —— 暗色档：同一套煤烟灰与黄铜，整体压深一档（降级适配，不是另一套配色）。
+       蒸汽朋克天性偏暗，所以亮档（默认）本身就已经是低明度的煤烟灰。 —— */
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(26, 24, 21, calc(var(--ls-glass-alpha) + .14));
+  --dsw-alias-bg-layer-1: rgba(38, 33, 28, calc(var(--ls-glass-alpha) + .18));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(44, 38, 32, calc(var(--ls-glass-alpha) + .26)), rgba(30, 26, 22, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(50, 43, 36, calc(var(--ls-glass-alpha) + .32)), rgba(34, 29, 25, calc(var(--ls-glass-alpha) + .28)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(54, 46, 38, calc(var(--ls-glass-alpha) + .36)), rgba(36, 31, 26, calc(var(--ls-glass-alpha) + .32)));
+  --dsw-alias-bg-module-platform: rgba(38, 33, 28, calc(var(--ls-glass-alpha) + .10));
+  --dsw-alias-bg-multi-select: rgba(48, 41, 35, calc(var(--ls-glass-alpha) + .30));
+  --dsw-alias-label-primary: #f6efe2;
+  --dsw-alias-label-secondary: #d2c5ae;
+  --dsw-alias-label-tertiary: #b0a48d;
+  --dsw-alias-label-caption: #8f826c;
+  --dsw-alias-label-dimmed: #5c5346;
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(32, 28, 24, calc(var(--ls-glass-alpha) + .12)), rgba(22, 19, 16, calc(var(--ls-glass-alpha) + .04)));
+  --dsw-alias-border-l1: rgba(216, 185, 120, .12);
+  --dsw-alias-border-l2: rgba(176, 141, 87, .24);
+  --dsw-alias-border-l3: rgba(176, 141, 87, .2);
+  --dsw-alias-border-l4: rgba(216, 185, 120, .32);
+  --dsw-alias-toast-bg: rgba(20, 18, 15, .97);
+  --dsw-alias-tooltip-bg: rgba(18, 16, 13, .98);
+}
+
+/* ==========================================================================
+   壁纸：各 variant 在自己的 skin.css 里定义 body 的 background-image
+   ========================================================================== */
+
+html[data-live-skin] body {
+  background-color: #2a2622;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   材质语言 1 · 金属包边
+   双层边框 + 四角铆钉点。这是「结构件即装饰」的最小落地。
+   ========================================================================== */
+
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'],
+html[data-live-skin] [data-dsh-part='dialog'],
+html[data-live-skin] [role='dialog'],
+html[data-live-skin] [role='menu'],
+html[data-live-skin] [role='tooltip'] {
+  backdrop-filter: blur(var(--ls-blur, 12px)) saturate(1.1);
+  box-shadow: inset 0 0 0 1px var(--ls-brass-edge), inset 0 1px 0 0 rgba(216, 185, 120, .16), var(--dsw-shadow-lv2);
+}
+
+/* ==========================================================================
+   材质语言 2 · 齿边分隔线
+   用方波重复渐变做「结构件外露」的暗示，替代普通细线。
+   ========================================================================== */
+
+html[data-live-skin] body ::selection {
+  background-color: rgba(176, 141, 87, .34);
+}
+
+/* ==========================================================================
+   材质语言 3 · 煤气灯与雾
+   body::before 承担光源（暖黄径向）与雾（intensity/gaslight/haze 共同驱动）。
+   光源有方向（右上），与磁带未来主义的均匀日光灯相反。
+   ========================================================================== */
+
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 50% at 78% 6%, rgba(255, 196, 107, var(--ls-gas-a, .45)) 0%, rgba(255, 196, 107, 0) 68%),
+    radial-gradient(120% 60% at 50% 110%, rgba(122, 139, 111, var(--ls-haze-a, .22)) 0%, rgba(122, 139, 111, 0) 70%),
+    linear-gradient(180deg, rgba(12, 10, 8, var(--ls-haze-a, .22)) 0%, rgba(12, 10, 8, 0) 42%);
+}
+
+/* 铜绿洗层：patina 越高越明显，压在壁纸之上、内容之下 */
+html[data-live-skin] body::after {
+  content: '';
+  position: fixed;
+  /* 外扩 35%：变体可以让这一层旋转或平移而不露边 */
+  inset: -35%;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--ls-patina-wash, transparent);
+  background-repeat: no-repeat;
+  background-position: center;
+  animation-name: var(--ls-fx-name, none);
+  animation-duration: calc(var(--ls-motion, 1) * var(--ls-fx-duration, 0s));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+}

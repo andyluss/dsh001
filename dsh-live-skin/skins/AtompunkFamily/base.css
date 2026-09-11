@@ -1,0 +1,264 @@
+/* ==========================================================================
+   AtompunkFamily —— 家族层（原子纪 1945—1969 · 奶油白 · 镀铬 · 瓷釉）
+   依据：doc/punks/atompunk/ ｜ 规格：doc/live-skin/04_原子朋克.md
+
+   材质签名：干净的瓷釉平面上，一道硬边的镀铬反光带。
+   这是七个家族里**唯一完全不做旧**的一支 —— 没有颗粒、没有划痕、没有雾。
+   其余六支都在某种「材料的老化」上建立识别（黄铜的包浆、胶片的颗粒、
+   霓虹的水汽、组织的湿润、塑料的哑光、木材的手工），只有原子朋克的未来是新的。
+
+   与相邻的柴油朋克的硬分界：
+     柴油朋克的颗粒是**底色**，界面像被重新打光的黑白新闻片；
+     原子朋克**一点噪点都不加**，界面是刚出厂的整体注塑件。
+
+   卷内明确排除：CRT 扫描线、绿字终端、磁带暖噪声（那是磁带未来主义）。
+   ========================================================================== */
+
+html[data-live-skin] body {
+  /* —— 由参数派生的中间量 —— */
+  --ls-glass-alpha: calc(.92 - var(--ls-glass, 55) * .0058);
+  /* radiation：放射色。它同时意味着「能量」与「威胁」——这个双义性是设计意图 */
+  --ls-rad-a: calc(var(--ls-radiation, 62) * .0060);
+  /* chrome：镜面高光带。硬边、可预测的反光角度 */
+  --ls-chrome-a: calc(var(--ls-chrome, 65) * .0058);
+  --ls-int: calc(var(--ls-intensity, 62) * .01);
+  --ls-rad-eff: calc(var(--ls-rad-a) * var(--ls-int));
+  --ls-chrome-eff: calc(var(--ls-chrome-a) * var(--ls-int));
+  /* flipside：双面底片。0/1 的布尔值直接乘进民防洗层的透明度 */
+  --ls-flip: var(--ls-flipside, 0);
+
+  --ls-cream: #f3ebdd;
+  --ls-mint: #a8cdbb;
+  --ls-enamel: #fbf7f0;
+  /* 注意：这里**不能**再声明 --ls-chrome —— 那是 chrome 参数自己的变量名，
+     在 body 上重声明会永远压住运行时的内联值（滑杆失效）。见 C10 检查。 */
+  --ls-rad: #e4572e;
+  --ls-rad-hot: #f26b21;
+
+  /* variant 私有动效的挂点 */
+  --ls-fx-name: none;
+  --ls-fx-duration: 0s;
+
+  /* —— 底与面板（奶油白系） —— */
+  --dsw-alias-bg-base: rgba(243, 235, 221, var(--ls-glass-alpha));
+  --dsw-alias-bg-layer-1: rgba(251, 247, 240, calc(var(--ls-glass-alpha) + .14));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(253, 250, 245, calc(var(--ls-glass-alpha) + .22)), rgba(240, 233, 221, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(254, 252, 248, calc(var(--ls-glass-alpha) + .28)), rgba(242, 236, 225, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(255, 253, 250, calc(var(--ls-glass-alpha) + .32)), rgba(244, 238, 228, calc(var(--ls-glass-alpha) + .28)));
+  --dsw-alias-bg-module-platform: rgba(244, 237, 226, calc(var(--ls-glass-alpha) + .06));
+  --dsw-alias-bg-multi-select: rgba(232, 224, 210, calc(var(--ls-glass-alpha) + .26));
+  --dsw-alias-bg-skeleton: rgba(168, 205, 187, .22);
+  --dsw-alias-bg-mask-1: rgba(43, 38, 34, .3);
+  --dsw-alias-bg-mask-2: rgba(43, 38, 34, .16);
+  --dsw-alias-bg-mask-3: rgba(30, 26, 22, .5);
+  --dsw-alias-bg-mask-drop: rgba(255, 253, 248, .7);
+  --dsw-alias-bg-mask-photo: rgba(24, 20, 17, .86);
+
+  /* —— 描边：瓷釉的硬边，一道细亮线 —— */
+  --dsw-alias-border-inverted: rgba(255, 255, 255, .6);
+  --dsw-alias-border-inverted2: rgba(255, 255, 255, .4);
+  --dsw-alias-border-l1: rgba(120, 110, 96, .14);
+  --dsw-alias-border-l2: rgba(120, 110, 96, .24);
+  --dsw-alias-border-l2-darkmode-thin: rgba(120, 110, 96, .16);
+  --dsw-alias-border-l3: rgba(120, 110, 96, .2);
+  --dsw-alias-border-l4: rgba(96, 88, 76, .34);
+
+  /* —— 品牌与强调：红橙是唯一的高饱和色，只出现在「行动」与「危险」处 —— */
+  --dsw-alias-brand-primary: var(--ls-accent, #e4572e);
+  --dsw-alias-brand-primary-invert: #f3ebdd;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #e4572e);
+  --dsw-alias-brand-text: #2b2622;
+  --dsw-alias-link: var(--ls-accent, #e4572e);
+  --dsw-alias-state-business-primary: var(--ls-accent, #e4572e);
+  --dsw-alias-state-business-tertiary: rgba(228, 87, 46, .16);
+
+  /* —— 按钮：填充色压到 45% 以承载白字（C4 逐 variant 复核） —— */
+  --dsw-alias-button-contrast-fill: #2b2622;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, #ffffff, #f2ece2);
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(255, 253, 250, .99), rgba(240, 234, 224, .97));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, #ffffff, #f8f4ec);
+  --dsw-alias-button-ghost-active-fill: rgba(232, 224, 210, .9);
+  --dsw-alias-button-ghost-active-border: rgba(228, 87, 46, .42);
+  --dsw-alias-button-ghost-active-hover: rgba(222, 212, 196, .95);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #e4572e) 45%, #0a0a0a);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #e4572e) 38%, #0a0a0a);
+  --dsw-alias-button-primary-dimmed: rgba(228, 87, 46, .32);
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #e4572e) 45%, #0a0a0a);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #e4572e) 38%, #0a0a0a);
+  --dsw-alias-button-tool-bar-fill: rgba(43, 38, 34, .56);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(43, 38, 34, .32);
+  --dsw-alias-button-tool-bar-hover: rgba(43, 38, 34, .7);
+
+  /* —— 交互态 —— */
+  --dsw-alias-interactive-bg-active: rgba(168, 205, 187, .3);
+  --dsw-alias-interactive-bg-hover: rgba(255, 255, 255, .6);
+  --dsw-alias-interactive-bg-hover-accent: rgba(168, 205, 187, .34);
+  --dsw-alias-interactive-bg-hover-danger: rgba(228, 87, 46, .12);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(252, 249, 244, .98), rgba(238, 232, 222, .94));
+
+  /* —— 文本 —— */
+  --dsw-alias-label-caption: #8b8175;
+  --dsw-alias-label-dimmed: #c4bba9;
+  --dsw-alias-label-primary: #2b2622;
+  --dsw-alias-label-primary-bluish: #1f4a63;
+  --dsw-alias-label-primary-dimmed: #3a332c;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #f3ebdd;
+  --dsw-alias-label-secondary: #5c5348;
+  --dsw-alias-label-tertiary: #7b7266;
+
+  /* —— Markdown —— */
+  --dsw-alias-markdown-citation: rgba(168, 205, 187, .3);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(248, 244, 236, calc(var(--ls-glass-alpha) + .26)), rgba(238, 232, 220, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-alias-markdown-code-block-banner: rgba(255, 253, 250, .86);
+  --dsw-alias-markdown-code-segment-selected: rgba(255, 255, 255, .95);
+  --dsw-alias-markdown-code-segment-unselected: rgba(236, 229, 217, .8);
+  --dsw-alias-markdown-inline-code: rgba(224, 236, 228, .7);
+  --dsw-alias-markdown-placeholder: rgba(232, 224, 210, .68);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(238, 244, 240, .96), rgba(220, 233, 226, .92));
+
+  /* —— 滚动条 —— */
+  --dsw-alias-scrollbar-bg-l1: rgba(168, 205, 187, .4);
+  --dsw-alias-scrollbar-bg-l2: rgba(168, 205, 187, .44);
+  --dsw-alias-scrollbar-hover-l1: rgba(120, 178, 158, .56);
+  --dsw-alias-scrollbar-hover-l2: rgba(120, 178, 158, .6);
+
+  /* —— 状态色 —— */
+  --dsw-alias-state-error-primary: #cf3a1f;
+  --dsw-alias-state-error-secondary: #e4572e;
+  --dsw-alias-state-success-primary: #3f8a63;
+  --dsw-alias-state-success-secondary: #62a884;
+  --dsw-alias-state-success-tertiary: rgba(168, 205, 187, .3);
+  --dsw-alias-state-warn-label: #a86a12;
+  --dsw-alias-state-warn-primary: #e8b923;
+  --dsw-alias-state-warn-secondary: #f0cd5c;
+  --dsw-alias-state-warn-tertiary: rgba(232, 185, 35, .24);
+
+  /* —— 语义面 —— */
+  --dsw-alias-toast-bg: rgba(43, 38, 34, .94);
+  --dsw-alias-tooltip-bg: rgba(38, 33, 29, .95);
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(255, 253, 250, calc(var(--ls-glass-alpha) + .24)), rgba(240, 234, 224, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(226, 240, 233, calc(var(--ls-glass-alpha) + .28)), rgba(200, 226, 214, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(255, 254, 252, calc(var(--ls-glass-alpha) + .28)), rgba(244, 239, 230, calc(var(--ls-glass-alpha) + .26)));
+  --dsw-specific-login-input: rgba(255, 253, 250, .92);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(255, 254, 252, calc(var(--ls-glass-alpha) + .32)), rgba(244, 239, 230, calc(var(--ls-glass-alpha) + .30)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(252, 249, 243, calc(var(--ls-glass-alpha) + .26)), rgba(238, 232, 222, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(252, 249, 243, calc(var(--ls-glass-alpha) + .10)), rgba(240, 234, 224, calc(var(--ls-glass-alpha) + .02)));
+  --dsw-specific-sidebar-nav-item-active: rgba(232, 224, 210, .84);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(168, 205, 187, .5);
+  --dsw-specific-sidebar-nav-item-hover: rgba(244, 239, 230, .7);
+  --dsw-specific-tip: rgba(240, 234, 224, calc(var(--ls-glass-alpha) + .26));
+
+  /* —— 高度：柔而浅的阴影。原子朋克的界面是「新」的，不用硬投影 —— */
+  --dsw-elevation-stroke-color: rgba(255, 255, 255, .8);
+  --dsw-shadow-lv1: 0 2px 5px 0 rgba(60, 50, 40, .1);
+  --dsw-shadow-lv2: 0 5px 14px 0 rgba(60, 50, 40, .12), 0 2px 6px 0 rgba(60, 50, 40, .08);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(60, 50, 40, .22), 0 12px 30px 0 rgba(60, 50, 40, .18);
+  --dsw-mask-blur: blur(var(--ls-blur, 12px)) saturate(1.2);
+}
+
+/* —— 暗色档：同一套瓷釉与镀铬，整体压深一档（降级适配）。
+       原子朋克天生偏亮（奶油白 + 薄荷绿），暗档是把同一张底片翻到夜场。 —— */
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(38, 40, 42, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-bg-layer-1: rgba(50, 52, 54, calc(var(--ls-glass-alpha) + .22));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(56, 58, 60, calc(var(--ls-glass-alpha) + .28)), rgba(42, 44, 46, calc(var(--ls-glass-alpha) + .26)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(62, 64, 66, calc(var(--ls-glass-alpha) + .34)), rgba(46, 48, 50, calc(var(--ls-glass-alpha) + .30)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(66, 68, 70, calc(var(--ls-glass-alpha) + .38)), rgba(48, 50, 52, calc(var(--ls-glass-alpha) + .34)));
+  --dsw-alias-bg-module-platform: rgba(50, 52, 54, calc(var(--ls-glass-alpha) + .1));
+  --dsw-alias-bg-multi-select: rgba(60, 62, 64, calc(var(--ls-glass-alpha) + .28));
+  --dsw-alias-bg-skeleton: rgba(200, 240, 255, .1);
+  --dsw-alias-bg-mask-1: rgba(8, 9, 10, .56);
+  --dsw-alias-bg-mask-2: rgba(8, 9, 10, .32);
+  --dsw-alias-bg-mask-3: rgba(4, 5, 6, .72);
+  --dsw-alias-bg-mask-drop: rgba(24, 26, 28, .74);
+  --dsw-alias-label-primary: #eef1f3;
+  --dsw-alias-label-secondary: #c0c6ca;
+  --dsw-alias-label-tertiary: #9ca3a8;
+  --dsw-alias-label-caption: #878e93;
+  --dsw-alias-label-dimmed: #555b60;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-border-l1: rgba(216, 221, 226, .12);
+  --dsw-alias-border-l2: rgba(216, 221, 226, .22);
+  --dsw-alias-border-l3: rgba(216, 221, 226, .18);
+  --dsw-alias-border-l4: rgba(216, 221, 226, .3);
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(44, 46, 48, calc(var(--ls-glass-alpha) + .14)), rgba(30, 32, 34, calc(var(--ls-glass-alpha) + .06)));
+  --dsw-alias-toast-bg: rgba(26, 28, 30, .97);
+  --dsw-alias-tooltip-bg: rgba(22, 24, 26, .98);
+}
+
+/* ==========================================================================
+   壁纸：各 variant 在自己的 skin.css 里定义 body 的 background-image
+   ========================================================================== */
+
+html[data-live-skin] body {
+  background-color: #f3ebdd;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   材质语言 · 瓷釉高光 + 镀铬反光带 + 原子图案 + 双面底片
+   全部是硬边、可预测的几何，一点噪点都不加。
+   ========================================================================== */
+
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* 瓷釉：顶部的整片柔光，边缘干净，没有颗粒 */
+    linear-gradient(180deg, rgba(255, 255, 255, calc(.42 * var(--ls-chrome-eff))) 0%, rgba(255, 255, 255, 0) 34%),
+    /* 镀铬反光带：一条硬边、高对比、斜向的镜面反射。
+       三段式（暗—亮—暗）复刻金属反射的固定角度，这是这一支的材质签名。 */
+    linear-gradient(104deg,
+      rgba(255, 255, 255, 0) 34%,
+      rgba(255, 255, 255, calc(.34 * var(--ls-chrome-eff))) 43%,
+      rgba(255, 255, 255, calc(.62 * var(--ls-chrome-eff))) 50%,
+      rgba(214, 222, 230, calc(.30 * var(--ls-chrome-eff))) 57%,
+      rgba(255, 255, 255, 0) 66%),
+    /* 放射：以主行动色为核的一圈轨道环语义辉光（rad 参数驱动） */
+    radial-gradient(58% 44% at 78% 16%, rgba(228, 87, 46, calc(var(--ls-rad-eff) * .34)) 0%, rgba(228, 87, 46, 0) 70%),
+    /* 双面底片：民防洗层。flipside 打开时把整张画面推向黑与黄那一面 */
+    linear-gradient(180deg, rgba(20, 20, 22, calc(var(--ls-flip) * .58)) 0%, rgba(20, 20, 22, calc(var(--ls-flip) * .46)) 100%),
+    /* 民防条纹：黄黑斜纹，只在 flipside 打开时显形，间距宽松不做密集警戒线 */
+    repeating-linear-gradient(45deg,
+      rgba(232, 185, 35, calc(var(--ls-flip) * .5)) 0 14px,
+      rgba(20, 20, 22, calc(var(--ls-flip) * .5)) 14px 28px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 14%, 100% 100%;
+  background-position: center, center, center, top, center;
+  background-repeat: no-repeat;
+}
+
+/* body::after 是纯动效层：家族层不给它静止内容，
+   这样 variant 可以放心用 opacity 或 transform 做动画。 */
+html[data-live-skin] body::after {
+  content: '';
+  position: fixed;
+  inset: -35%;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation-name: var(--ls-fx-name, none);
+  animation-duration: calc(var(--ls-motion, 1) * var(--ls-fx-duration, 0s));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* 浮层：瓷釉的硬边描边，没有硬投影 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'],
+html[data-live-skin] [data-dsh-part='dialog'],
+html[data-live-skin] [role='dialog'],
+html[data-live-skin] [role='menu'],
+html[data-live-skin] [role='tooltip'] {
+  backdrop-filter: blur(var(--ls-blur, 12px)) saturate(1.2);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, .7), var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] body ::selection {
+  background-color: rgba(228, 87, 46, .2);
+}

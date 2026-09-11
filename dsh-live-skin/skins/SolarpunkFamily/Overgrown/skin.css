@@ -1,0 +1,71 @@
+/* Overgrown —— 蔓生
+   生态修复完成后的样子：建筑被植物覆盖。这是太阳朋克最标志性的画面。
+   家族里绿意最重的一支（canopy 92）。但**强调色仍然是金**，不是绿 ——
+   环境可以全是绿，行动的位置仍然留给赤陶/金。
+   动效签名：叶片摇曳（最外层剪影以 16s 做极小幅度的旋转与位移，模拟微风）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: sp-leaf-sway;
+  --ls-fx-duration: 16s;
+  background-image:
+    /* 三层不同尺度的叶片剪影，形成纵深 */
+    radial-gradient(circle 26px at 34px 100%, rgba(61, 90, 52, .22) 0 58%, rgba(61, 90, 52, 0) 100%),
+    radial-gradient(circle 18px at 96px 100%, rgba(107, 127, 74, .18) 0 58%, rgba(107, 127, 74, 0) 100%),
+    radial-gradient(circle 13px at 152px 100%, rgba(61, 90, 52, .16) 0 58%, rgba(61, 90, 52, 0) 100%),
+    /* 从左上斜下来的一束暖光 */
+    linear-gradient(126deg, rgba(255, 236, 190, .34) 0%, rgba(255, 236, 190, 0) 48%),
+    linear-gradient(180deg, #2f3d27 0%, #26331f 58%, #1b2416 100%);
+  background-repeat: repeat-x, repeat-x, repeat-x, no-repeat, no-repeat;
+  background-size: 186px 64px, 186px 54px, 186px 44px, 100% 100%, 100% 100%;
+  background-position: bottom left, bottom left, bottom left, center, center;
+  background-attachment: fixed;
+}
+
+/* 最外层：更宽的叶簇，做微风里的摇曳 */
+html[data-live-skin] body::after {
+  background-image:
+    radial-gradient(circle 34px at 60px 100%, rgba(107, 127, 74, .16) 0 56%, rgba(107, 127, 74, 0) 100%),
+    radial-gradient(circle 24px at 150px 100%, rgba(61, 90, 52, .14) 0 56%, rgba(61, 90, 52, 0) 100%);
+  background-size: 220px 78px, 220px 66px;
+  background-position: bottom left, bottom left;
+  background-repeat: repeat-x, repeat-x;
+  transform-origin: bottom center;
+}
+
+/* 这一支的壁纸是深叶绿，而家族主调是浅色 —— 浅色外框会把深绿盖住。
+   所以它明暗两档都用深色面板与浅色文字（与 Cleanroom 的做法相反、理由相同：
+   变体可以覆盖整套表面 token，这是「变体只表达差异」的正当用法）。 */
+html[data-live-skin] body,
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(38, 50, 31, calc(var(--ls-glass-alpha) * .6));
+  --dsw-alias-bg-layer-1: rgba(36, 44, 31, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(42, 51, 36, calc(var(--ls-glass-alpha) + .26)), rgba(30, 37, 26, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(48, 58, 41, calc(var(--ls-glass-alpha) + .3)), rgba(34, 42, 29, calc(var(--ls-glass-alpha) + .28)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(52, 63, 45, calc(var(--ls-glass-alpha) + .34)), rgba(36, 44, 31, calc(var(--ls-glass-alpha) + .32)));
+  --dsw-alias-bg-module-platform: rgba(36, 44, 31, calc(var(--ls-glass-alpha) + .06));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(31, 38, 27, calc(var(--ls-glass-alpha) + .16)), rgba(20, 25, 17, calc(var(--ls-glass-alpha) + .08)));
+  --dsw-alias-label-primary: #eef3e6;
+  --dsw-alias-label-secondary: #c0cbb0;
+  --dsw-alias-label-tertiary: #9caa8c;
+  --dsw-alias-label-caption: #869577;
+  --dsw-alias-label-dimmed: #556048;
+  --dsw-alias-label-primary-inverted: #1a2016;
+  --dsw-alias-border-l1: rgba(168, 207, 196, .16);
+  --dsw-alias-border-l2: rgba(168, 207, 196, .26);
+  --dsw-alias-border-l3: rgba(168, 207, 196, .22);
+  --dsw-alias-border-l4: rgba(168, 207, 196, .34);
+}
+
+/* 绿意最重的一支：正文行加一层极淡的暗描边，保证在深叶绿底上仍可读 */
+html[data-live-skin] [data-dsh-part='message-row'] {
+  text-shadow: 0 1px 0 rgba(12, 18, 9, .34);
+}
+
+@keyframes sp-leaf-sway {
+  from {
+    transform: rotate(-.6deg) translateY(0);
+  }
+  to {
+    transform: rotate(.6deg) translateY(-2px);
+  }
+}

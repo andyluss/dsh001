@@ -1,0 +1,280 @@
+/* ==========================================================================
+   Frutiger Aero — L1 官方设计 token 重映射
+   浅色 = 白天水族箱；深色 = 深海夜光。全部是官方 --dsw-* 别名层 token，
+   不依赖任何 DOM 结构，因此官方壳层与第三方插件一起被覆盖。
+   ========================================================================== */
+
+:root {
+  /* —— 底与面板：半透明玻璃，透出 body 上的天空壁纸。
+        遮蔽量接皮肤中心的「背景遮蔽」滑杆（--dsw-skin-scrim = 0..1）：
+        0 → 面板几乎全透、壁纸最清楚；1 → 面板发白、壁纸被压到背景里。
+        公式在滑杆 50% 处正好还原本皮肤原本的 .56。 —— */
+  --dsw-alias-bg-base: rgba(247, 253, 255, calc(.40 + var(--dsw-skin-scrim, .5) * .58));
+  --dsw-alias-bg-layer-1: rgba(255, 255, 255, .76);
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(238, 250, 255, .9));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(255, 255, 255, .97), rgba(233, 248, 255, .94));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(236, 249, 255, .96));
+  --dsw-alias-bg-module-platform: rgba(255, 255, 255, .66);
+  --dsw-alias-bg-multi-select: linear-gradient(180deg, rgba(232, 247, 255, .96), rgba(214, 240, 253, .9));
+  --dsw-alias-bg-skeleton: rgba(126, 192, 226, .2);
+  --dsw-alias-bg-mask-1: rgba(7, 58, 88, .3);
+  --dsw-alias-bg-mask-2: rgba(7, 58, 88, .14);
+  --dsw-alias-bg-mask-3: rgba(5, 42, 68, .5);
+  --dsw-alias-bg-mask-drop: rgba(255, 255, 255, .72);
+  --dsw-alias-bg-mask-photo: rgba(4, 30, 48, .86);
+
+  /* —— 描边：外圈偏青，内圈留一道玻璃高光 —— */
+  --dsw-alias-border-inverted: rgba(255, 255, 255, .4);
+  --dsw-alias-border-inverted2: rgba(255, 255, 255, .22);
+  --dsw-alias-border-l1: rgba(255, 255, 255, .7);
+  --dsw-alias-border-l2: rgba(26, 138, 190, .3);
+  --dsw-alias-border-l2-darkmode-thin: rgba(26, 138, 190, .2);
+  --dsw-alias-border-l3: rgba(26, 138, 190, .24);
+  --dsw-alias-border-l4: rgba(18, 112, 164, .38);
+
+  /* —— 品牌与水色 —— */
+  --dsw-alias-brand-primary: #0f7fc4;
+  --dsw-alias-brand-primary-invert: #ffffff;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: #1a94dd;
+  --dsw-alias-brand-text: #06344d;
+
+  /* —— 按钮：近似 Aero 玻璃按钮的纵向高光 —— */
+  --dsw-alias-button-contrast-fill: #0a3f5c;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, #ffffff, #e8f7ff);
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(255, 255, 255, .99), rgba(228, 246, 255, .96));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, #ffffff, #f2fbff);
+  --dsw-alias-button-ghost-active-fill: rgba(206, 240, 255, .92);
+  --dsw-alias-button-ghost-active-border: rgba(24, 146, 205, .55);
+  --dsw-alias-button-ghost-active-hover: rgba(186, 232, 255, .95);
+  --dsw-alias-button-info-fill: #1f8fd6;
+  --dsw-alias-button-info-hover: #3aa6e8;
+  --dsw-alias-button-primary-dimmed: rgba(15, 127, 196, .4);
+  --dsw-alias-button-primary-fill: #0f7fc4;
+  --dsw-alias-button-primary-hover: #0b6aa8;
+  --dsw-alias-button-tool-bar-fill: rgba(10, 70, 102, .58);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(10, 70, 102, .34);
+  --dsw-alias-button-tool-bar-hover: rgba(10, 70, 102, .72);
+
+  /* —— 交互态 —— */
+  --dsw-alias-interactive-bg-active: rgba(110, 196, 238, .24);
+  --dsw-alias-interactive-bg-hover: rgba(255, 255, 255, .62);
+  --dsw-alias-interactive-bg-hover-accent: rgba(110, 196, 238, .3);
+  --dsw-alias-interactive-bg-hover-danger: rgba(216, 50, 74, .1);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(245, 252, 255, .98), rgba(226, 245, 255, .94));
+
+  /* —— 文本 —— */
+  --dsw-alias-label-caption: #6ea3ba;
+  --dsw-alias-label-dimmed: #b7dcec;
+  --dsw-alias-label-primary: #0a2f42;
+  --dsw-alias-label-primary-bluish: #0b4a6e;
+  --dsw-alias-label-primary-dimmed: #08283a;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #ffffff;
+  --dsw-alias-label-secondary: #2d617a;
+  --dsw-alias-label-tertiary: #4a7f97;
+  --dsw-alias-link: #0a7fc0;
+
+  /* —— Markdown —— */
+  --dsw-alias-markdown-citation: rgba(198, 234, 250, .7);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(238, 250, 255, .94), rgba(222, 244, 254, .92));
+  --dsw-alias-markdown-code-block-banner: rgba(255, 255, 255, .82);
+  --dsw-alias-markdown-code-segment-selected: rgba(255, 255, 255, .96);
+  --dsw-alias-markdown-code-segment-unselected: rgba(211, 239, 252, .72);
+  --dsw-alias-markdown-inline-code: rgba(188, 229, 249, .55);
+  --dsw-alias-markdown-placeholder: rgba(206, 236, 250, .65);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(226, 246, 255, .96), rgba(203, 236, 252, .92));
+
+  /* —— 滚动条 —— */
+  --dsw-alias-scrollbar-bg-l1: rgba(116, 190, 226, .36);
+  --dsw-alias-scrollbar-bg-l2: rgba(116, 190, 226, .36);
+  --dsw-alias-scrollbar-hover-l1: rgba(78, 166, 214, .52);
+  --dsw-alias-scrollbar-hover-l2: rgba(78, 166, 214, .52);
+
+  /* —— 状态色 —— */
+  --dsw-alias-state-business-primary: #1f8fd6;
+  --dsw-alias-state-business-tertiary: rgba(178, 224, 250, .55);
+  --dsw-alias-state-error-primary: #d8324a;
+  --dsw-alias-state-error-secondary: #f2686f;
+  --dsw-alias-state-success-primary: #2fa84f;
+  --dsw-alias-state-success-secondary: #6fce3f;
+  --dsw-alias-state-success-tertiary: rgba(158, 229, 124, .4);
+  --dsw-alias-state-warn-label: #a86f00;
+  --dsw-alias-state-warn-primary: #e8a300;
+  --dsw-alias-state-warn-secondary: #f5c344;
+  --dsw-alias-state-warn-tertiary: rgba(255, 226, 152, .45);
+  --dsw-alias-toast-bg: rgba(8, 50, 74, .92);
+  --dsw-alias-tooltip-bg: rgba(8, 50, 74, .94);
+
+  /* —— 语义面（气泡 / 输入 / 菜单 / 选择器 / 侧栏） —— */
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(222, 245, 255, .86));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(202, 238, 255, .96), rgba(172, 224, 250, .92));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(238, 251, 255, .92));
+  --dsw-specific-login-input: rgba(255, 255, 255, .92);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(233, 248, 255, .95));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(224, 245, 255, .88));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(255, 255, 255, calc(.62 + var(--dsw-skin-scrim, .5) * .30)), rgba(212, 240, 253, calc(.54 + var(--dsw-skin-scrim, .5) * .30)));
+  --dsw-specific-sidebar-nav-item-active: rgba(255, 255, 255, .78);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(186, 232, 255, .85);
+  --dsw-specific-sidebar-nav-item-hover: rgba(255, 255, 255, .5);
+  --dsw-specific-tip: rgba(224, 245, 255, .88);
+
+  /* —— 高度与阴影：换成偏青的低对比柔光 —— */
+  --dsw-elevation-stroke-color: rgba(255, 255, 255, .8);
+  --dsw-shadow-lv1: 0 2px 6px 0 rgba(14, 96, 138, .1);
+  --dsw-shadow-lv2: 0 6px 16px 0 rgba(14, 96, 138, .12), 0 2px 8px 0 rgba(14, 96, 138, .08);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(10, 80, 120, .24), 0 14px 34px 0 rgba(12, 90, 130, .2);
+  --dsw-mask-blur: blur(10px) saturate(1.15);
+}
+
+/* ==========================================================================
+   深海夜光（深色）
+   ========================================================================== */
+
+body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(5, 30, 45, calc(.54 + var(--dsw-skin-scrim, .5) * .56));
+  --dsw-alias-bg-layer-1: rgba(12, 48, 68, .74);
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(16, 58, 80, .92), rgba(10, 42, 60, .9));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(18, 64, 88, .95), rgba(11, 45, 64, .94));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(14, 56, 78, .98), rgba(9, 38, 55, .97));
+  --dsw-alias-bg-module-platform: rgba(14, 56, 78, .7);
+  --dsw-alias-bg-multi-select: linear-gradient(180deg, rgba(18, 66, 90, .95), rgba(12, 48, 68, .9));
+  --dsw-alias-bg-skeleton: rgba(120, 220, 255, .12);
+  --dsw-alias-bg-mask-1: rgba(2, 16, 26, .55);
+  --dsw-alias-bg-mask-2: rgba(2, 16, 26, .3);
+  --dsw-alias-bg-mask-3: rgba(1, 10, 18, .7);
+  --dsw-alias-bg-mask-drop: rgba(8, 36, 52, .72);
+  --dsw-alias-bg-mask-photo: rgba(1, 10, 18, .9);
+
+  --dsw-alias-border-inverted: rgba(160, 240, 255, .16);
+  --dsw-alias-border-inverted2: rgba(160, 240, 255, .1);
+  --dsw-alias-border-l1: rgba(150, 235, 255, .16);
+  --dsw-alias-border-l2: rgba(150, 235, 255, .26);
+  --dsw-alias-border-l2-darkmode-thin: rgba(150, 235, 255, .16);
+  --dsw-alias-border-l3: rgba(150, 235, 255, .22);
+  --dsw-alias-border-l4: rgba(150, 235, 255, .34);
+
+  --dsw-alias-brand-primary: #35c6f0;
+  --dsw-alias-brand-primary-invert: #04202f;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: #4fd6f7;
+  --dsw-alias-brand-text: #d8f6ff;
+
+  --dsw-alias-button-contrast-fill: #cfeeff;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, rgba(24, 74, 100, .95), rgba(13, 50, 70, .95));
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(22, 70, 95, .98), rgba(11, 44, 62, .96));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, rgba(30, 86, 114, 1), rgba(15, 56, 78, 1));
+  --dsw-alias-button-ghost-active-fill: rgba(30, 96, 128, .85);
+  --dsw-alias-button-ghost-active-border: rgba(96, 214, 252, .5);
+  --dsw-alias-button-ghost-active-hover: rgba(36, 110, 146, .9);
+  --dsw-alias-button-info-fill: #2b9ed4;
+  --dsw-alias-button-info-hover: #46b6e8;
+  --dsw-alias-button-primary-dimmed: rgba(53, 198, 240, .35);
+  --dsw-alias-button-primary-fill: #1f9fd0;
+  --dsw-alias-button-primary-hover: #37bce6;
+  --dsw-alias-button-tool-bar-fill: rgba(190, 240, 255, .28);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(190, 240, 255, .16);
+  --dsw-alias-button-tool-bar-hover: rgba(190, 240, 255, .4);
+
+  --dsw-alias-interactive-bg-active: rgba(90, 210, 255, .22);
+  --dsw-alias-interactive-bg-hover: rgba(150, 235, 255, .14);
+  --dsw-alias-interactive-bg-hover-accent: rgba(90, 210, 255, .28);
+  --dsw-alias-interactive-bg-hover-danger: rgba(242, 104, 111, .16);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(22, 70, 96, .95), rgba(12, 48, 68, .92));
+
+  --dsw-alias-label-caption: #6fa6bd;
+  --dsw-alias-label-dimmed: #275c74;
+  --dsw-alias-label-primary: #eaf8ff;
+  --dsw-alias-label-primary-bluish: #cdeeff;
+  --dsw-alias-label-primary-dimmed: #d3eefb;
+  --dsw-alias-label-primary-foreground: #032130;
+  --dsw-alias-label-primary-inverted: #062838;
+  --dsw-alias-label-secondary: #a6d3e6;
+  --dsw-alias-label-tertiary: #7fb2c9;
+  --dsw-alias-link: #55d0f5;
+
+  --dsw-alias-markdown-citation: rgba(30, 86, 112, .7);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(10, 40, 58, .95), rgba(6, 30, 45, .95));
+  --dsw-alias-markdown-code-block-banner: rgba(16, 54, 74, .95);
+  --dsw-alias-markdown-code-segment-selected: rgba(30, 88, 116, .95);
+  --dsw-alias-markdown-code-segment-unselected: rgba(12, 46, 64, .9);
+  --dsw-alias-markdown-inline-code: rgba(24, 72, 96, .85);
+  --dsw-alias-markdown-placeholder: rgba(20, 64, 86, .8);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(24, 74, 98, .95), rgba(14, 52, 72, .92));
+
+  --dsw-alias-scrollbar-bg-l1: rgba(120, 210, 245, .25);
+  --dsw-alias-scrollbar-bg-l2: rgba(120, 210, 245, .3);
+  --dsw-alias-scrollbar-hover-l1: rgba(120, 210, 245, .45);
+  --dsw-alias-scrollbar-hover-l2: rgba(120, 210, 245, .5);
+
+  --dsw-alias-state-business-primary: #3fc0ec;
+  --dsw-alias-state-business-tertiary: rgba(20, 70, 96, .6);
+  --dsw-alias-state-error-primary: #ff6b7d;
+  --dsw-alias-state-error-secondary: #ff8f9c;
+  --dsw-alias-state-success-primary: #4ede8a;
+  --dsw-alias-state-success-secondary: #86e8a8;
+  --dsw-alias-state-success-tertiary: rgba(20, 80, 60, .6);
+  --dsw-alias-state-warn-label: #ffce6b;
+  --dsw-alias-state-warn-primary: #f5b942;
+  --dsw-alias-state-warn-secondary: #ffd479;
+  --dsw-alias-state-warn-tertiary: rgba(90, 66, 16, .55);
+  --dsw-alias-toast-bg: rgba(10, 46, 66, .96);
+  --dsw-alias-tooltip-bg: rgba(10, 46, 66, .97);
+
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(20, 66, 90, .92), rgba(12, 46, 64, .9));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(30, 92, 120, .95), rgba(18, 66, 90, .92));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(16, 56, 78, .95), rgba(9, 38, 55, .93));
+  --dsw-specific-login-input: rgba(10, 42, 60, .9);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(16, 58, 80, .98), rgba(9, 38, 55, .97));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(18, 62, 84, .94), rgba(10, 42, 60, .9));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(9, 40, 58, calc(.72 + var(--dsw-skin-scrim, .5) * .28)), rgba(5, 28, 42, calc(.62 + var(--dsw-skin-scrim, .5) * .28)));
+  --dsw-specific-sidebar-nav-item-active: rgba(30, 92, 122, .85);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(24, 76, 102, .9);
+  --dsw-specific-sidebar-nav-item-hover: rgba(20, 66, 90, .6);
+  --dsw-specific-tip: rgba(16, 58, 80, .9);
+
+  --dsw-elevation-stroke-color: rgba(150, 235, 255, .22);
+  --dsw-shadow-lv1: 0 2px 6px 0 rgba(0, 14, 24, .4);
+  --dsw-shadow-lv2: 0 6px 16px 0 rgba(0, 14, 24, .45), 0 2px 8px 0 rgba(0, 14, 24, .35);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(120, 220, 255, .28), 0 14px 34px 0 rgba(0, 12, 22, .55);
+  --dsw-mask-blur: blur(12px) saturate(1.3);
+}
+
+/* ==========================================================================
+   壁纸：天空 → 草地的分层渐变（纯 CSS，无外部资源）
+   画在 body 上，透过半透明的 --dsw-alias-bg-base 显示出来。
+   ========================================================================== */
+
+body {
+  background-color: #9fd9f2;
+  background-image:
+    radial-gradient(78% 52% at 16% 2%, rgba(255, 255, 255, .99) 0%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(42% 34% at 86% 6%, rgba(255, 248, 214, .95) 0%, rgba(255, 248, 214, 0) 72%),
+    radial-gradient(circle 82px at 79% 24%, rgba(255, 255, 255, 0) 56%, rgba(255, 255, 255, .5) 76%, rgba(255, 255, 255, .14) 88%, rgba(255, 255, 255, 0) 96%),
+    radial-gradient(circle 82px at 79% 24%, rgba(255, 255, 255, .95) 0 9%, rgba(255, 255, 255, 0) 15%),
+    radial-gradient(circle 46px at 23% 51%, rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, .46) 76%, rgba(255, 255, 255, .12) 89%, rgba(255, 255, 255, 0) 97%),
+    radial-gradient(circle 46px at 23% 51%, rgba(255, 255, 255, .92) 0 10%, rgba(255, 255, 255, 0) 16%),
+    radial-gradient(circle 27px at 62% 15%, rgba(255, 255, 255, 0) 54%, rgba(255, 255, 255, .42) 76%, rgba(255, 255, 255, .1) 89%, rgba(255, 255, 255, 0) 97%),
+    radial-gradient(140% 62% at 50% 124%, #3f9c22 0%, #8fd94a 40%, rgba(143, 217, 74, 0) 72%),
+    linear-gradient(180deg, #45b4e4 0%, #7fd0f2 28%, #cdeeff 50%, #b6e88a 76%, #7ccb3a 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body[data-ds-dark-theme] {
+  background-color: #03202f;
+  background-image:
+    radial-gradient(72% 48% at 18% 4%, rgba(64, 198, 255, .34) 0%, rgba(64, 198, 255, 0) 66%),
+    radial-gradient(40% 30% at 86% 8%, rgba(120, 255, 214, .2) 0%, rgba(120, 255, 214, 0) 72%),
+    radial-gradient(circle 76px at 78% 26%, rgba(160, 240, 255, 0) 56%, rgba(160, 240, 255, .34) 76%, rgba(160, 240, 255, .08) 89%, rgba(160, 240, 255, 0) 97%),
+    radial-gradient(circle 76px at 78% 26%, rgba(210, 250, 255, .7) 0 8%, rgba(210, 250, 255, 0) 15%),
+    radial-gradient(circle 44px at 24% 54%, rgba(160, 240, 255, 0) 55%, rgba(160, 240, 255, .28) 76%, rgba(160, 240, 255, .06) 90%, rgba(160, 240, 255, 0) 97%),
+    radial-gradient(circle 44px at 24% 54%, rgba(210, 250, 255, .55) 0 9%, rgba(210, 250, 255, 0) 16%),
+    radial-gradient(150% 70% at 50% 132%, #063a24 0%, rgba(6, 58, 36, 0) 66%),
+    linear-gradient(180deg, #021824 0%, #04435f 30%, #0a6280 52%, #083c54 76%, #02141f 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 选中文本染成水色 */
+body ::selection {
+  background-color: rgba(110, 196, 238, .42);
+}

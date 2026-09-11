@@ -1,0 +1,35 @@
+/* RainyNeon —— 雨夜霓虹
+   最典型的一支，也是本卷里最容易被过度消费的一支。
+   刻意的克制：**只取雨与霓虹两件**，不堆招牌、不堆义体、不堆塔。
+   光被水揉糊，靠这一件事成立，而不是靠符号的数量。
+   动效签名：霓虹呼吸（bloom 以 8s 周期在透明度 0.85↔1 之间起伏）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cyber-neon-breathe;
+  --ls-fx-duration: 8s;
+  background-image:
+    /* 左上品红辉光 */
+    radial-gradient(72% 54% at 16% 6%, rgba(255, 45, 149, .28) 0%, rgba(255, 45, 149, 0) 70%),
+    /* 右下青辉光 */
+    radial-gradient(66% 48% at 88% 92%, rgba(0, 229, 255, .22) 0%, rgba(0, 229, 255, 0) 72%),
+    /* 中部一道极淡的垂直光带：模拟远处招牌的光柱被雨拉长 */
+    linear-gradient(92deg, rgba(255, 90, 31, 0) 46%, rgba(255, 90, 31, .07) 50%, rgba(255, 90, 31, 0) 54%),
+    linear-gradient(180deg, #150c1e 0%, #0e0716 58%, #08040f 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 呼吸层：一圈极宽的品红 bloom，用 opacity 做缓慢起伏 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(88% 62% at 20% 10%, rgba(255, 45, 149, .22) 0%, rgba(255, 45, 149, 0) 74%);
+  background-size: 100% 100%;
+}
+
+@keyframes cyber-neon-breathe {
+  from {
+    opacity: .85;
+  }
+  to {
+    opacity: 1;
+  }
+}

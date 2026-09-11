@@ -1,0 +1,50 @@
+/* DecoMetropolis —— 装饰都会
+   装饰朋克近邻：共享战间素材，但焦点从动力机器转向装饰的都会（1920—30 年代）。
+   克莱斯勒大厦的退台冠顶、洛克菲勒中心的对称轴线。
+   设计约束：**没有机械** —— 不出现齿边、管道、仪表。
+   动效签名：旭日扩散（底部放射纹以 60s 极缓慢地扩缩，幅度 2%）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: diesel-sunburst-breathe;
+  --ls-fx-duration: 60s;
+  background-image:
+    radial-gradient(120% 52% at 50% 122%, rgba(217, 194, 122, .26) 0%, rgba(217, 194, 122, 0) 72%),
+    linear-gradient(180deg, #24211c 0%, #1a1815 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 旭日纹：从底边放射的细线 */
+html[data-live-skin] body::after {
+  background-image: repeating-conic-gradient(from -26deg at 50% 128%,
+      rgba(217, 194, 122, .07) 0deg 1.1deg,
+      rgba(217, 194, 122, 0) 1.1deg 6deg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: calc(var(--ls-grain-eff, .19) * 1.6);
+  animation-timing-function: ease-in-out;
+}
+
+/* 退台轮廓：双层内嵌边框做「逐层收进」，没有铆钉、没有齿边 */
+html[data-live-skin] [data-dsh-surface='session-header'],
+html[data-live-skin] [data-dsh-surface='composer'] {
+  box-shadow:
+    inset 0 0 0 1px rgba(217, 194, 122, .30),
+    inset 0 0 0 4px rgba(20, 18, 15, .55),
+    inset 0 0 0 5px rgba(217, 194, 122, .16),
+    var(--dsw-shadow-lv2);
+}
+
+/* 对称的分隔：顶部一条居中的短金线 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-bottom: 1px solid rgba(217, 194, 122, .2);
+}
+
+@keyframes diesel-sunburst-breathe {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}

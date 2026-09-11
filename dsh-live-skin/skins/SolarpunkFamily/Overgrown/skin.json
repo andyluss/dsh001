@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "Overgrown",
+  "nameEn": "Overgrown",
+  "description": "蔓生 · 生态修复完成之后 · 建筑被植物覆盖，全家族最浓",
+  "accent": "#c9a227",
+  "tags": ["overgrown", "rewilding", "dense"],
+  "defaults": {
+    "accent": "#c9a227",
+    "glass": 38,
+    "canopy": 92,
+    "sun": 48,
+    "craft": 62,
+    "intensity": 84
+  },
+  "styles": ["skin.css"]
+}

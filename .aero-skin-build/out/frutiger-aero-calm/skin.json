@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.linxin666.org/dsh-skin/v2.json",
+  "skinManifestVersion": 2,
+  "id": "frutiger-aero-calm",
+  "name": "Frutiger Aero · 清淡",
+  "nameEn": "Frutiger Aero · Calm",
+  "version": "1.0.0",
+  "author": "dsh001 · 由动态 Cordis 插件固化",
+  "tagline": "通透淡雅 · 稀疏大气泡 · 长文与代码友好",
+  "description": "Frutiger Aero 的淡口版本：壁纸更亮更粉彩，玻璃面板更透，气泡又少又大、飘得极慢，磨砂最轻。长时间读长文或盯代码时，天空草地还在，但不抢注意力。同样接入「背景遮蔽」与「气泡不透明度」两支滑杆。",
+  "tags": [
+    "frutiger-aero",
+    "calm",
+    "pastel",
+    "translucent",
+    "minimal"
+  ],
+  "accent": "#3fa9d8",
+  "order": 11,
+  "license": "MIT",
+  "contributes": {
+    "stylesheet": "skin.css",
+    "patches": "patches.css"
+  }
+}

@@ -1,0 +1,64 @@
+/* PostCyber —— 后赛博
+   ==========================================================================
+   设计立场：这一支是对本卷「犬儒化」雷区的回答。
+
+   卷内指出：「反乌托邦视觉一旦成为时尚商品，警示就被审美消费吸收，
+   只剩『很酷的绝望』。效力的判断标准是『处理系统时给出的是分析，
+   还是仅仅给出气氛』。」
+
+   所以这一支**主动放弃气氛**：无雨、无塔、无对撞的霓虹、无扫描线。
+   它把赛博朋克从「雨夜街头」移到「系统内部的工作台」——主角是系统内的
+   专业者，基调从失控转为谨慎的乐观（卷内对 postcyberpunk 的定义）。
+
+   这不是「削弱版的赛博朋克」，而是这条分支里唯一能长时间工作的那一支：
+   它保留了对系统的**分析**（分层、数据流、可读的结构），去掉了**气氛**。
+   ==========================================================================
+   动效签名：数据流（一条极细的青色线段沿面板顶边缓慢流过，18s）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cyber-data-flow;
+  --ls-fx-duration: 18s;
+  background-image:
+    /* 顶部一条极淡的琥珀色地平线光：一天开始或结束的那条线 */
+    linear-gradient(180deg, rgba(255, 176, 32, .10) 0%, rgba(255, 176, 32, 0) 16%),
+    /* 克制的青：右下角一点冷光，不与琥珀对撞 */
+    radial-gradient(58% 42% at 88% 88%, rgba(79, 209, 197, .08) 0%, rgba(79, 209, 197, 0) 74%),
+    linear-gradient(180deg, #101820 0%, #0c141a 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 数据流：一条很细的青色线段贴着顶边缓慢流过。
+   它是「系统在运行」的读数，不是装饰 —— 所以极细、极慢、几乎不引人注意。 */
+html[data-live-skin] body::after {
+  inset: 0;
+  background-image: linear-gradient(90deg,
+    rgba(79, 209, 197, 0) 0%,
+    rgba(79, 209, 197, .5) 45%,
+    rgba(160, 240, 230, .7) 50%,
+    rgba(79, 209, 197, .5) 55%,
+    rgba(79, 209, 197, 0) 100%);
+  background-size: 34% 1.5px;
+  background-position: left top;
+}
+
+/* 圆角略大、层次清晰：与 TerminalGreen 的方正、RainyNeon 的湿糊都不同 */
+html[data-live-skin] [data-dsh-surface='composer'] {
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(79, 209, 197, .2), var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 8px 8px 0 0;
+  box-shadow: inset 0 -1px 0 0 rgba(255, 176, 32, .24);
+  text-shadow: none;
+}
+
+@keyframes cyber-data-flow {
+  from {
+    transform: translateX(-34%);
+  }
+  to {
+    transform: translateX(134%);
+  }
+}

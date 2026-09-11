@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "Unbuilt",
+  "nameEn": "Unbuilt",
+  "description": "未建成巨构 · 纪念碑尺度 · 对称、复沓、空的广场与浓雾",
+  "accent": "#8a8d8e",
+  "tags": ["monument", "symmetry", "ruins"],
+  "defaults": {
+    "accent": "#8a8d8e",
+    "glass": 26,
+    "grain": 65,
+    "noir": 78,
+    "chrome": 72,
+    "intensity": 82
+  },
+  "styles": ["skin.css"]
+}

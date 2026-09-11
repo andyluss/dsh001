@@ -1,0 +1,76 @@
+/* RedAtom —— 红旗原子
+   ==========================================================================
+   设计立场：卷内明确要求「勿混美式与苏联美学」。所以这一支**不是给
+   ChromeSuburb 换个红**，它的形态语言也不同：
+
+     美式侧（ChromeSuburb）      苏联侧（RedAtom）
+     镜面镀铬、高对比反光         哑光，拉丝金属的低对比横向纹理
+     Googie 的斜挑与飞翘          垂直的塔尖与水平的分层
+     尾鳍（有方向的圆角）         收小的圆角，接近直角
+     消费繁荣的语汇               没有消费感，只有体量与正面性
+
+   参考：奥布宁斯克核电站（1954）、1958 布鲁塞尔世博会苏联馆。
+   ==========================================================================
+   动效签名：垂直脉冲（中轴线上的一条细亮线做小幅明度起伏，6s）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: atom-vertical-pulse;
+  --ls-fx-duration: 6s;
+  background-image:
+    /* 顶部的暗红：是「印上去的红」，不发光、没有 bloom */
+    linear-gradient(180deg, rgba(179, 53, 44, .30) 0%, rgba(179, 53, 44, .08) 22%, rgba(179, 53, 44, 0) 40%),
+    /* 水平分层的拉丝金属：低对比、等距、无方向性高光 */
+    repeating-linear-gradient(180deg,
+      rgba(120, 116, 110, .07) 0 1px,
+      rgba(120, 116, 110, 0) 1px 5px),
+    linear-gradient(180deg, #d9d5ce 0%, #cdc8c0 100%);
+  background-repeat: no-repeat, repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 中轴的分层：一条哑光的垂直带（不是铬银亮线），加一圈塔尖式的收束 */
+html[data-live-skin] body::after {
+  background-image:
+    linear-gradient(90deg,
+      rgba(179, 53, 44, 0) 0%,
+      rgba(179, 53, 44, .16) calc(50% - 26px),
+      rgba(179, 53, 44, .16) calc(50% + 26px),
+      rgba(179, 53, 44, 0) 100%),
+    radial-gradient(60% 30% at 50% 0%, rgba(179, 53, 44, .14) 0%, rgba(179, 53, 44, 0) 76%);
+  background-size: 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  animation-timing-function: ease-in-out;
+}
+
+/* 圆角收小、描边变实：与美式侧的大圆角形成形态对照 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 4px;
+  border-bottom: 2px solid rgba(179, 53, 44, .4);
+}
+
+html[data-live-skin] [data-dsh-surface='composer'] {
+  border-radius: 4px;
+}
+
+/* 哑光：把家族层的镀铬镜面压下去 —— 这一支不该有高对比反光 */
+html[data-live-skin] body::before {
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, calc(.16 * var(--ls-chrome-eff))) 0%, rgba(255, 255, 255, 0) 30%),
+    radial-gradient(58% 44% at 78% 16%, rgba(179, 53, 44, calc(var(--ls-rad-eff) * .22)) 0%, rgba(179, 53, 44, 0) 70%),
+    linear-gradient(180deg, rgba(20, 20, 22, calc(var(--ls-flip) * .58)) 0%, rgba(20, 20, 22, calc(var(--ls-flip) * .46)) 100%),
+    repeating-linear-gradient(45deg,
+      rgba(232, 185, 35, calc(var(--ls-flip) * .5)) 0 14px,
+      rgba(20, 20, 22, calc(var(--ls-flip) * .5)) 14px 28px);
+  background-size: 100% 100%, 100% 100%, 100% 14%, 100% 100%;
+  background-position: center, center, top, center;
+}
+
+@keyframes atom-vertical-pulse {
+  0%,
+  100% {
+    opacity: .72;
+  }
+  50% {
+    opacity: 1;
+  }
+}

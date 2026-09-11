@@ -1,0 +1,29 @@
+# 依赖与构建产物（可再生成，一律不入库）
+node_modules/
+dist/
+build/
+.npm-cache/
+*.tsbuildinfo
+
+# 系统与编辑器垃圾
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# 日志、临时文件与本地环境
+*.log
+*.tmp
+.env
+.env.local
+*.local
+
+# ---------------------------------------------------------------------------
+# 说明：本仓库是 DSH 实验室沙盒。实验源码、文档、设计稿一律入库；
+# 可再生的依赖与构建产物一律不入库（换机器 npm install / npm run build 即可）。
+# 例外：.aero-skin-build/out/ 与 .liveskin-test/.home/ 是刻意提交的实验产物与样本，
+# 它们不叫 dist/build，所以不受上面规则影响。
+# 详细约定见 CONTRIBUTING.md「忽略配置」一节。
+# ---------------------------------------------------------------------------

@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "DifferenceEngine",
+  "nameEn": "Difference Engine",
+  "description": "差分机 · 思想实验取向 · 穿孔卡与刻度带，去装饰、更冷更精确",
+  "accent": "#c9a227",
+  "tags": ["analytical", "precision", "punchcard"],
+  "defaults": {
+    "accent": "#c9a227",
+    "glass": 46,
+    "patina": 12,
+    "gaslight": 30,
+    "haze": 18,
+    "intensity": 44
+  },
+  "styles": ["skin.css"]
+}

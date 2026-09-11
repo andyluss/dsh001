@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "SkyFleet",
+  "nameEn": "Sky Fleet",
+  "description": "天空舰队 · 冒险英雄尺度 · 飞艇与流线型云带",
+  "accent": "#c8ccd0",
+  "tags": ["standard", "aviation", "streamline"],
+  "defaults": {
+    "accent": "#c8ccd0",
+    "glass": 54,
+    "grain": 55,
+    "noir": 45,
+    "chrome": 65
+  },
+  "styles": ["skin.css"]
+}

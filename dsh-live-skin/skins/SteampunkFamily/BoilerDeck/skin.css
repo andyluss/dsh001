@@ -1,0 +1,47 @@
+/* BoilerDeck —— 锅炉舱
+   修正取向。卷内批评「绅士发明家占前台，司炉、工人、仆役退为背景，
+   煤烟、工时、贫民窟、工伤被审美化过滤」——这一支把前台换掉：
+   黄铜退为配件，铁灰与煤烟成为主体，铜绿最重、可见磨损最多。
+   动效签名：压力脉动（炉火以 4.5s 周期做小幅明暗起伏，模拟燃烧的不稳定）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: steampunk-pressure-pulse;
+  --ls-fx-duration: 4.5s;
+  background-image:
+    radial-gradient(120% 46% at 50% 112%, rgba(193, 102, 59, .30) 0%, rgba(193, 102, 59, 0) 74%),
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, .11) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg, #24211f 0%, #1b1917 60%, #131110 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 炉火的第二层：更窄更亮，与壁纸里的宽辉光错开周期地起伏 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(52% 30% at 50% 104%, rgba(255, 150, 84, .18) 0%, rgba(255, 150, 84, 0) 72%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* 粗糙：面板带可见的接缝与磕碰（用不对称圆角与内阴影模拟），
+   黄铜只在压力表与阀门语义的位置出现 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 13px 9px 12px 10px;
+  box-shadow: inset 0 0 0 1px rgba(193, 102, 59, .18), inset 0 -2px 6px 0 rgba(0, 0, 0, .3), var(--dsw-shadow-lv2);
+}
+
+@keyframes steampunk-pressure-pulse {
+  0%,
+  100% {
+    opacity: .8;
+  }
+  40% {
+    opacity: 1;
+  }
+  62% {
+    opacity: .88;
+  }
+  84% {
+    opacity: .96;
+  }
+}

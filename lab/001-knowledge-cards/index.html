@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识卡片</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --ink: #1f2329;
+    --muted: #8a919c;
+    --accent: #4f6ef7;
+    --accent-dark: #3d5adf;
+    --accent-soft: #eef2fe;
+    --danger: #e5484d;
+    --radius: 12px;
+    --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #e8eaee;
+  }
+  .bar {
+    max-width: 1200px; margin: 0 auto; padding: 14px 20px;
+    display: flex; gap: 10px; align-items: center;
+  }
+  h1 { font-size: 18px; font-weight: 700; white-space: nowrap; }
+  .bar .grow { flex: 1; }
+  #search {
+    width: 100%; max-width: 300px;
+    padding: 8px 14px; border: 1px solid #d8dbe0; border-radius: 8px;
+    font-size: 14px; outline: none; background: #fff;
+  }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,110,247,.15); }
+  button {
+    font-size: 14px; padding: 8px 14px; border-radius: 8px;
+    border: 1px solid #d8dbe0; background: #fff; color: var(--ink);
+    cursor: pointer; transition: background .15s, border-color .15s;
+  }
+  button:hover { background: #f0f2f5; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { background: var(--accent-dark); }
+  button.danger { color: var(--danger); border-color: #f3c1c3; }
+  button.danger:hover { background: #fdf0f0; }
+  button.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+  button.ghost:hover { background: #eef0f3; color: var(--ink); }
+  button.mini {
+    font-size: 12px; padding: 1px 6px; border-radius: 6px;
+    border: none; background: transparent; color: var(--muted);
+    line-height: 1.5; display: none;
+  }
+  button.mini:hover { background: #eef0f3; color: var(--ink); }
+  button.mini.del:hover { color: var(--danger); background: #fdf0f0; }
+  #btnSide { display: none; }
+  .count { font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+  .layout { max-width: 1200px; margin: 0 auto; padding: 20px; display: flex; gap: 16px; align-items: flex-start; }
+
+  /* ---------- 侧边栏 ---------- */
+  aside {
+    width: 252px; flex-shrink: 0;
+    background: #fff; border: 1px solid #e8eaee; border-radius: var(--radius);
+    padding: 12px; position: sticky; top: 68px;
+    max-height: calc(100vh - 90px); overflow: auto;
+  }
+  .side-sec + .side-sec { margin-top: 14px; padding-top: 14px; border-top: 1px solid #eef0f3; }
+  .side-title {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .side-title button.mini { display: inline-block; }
+  .tree-row {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 6px; border-radius: 7px; cursor: pointer; font-size: 13.5px;
+    white-space: nowrap;
+  }
+  .tree-row:hover { background: #f4f5f8; }
+  .tree-row:hover button.mini { display: inline-block; }
+  .tree-row.sel { background: var(--accent-soft); color: var(--accent-dark); font-weight: 600; }
+  .tw {
+    width: 16px; text-align: center; color: var(--muted); flex-shrink: 0;
+    font-size: 12px; user-select: none;
+  }
+  .tw.leaf { pointer-events: none; }
+  .tname { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+  .tcount {
+    font-size: 11px; color: var(--muted); background: #f0f2f5;
+    border-radius: 999px; padding: 0 7px; flex-shrink: 0;
+  }
+  .tree-row.sel .tcount { background: #dfe6fd; color: var(--accent-dark); }
+  .tactions { display: flex; gap: 2px; flex-shrink: 0; }
+
+  /* ---------- 主区 ---------- */
+  main { flex: 1; min-width: 0; }
+  #filterBar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; min-height: 28px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent-soft); color: var(--accent-dark);
+    border-radius: 8px; padding: 3px 8px 3px 12px; font-size: 13px;
+  }
+  .chip button {
+    border: none; background: none; color: inherit; padding: 0 2px;
+    font-size: 12px; line-height: 1; border-radius: 4px;
+  }
+  .chip button:hover { background: rgba(79,110,247,.15); }
+
+  #grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .flip { perspective: 900px; cursor: pointer; }
+  .inner {
+    position: relative; width: 100%; height: 190px;
+    transform-style: preserve-3d; transition: transform .4s ease;
+  }
+  .flip.flipped .inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0; backface-visibility: hidden;
+    border-radius: var(--radius); background: var(--card);
+    box-shadow: var(--shadow); padding: 14px 16px; overflow: auto;
+  }
+  .face.back { transform: rotateY(180deg); background: #fbfcff; border: 1px solid #e3e8f6; }
+  .face .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .face .label {
+    font-size: 11px; color: var(--muted); letter-spacing: .05em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .cat-badge {
+    font-size: 11px; color: #8a5cf6; background: #f3effe;
+    border-radius: 6px; padding: 0 7px; margin-bottom: 6px; flex-shrink: 0;
+  }
+  .front-text { font-size: 15px; font-weight: 600; word-break: break-word; white-space: pre-wrap; }
+  .back-text { font-size: 14px; word-break: break-word; white-space: pre-wrap; }
+  .tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 12px; color: var(--accent-dark); background: var(--accent-soft);
+    padding: 1px 9px; border-radius: 999px; cursor: pointer;
+  }
+  .tag:hover { background: #dfe6fd; }
+  .empty {
+    grid-column: 1 / -1; text-align: center; color: var(--muted);
+    padding: 60px 0; font-size: 15px;
+  }
+
+  /* ---------- 弹窗 ---------- */
+  #overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(15,18,25,.45);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 8vh 16px 16px;
+  }
+  #overlay.open { display: flex; }
+  #modal {
+    width: 100%; max-width: 480px; background: #fff; border-radius: var(--radius);
+    box-shadow: 0 12px 40px rgba(0,0,0,.18); padding: 20px; animation: pop .18s ease;
+  }
+  @keyframes pop { from { transform: translateY(8px); opacity: 0; } }
+  #modal h2 { font-size: 16px; margin-bottom: 14px; }
+  #modal label.lbl { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+  #modal input[type=text], #modal textarea, #modal select {
+    width: 100%; padding: 8px 12px; border: 1px solid #d8dbe0; border-radius: 8px;
+    font-size: 14px; font-family: inherit; outline: none; resize: vertical;
+    background: #fff; color: var(--ink);
+  }
+  #modal input[type=text]:focus, #modal textarea:focus, #modal select:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,110,247,.15);
+  }
+  #fTagList {
+    max-height: 170px; overflow: auto;
+    border: 1px solid #e8eaee; border-radius: 8px; padding: 6px 8px;
+  }
+  .tag-opt { display: flex; align-items: center; gap: 6px; font-size: 13.5px; padding: 3px 0; cursor: pointer; }
+  .tag-opt input { width: auto; accent-color: var(--accent); }
+  .hint { color: var(--muted); font-size: 13px; padding: 8px 4px; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .modal-actions .grow { flex: 1; }
+  .modal-actions .grow + .grow { margin-left: auto; }
+
+  @media (max-width: 820px) {
+    #btnSide { display: inline-block; }
+    aside {
+      display: none; position: fixed; left: 12px; top: 64px; z-index: 40;
+      width: 240px; max-height: calc(100vh - 80px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+    }
+    body.side-open aside { display: block; }
+    .bar { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <button id="btnSide" title="展开/收起侧边栏">☰</button>
+    <h1>📇 知识卡片</h1>
+    <div class="grow"></div>
+    <input id="search" type="search" placeholder="搜索卡片… (Esc 清空)">
+    <span class="count" id="count"></span>
+    <button class="ghost" id="btnExport" title="导出全部数据为 JSON">导出</button>
+    <button class="ghost" id="btnImport" title="从 JSON 文件导入">导入</button>
+    <button class="primary" id="btnNew">＋ 新建</button>
+    <input id="fileInput" type="file" accept=".json,application/json" hidden>
+  </div>
+</header>
+
+<div class="layout">
+  <aside id="sidebar">
+    <div class="side-sec">
+      <div class="side-title">
+        <span>📁 分类</span>
+        <button class="mini" id="addCatRoot" title="添加根分类">＋ 根分类</button>
+      </div>
+      <div id="catTree"></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-title">
+        <span>🏷 标签</span>
+        <button class="mini" id="addTagRoot" title="添加根标签">＋ 根标签</button>
+      </div>
+      <div id="tagTree"></div>
+    </div>
+  </aside>
+
+  <main>
+    <div id="filterBar"></div>
+    <div id="grid"></div>
+  </main>
+</div>
+
+<div id="overlay">
+  <div id="modal">
+    <h2 id="modalTitle">新建卡片</h2>
+    <label class="lbl" for="fFront">正面（问题 / 标题）</label>
+    <input id="fFront" type="text" placeholder="例如：什么是闭包？">
+    <label class="lbl" for="fBack">背面（答案 / 内容）</label>
+    <textarea id="fBack" rows="5" placeholder="例如：闭包是函数与其词法环境的组合……"></textarea>
+    <label class="lbl" for="fCat">分类（树形选择）</label>
+    <select id="fCat"></select>
+    <label class="lbl">标签（树形勾选，可多选）</label>
+    <div id="fTagList"></div>
+    <div class="modal-actions">
+      <button class="danger" id="btnDelete" hidden>删除</button>
+      <div class="grow"></div>
+      <button id="btnCancel">取消</button>
+      <button class="primary" id="btnSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var CK = 'kcards.v1', CATK = 'kcats.v1', TAGK = 'ktags.v1';
+  var cards = [], categories = [], tags = [];
+  var editingId = null;
+  var filter = { query: '', catId: null, tagId: null };
+  var expanded = {};
+
+  function uid(prefix) {
+    return (prefix || 'n') + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // ================= 树工具 =================
+  function findNode(nodes, id) {
+    if (!id) return null;
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].id === id) return nodes[i];
+      var r = findNode(nodes[i].children || [], id);
+      if (r) return r;
+    }
+    return null;
+  }
+  function findPath(nodes, id, path) {
+    path = path || [];
+    for (var i = 0; i < nodes.length; i++) {
+      var p = path.concat([nodes[i]]);
+      if (nodes[i].id === id) return p;
+      var r = findPath(nodes[i].children || [], id, p);
+      if (r) return r;
+    }
+    return null;
+  }
+  function subtreeIds(node) {
+    var set = new Set();
+    (function walk(n) {
+      set.add(n.id);
+      (n.children || []).forEach(walk);
+    })(node);
+    return set;
+  }
+  function removeNode(nodes, id) {
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].id === id) return nodes.splice(i, 1)[0];
+      var r = removeNode(nodes[i].children || [], id);
+      if (r) return r;
+    }
+    return null;
+  }
+  function flatten(nodes, depth, out) {
+    out = out || [];
+    nodes.forEach(function (n) {
+      out.push({ node: n, depth: depth });
+      flatten(n.children || [], depth + 1, out);
+    });
+    return out;
+  }
+  function cloneNode(n) {
+    return { id: n.id, name: n.name, children: (n.children || []).map(cloneNode) };
+  }
+  function mergeTrees(a, b) {
+    b.forEach(function (nb) {
+      var ex = null;
+      for (var i = 0; i < a.length; i++) if (a[i].id === nb.id) { ex = a[i]; break; }
+      if (ex) ex.children = mergeTrees(ex.children || [], nb.children || []);
+      else a.push(cloneNode(nb));
+    });
+    return a;
+  }
+  function byName(nodes, name) {
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].name === name) return nodes[i];
+      var r = byName(nodes[i].children || [], name);
+      if (r) return r;
+    }
+    return null;
+  }
+
+  // ================= 存储 / 迁移 =================
+  function read(k, fb) {
+    try { var v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : fb; }
+    catch (e) { return fb; }
+  }
+  function load() {
+    cards = read(CK, []);
+    categories = read(CATK, []);
+    tags = read(TAGK, []);
+    migrate();
+    if (!cards.length && !categories.length && !tags.length) seed();
+    persist(); // 迁移结果（旧字符串标签 -> 树节点）立即写回，保证 id 稳定
+    expandAll();
+  }
+  function persist() {
+    localStorage.setItem(CK, JSON.stringify(cards));
+    localStorage.setItem(CATK, JSON.stringify(categories));
+    localStorage.setItem(TAGK, JSON.stringify(tags));
+  }
+  // 旧版卡片的字符串标签 -> 标签树节点 id
+  function migrate() {
+    var tagByName = {};
+    flatten(tags, 0).forEach(function (o) { tagByName[o.node.name] = o.node.id; });
+    cards.forEach(function (c) {
+      if (!c || typeof c !== 'object') return;
+      if (c.front === undefined) c.front = '';
+      if (c.back === undefined) c.back = '';
+      if (c.categoryId === undefined) c.categoryId = null;
+      if (!Array.isArray(c.tags)) c.tags = [];
+      if (c.tags.length && typeof c.tags[0] === 'string') {
+        var allIds = c.tags.every(function (t) { return findNode(tags, t); });
+        if (allIds) {
+          c.tags = c.tags.filter(function (t) { return findNode(tags, t); });
+        } else {
+          c.tags = c.tags.map(function (name) {
+            if (tagByName[name]) return tagByName[name];
+            var n = { id: uid('t'), name: name, children: [] };
+            tags.push(n); tagByName[name] = n.id; return n.id;
+          });
+        }
+      }
+    });
+  }
+  function expandAll() {
+    [categories, tags].forEach(function (roots) {
+      (function walk(ns) {
+        ns.forEach(function (n) {
+          if (n.children && n.children.length) { expanded[n.id] = true; walk(n.children); }
+        });
+      })(roots);
+    });
+  }
+  function seed() {
+    var now = new Date().toISOString();
+    categories = [
+      { id: uid('k'), name: '编程', children: [
+        { id: uid('k'), name: '前端', children: [] },
+        { id: uid('k'), name: '后端', children: [] } ] },
+      { id: uid('k'), name: '科学', children: [
+        { id: uid('k'), name: '物理', children: [] } ] },
+      { id: uid('k'), name: '生活', children: [] }
+    ];
+    tags = [
+      { id: uid('t'), name: '使用说明', children: [] },
+      { id: uid('t'), name: '面试', children: [] },
+      { id: uid('t'), name: '基础', children: [] },
+      { id: uid('t'), name: '专题', children: [
+        { id: uid('t'), name: 'JS', children: [] } ] }
+    ];
+    var front = byName(categories, '前端').id;
+    var physics = byName(categories, '物理').id;
+    cards = [
+      { id: uid('c'), front: '点击卡片可翻转查看背面', back: '双击卡片可编辑。左侧是分类与标签树：点节点筛选，点箭头展开/收起，悬停行末可增删改。', categoryId: null, tags: [byName(tags, '使用说明').id], createdAt: now, updatedAt: now },
+      { id: uid('c'), front: '什么是闭包？', back: '闭包是函数与其词法作用域的组合，使内层函数可以访问外层函数中的变量，即使外层函数已经返回。', categoryId: front, tags: [byName(tags, 'JS').id, byName(tags, '面试').id], createdAt: now, updatedAt: now },
+      { id: uid('c'), front: 'E = mc²', back: '质能等价公式：能量等于质量乘以光速的平方，由爱因斯坦在 1905 年提出。', categoryId: physics, tags: [byName(tags, '基础').id], createdAt: now, updatedAt: now }
+    ];
+    persist();
+  }
+
+  // ================= 统计与筛选 =================
+  function buildCatCounts() {
+    var m = {};
+    cards.forEach(function (c) {
+      if (!c.categoryId) return;
+      var path = findPath(categories, c.categoryId);
+      if (!path) return;
+      path.forEach(function (n) { m[n.id] = (m[n.id] || 0) + 1; });
+    });
+    return m;
+  }
+  function buildTagCounts() {
+    var m = {};
+    cards.forEach(function (c) {
+      (c.tags || []).forEach(function (tid) {
+        var path = findPath(tags, tid);
+        if (!path) return;
+        path.forEach(function (n) { m[n.id] = (m[n.id] || 0) + 1; });
+      });
+    });
+    return m;
+  }
+  function cardMatches(c) {
+    var q = filter.query.trim().toLowerCase();
+    if (q) {
+      var tagNames = (c.tags || []).map(function (tid) {
+        var n = findNode(tags, tid); return n ? n.name : '';
+      }).join(' ');
+      var cat = c.categoryId ? findNode(categories, c.categoryId) : null;
+      var hay = (c.front + ' ' + c.back + ' ' + tagNames + ' ' + (cat ? cat.name : '')).toLowerCase();
+      if (!q.split(/\s+/).every(function (w) { return hay.indexOf(w) !== -1; })) return false;
+    }
+    if (filter.catId) {
+      var node = findNode(categories, filter.catId);
+      if (!node || !subtreeIds(node).has(c.categoryId)) return false;
+    }
+    if (filter.tagId) {
+      var tnode = findNode(tags, filter.tagId);
+      if (!tnode) return false;
+      var ids = subtreeIds(tnode);
+      if (!(c.tags || []).some(function (tid) { return ids.has(tid); })) return false;
+    }
+    return true;
+  }
+
+  // ================= 渲染 =================
+  function treeHtml(nodes, depth, kind, counts, allLabel) {
+    var out = '<div class="tree-row' + (filter[kind + 'Id'] ? '' : ' sel') + '" data-kind="' + kind + '" data-id="">' +
+      '<span class="tw leaf"></span><span class="tname" data-act="select">' + esc(allLabel) + '</span></div>';
+    return out + rows(nodes, depth);
+    function rows(ns, d) {
+      var s = '';
+      ns.forEach(function (n) {
+        var has = n.children && n.children.length;
+        var exp = !!expanded[n.id];
+        var sel = filter[kind + 'Id'] === n.id ? ' sel' : '';
+        var c = counts[n.id] || 0;
+        s += '<div class="tree-row' + sel + '" data-kind="' + kind + '" data-id="' + n.id + '" style="padding-left:' + (d * 16 + 8) + 'px">' +
+          '<span class="tw' + (has ? '' : ' leaf') + '" data-act="toggle">' + (has ? (exp ? '▾' : '▸') : '') + '</span>' +
+          '<span class="tname" data-act="select" title="点击筛选">' + esc(n.name) + '</span>' +
+          (c ? '<span class="tcount">' + c + '</span>' : '') +
+          '<span class="tactions">' +
+            '<button class="mini" data-act="add" title="添加子节点">＋</button>' +
+            '<button class="mini" data-act="rename" title="重命名">✎</button>' +
+            '<button class="mini del" data-act="del" title="删除（含子节点）">✕</button>' +
+          '</span></div>';
+        if (has && exp) s += rows(n.children, d + 1);
+      });
+      return s;
+    }
+  }
+  function renderSidebar() {
+    document.getElementById('catTree').innerHTML = treeHtml(categories, 0, 'cat', buildCatCounts(), '全部分类');
+    document.getElementById('tagTree').innerHTML = treeHtml(tags, 0, 'tag', buildTagCounts(), '全部标签');
+  }
+  function renderFilterBar() {
+    var parts = [];
+    var cat = filter.catId ? findNode(categories, filter.catId) : null;
+    var tag = filter.tagId ? findNode(tags, filter.tagId) : null;
+    if (cat) parts.push('<span class="chip">分类: ' + esc(cat.name) + ' <button data-clear="cat" title="清除">✕</button></span>');
+    if (tag) parts.push('<span class="chip">标签: ' + esc(tag.name) + ' <button data-clear="tag" title="清除">✕</button></span>');
+    document.getElementById('filterBar').innerHTML = parts.join('');
+  }
+  function renderGrid() {
+    var grid = document.getElementById('grid');
+    var list = cards.filter(cardMatches);
+    document.getElementById('count').textContent = list.length + ' / ' + cards.length;
+    if (!list.length) {
+      grid.innerHTML = '<div class="empty">' +
+        (cards.length ? '没有匹配的卡片' : '还没有卡片，点「新建」添加第一张吧 ✨') + '</div>';
+      return;
+    }
+    grid.innerHTML = list.map(function (c) {
+      var tagsHtml = (c.tags || []).map(function (tid) {
+        var n = findNode(tags, tid);
+        return n ? '<span class="tag" data-tag="' + tid + '" title="点击按标签筛选">' + esc(n.name) + '</span>' : '';
+      }).join('');
+      var cat = c.categoryId ? findNode(categories, c.categoryId) : null;
+      var catHtml = cat ? '<span class="cat-badge" data-cat="' + cat.id + '" title="点击按分类筛选">' + esc(cat.name) + '</span>' : '';
+      return '<div class="flip" data-id="' + c.id + '" title="点击翻转 · 双击编辑">' +
+        '<div class="inner">' +
+          '<div class="face">' +
+            '<div class="head"><span class="label">正面</span>' + catHtml + '</div>' +
+            '<div class="front-text">' + esc(c.front || '（无标题）') + '</div>' +
+            (tagsHtml ? '<div class="tags">' + tagsHtml + '</div>' : '') +
+          '</div>' +
+          '<div class="face back">' +
+            '<div class="label">背面</div>' +
+            '<div class="back-text">' + (esc(c.back || '') || '—') + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+  function renderAll() { renderSidebar(); renderFilterBar(); renderGrid(); }
+
+  // ================= 编辑器 =================
+  function openEditor(id) {
+    editingId = id;
+    var card = id ? cards.find(function (c) { return c.id === id; }) : null;
+    document.getElementById('modalTitle').textContent = card ? '编辑卡片' : '新建卡片';
+    document.getElementById('fFront').value = card ? card.front : '';
+    document.getElementById('fBack').value = card ? card.back : '';
+    document.getElementById('btnDelete').hidden = !card;
+
+    var opts = '<option value="">（无分类）</option>';
+    flatten(categories, 0).forEach(function (o) {
+      var sel = card && card.categoryId === o.node.id ? ' selected' : '';
+      opts += '<option value="' + o.node.id + '"' + sel + '>' + '\u3000'.repeat(o.depth) + esc(o.node.name) + '</option>';
+    });
+    document.getElementById('fCat').innerHTML = opts;
+
+    var list = flatten(tags, 0);
+    var tagHtml = list.length ? '' : '<div class="hint">还没有标签，先在左侧「标签」树里添加。</div>';
+    list.forEach(function (o) {
+      var checked = card && (card.tags || []).indexOf(o.node.id) !== -1 ? ' checked' : '';
+      tagHtml += '<label class="tag-opt" style="padding-left:' + (o.depth * 18 + 4) + 'px">' +
+        '<input type="checkbox" value="' + o.node.id + '"' + checked + '> ' + esc(o.node.name) + '</label>';
+    });
+    document.getElementById('fTagList').innerHTML = tagHtml;
+
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('fFront').focus();
+  }
+  function closeEditor() { document.getElementById('overlay').classList.remove('open'); }
+  function saveCard() {
+    var front = document.getElementById('fFront').value.trim();
+    var back = document.getElementById('fBack').value.trim();
+    var catId = document.getElementById('fCat').value || null;
+    var tagIds = Array.prototype.map.call(
+      document.getElementById('fTagList').querySelectorAll('input:checked'),
+      function (i) { return i.value; });
+    if (!front && !back) { alert('正面或背面至少要填一个'); return; }
+    var now = new Date().toISOString();
+    if (editingId) {
+      var card = cards.find(function (c) { return c.id === editingId; });
+      if (card) Object.assign(card, { front: front, back: back, categoryId: catId, tags: tagIds, updatedAt: now });
+    } else {
+      cards.unshift({ id: uid('c'), front: front, back: back, categoryId: catId, tags: tagIds, createdAt: now, updatedAt: now });
+    }
+    persist(); closeEditor(); renderAll();
+  }
+  function deleteCard() {
+    if (!editingId) return;
+    if (!confirm('确定删除这张卡片？')) return;
+    cards = cards.filter(function (c) { return c.id !== editingId; });
+    persist(); closeEditor(); renderAll();
+  }
+
+  // ================= 树操作 =================
+  function rootOf(kind) { return kind === 'cat' ? categories : tags; }
+  function treeAction(kind, id, act) {
+    var roots = rootOf(kind);
+    if (act === 'select') { filter[kind + 'Id'] = id || null; renderAll(); return; }
+    if (act === 'toggle') { expanded[id] = !expanded[id]; renderSidebar(); return; }
+    var parent = id ? findNode(roots, id) : null;
+    if (act === 'add') {
+      var name = prompt('子节点名称：');
+      if (!name || !name.trim()) return;
+      var node = { id: uid(kind === 'cat' ? 'k' : 't'), name: name.trim(), children: [] };
+      if (parent) parent.children.push(node); else roots.push(node);
+      if (parent) expanded[parent.id] = true;
+      persist(); renderSidebar(); refreshEditor();
+    } else if (act === 'rename') {
+      var node = parent;
+      if (!node) return;
+      var nn = prompt('新名称：', node.name);
+      if (nn && nn.trim() && nn.trim() !== node.name) { node.name = nn.trim(); persist(); renderSidebar(); refreshEditor(); }
+    } else if (act === 'del') {
+      var node = parent;
+      if (!node) return;
+      if (!confirm('删除「' + node.name + '」及其全部子节点？卡片上的相关关联也会被移除。')) return;
+      var ids = subtreeIds(node);
+      removeNode(roots, id);
+      if (kind === 'cat') cards.forEach(function (c) { if (ids.has(c.categoryId)) c.categoryId = null; });
+      else cards.forEach(function (c) { c.tags = (c.tags || []).filter(function (t) { return !ids.has(t); }); });
+      if (filter[kind + 'Id'] && ids.has(filter[kind + 'Id'])) filter[kind + 'Id'] = null;
+      ids.forEach(function (i) { delete expanded[i]; });
+      persist(); renderAll(); refreshEditor();
+    }
+  }
+  function refreshEditor() { if (editingId) openEditor(editingId); }
+
+  // ================= 导入导出 =================
+  function exportJson() {
+    var data = { version: 2, cards: cards, categories: categories, tags: tags };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'knowledge-cards-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  function importJson(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var data = JSON.parse(reader.result);
+        var newCards, newCats, newTags;
+        if (Array.isArray(data)) { newCards = data; newCats = []; newTags = []; }
+        else if (data && Array.isArray(data.cards)) { newCards = data.cards; newCats = data.categories || []; newTags = data.tags || []; }
+        else throw new Error('bad format');
+        var valid = newCards.filter(function (c) { return c && typeof c === 'object'; }).map(function (c) {
+          return {
+            id: c.id || uid('c'), front: c.front || '', back: c.back || '',
+            categoryId: c.categoryId || null,
+            tags: Array.isArray(c.tags) ? c.tags.map(String) : [],
+            createdAt: c.createdAt || new Date().toISOString(),
+            updatedAt: c.updatedAt || new Date().toISOString()
+          };
+        });
+        if (!confirm('导入 ' + valid.length + ' 张卡片？分类/标签树将合并，卡片追加到现有列表。')) return;
+        mergeTrees(categories, newCats);
+        mergeTrees(tags, newTags);
+        var existing = {};
+        cards.forEach(function (c) { existing[c.id] = true; });
+        valid = valid.filter(function (c) { return !existing[c.id]; });
+        cards = valid.concat(cards);
+        migrate();
+        expandAll();
+        persist();
+        renderAll();
+      } catch (e) { alert('导入失败：不是有效的卡片 JSON 文件'); }
+    };
+    reader.readAsText(file);
+  }
+
+  // ================= 事件 =================
+  document.getElementById('btnNew').addEventListener('click', function () { openEditor(null); });
+  document.getElementById('btnCancel').addEventListener('click', closeEditor);
+  document.getElementById('btnSave').addEventListener('click', saveCard);
+  document.getElementById('btnDelete').addEventListener('click', deleteCard);
+  document.getElementById('btnExport').addEventListener('click', exportJson);
+  document.getElementById('btnImport').addEventListener('click', function () { document.getElementById('fileInput').click(); });
+  document.getElementById('fileInput').addEventListener('change', function (e) {
+    if (e.target.files[0]) importJson(e.target.files[0]);
+    e.target.value = '';
+  });
+  document.getElementById('btnSide').addEventListener('click', function () {
+    document.body.classList.toggle('side-open');
+  });
+  document.getElementById('search').addEventListener('input', function (e) {
+    filter.query = e.target.value; renderGrid();
+  });
+  document.getElementById('overlay').addEventListener('click', function (e) {
+    if (e.target === this) closeEditor();
+  });
+  document.getElementById('filterBar').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-clear]');
+    if (b) { filter[b.dataset.clear + 'Id'] = null; renderAll(); }
+  });
+  document.getElementById('addCatRoot').addEventListener('click', function () { treeAction('cat', null, 'add'); });
+  document.getElementById('addTagRoot').addEventListener('click', function () { treeAction('tag', null, 'add'); });
+
+  document.getElementById('sidebar').addEventListener('click', function (e) {
+    var act = e.target.closest('[data-act]');
+    var row = e.target.closest('.tree-row');
+    if (!row) return;
+    var kind = row.dataset.kind;
+    var id = row.dataset.id;
+    if (act && act.dataset.act !== 'select') {
+      treeAction(kind, id, act.dataset.act);
+    } else {
+      filter[kind + 'Id'] = id || null;
+      renderAll();
+    }
+  });
+  document.getElementById('sidebar').addEventListener('dblclick', function (e) {
+    var row = e.target.closest('.tree-row');
+    if (!row || !row.dataset.id) return;
+    treeAction(row.dataset.kind, row.dataset.id, 'rename');
+  });
+
+  document.getElementById('grid').addEventListener('click', function (e) {
+    var chip = e.target.closest('.tag');
+    if (chip) { filter.tagId = chip.dataset.tag; renderAll(); return; }
+    var badge = e.target.closest('.cat-badge');
+    if (badge) { filter.catId = badge.dataset.cat; renderAll(); return; }
+    var el = e.target.closest('.flip');
+    if (el) el.classList.toggle('flipped');
+  });
+  document.getElementById('grid').addEventListener('dblclick', function (e) {
+    var el = e.target.closest('.flip');
+    if (!el) return;
+    openEditor(el.dataset.id);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (document.getElementById('overlay').classList.contains('open')) closeEditor();
+      else {
+        var s = document.getElementById('search');
+        s.value = ''; filter.query = ''; renderGrid(); s.focus();
+      }
+    }
+    if (e.key === 'Enter' && e.target.id === 'search') e.preventDefault();
+  });
+
+  // ================= 启动 =================
+  load();
+  renderAll();
+})();
+</script>
+</body>
+</html>

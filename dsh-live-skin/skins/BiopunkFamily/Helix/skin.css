@@ -1,0 +1,53 @@
+/* Helix —— 螺旋
+   卷内明列的第三个语汇簇：双螺旋、碱基序列条带、染色体核型。
+   卷内明确说这三者在这一支里充当「齿轮与 logo」—— 所以这是唯一被文档
+   认可的图形语言，不只是装饰。
+   动效签名：螺旋旋转（一条点阵链以 60s 周期做极缓慢的横向翻转，模拟 3D 旋转）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: bio-helix-turn;
+  --ls-fx-duration: 60s;
+  background-image:
+    /* 碱基条带：四段一组的细横带，充当分隔语义 */
+    repeating-linear-gradient(0deg,
+      rgba(127, 232, 216, .07) 0 1px,
+      rgba(0, 0, 0, 0) 1px 3px,
+      rgba(91, 255, 158, .05) 3px 4px,
+      rgba(0, 0, 0, 0) 4px 11px),
+    /* 双螺旋：两条错位的点阵链，纵向排布 */
+    radial-gradient(circle 2.2px at 3px 4px, rgba(91, 255, 158, .5) 0 60%, rgba(91, 255, 158, 0) 100%),
+    radial-gradient(circle 2.2px at 15px 16px, rgba(127, 232, 216, .42) 0 60%, rgba(127, 232, 216, 0) 100%),
+    linear-gradient(180deg, #101a1c 0%, #0c1517 100%);
+  background-size: 100% 100%, 19px 20px, 19px 20px, 100% 100%;
+  background-repeat: no-repeat, repeat, repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 螺旋链：一条更宽的点阵，做横向翻转 ——
+   用 scaleX 在 -0.85↔0.85 之间往复，读到的是「一条链在转」。 */
+html[data-live-skin] body::after {
+  background-image:
+    radial-gradient(circle 3px at 8px 10px, rgba(91, 255, 158, .22) 0 60%, rgba(91, 255, 158, 0) 100%),
+    radial-gradient(circle 3px at 32px 30px, rgba(127, 232, 216, .18) 0 60%, rgba(127, 232, 216, 0) 100%);
+  background-size: 40px 40px;
+  background-repeat: repeat;
+  animation-timing-function: ease-in-out;
+}
+
+/* 符号化的分隔：碱基条带替代普通细线 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-bottom: 1px solid rgba(127, 232, 216, .2);
+}
+
+html[data-live-skin] [data-dsh-surface='composer'] {
+  border-radius: 12px 12px 12px 12px;
+}
+
+@keyframes bio-helix-turn {
+  from {
+    transform: scaleX(-0.85);
+  }
+  to {
+    transform: scaleX(0.85);
+  }
+}

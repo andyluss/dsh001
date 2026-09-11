@@ -1,0 +1,143 @@
+{
+  "manifestVersion": 1,
+  "name": "Frutiger Aero 家族",
+  "nameEn": "Frutiger Aero Family",
+  "description": "2004–2013 的 Aero 时代美学：玻璃拟态面板、天空到草地的渐变壁纸、不断上浮的气泡。大类定义全部共享参数与整套调色板；小类只声明自己的差异。",
+  "accent": "#0f7fc4",
+  "tags": ["frutiger-aero", "glass", "aqua", "y2k"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住壁纸的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 55
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "description": "浮在内容之上的面板背后的高斯模糊",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "gloss",
+      "type": "number",
+      "label": "玻璃高光",
+      "description": "会话头与输入区顶部那道反光的强度",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 62
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "按钮、链接、选中态",
+      "group": "材质",
+      "default": "#0f7fc4"
+    },
+    {
+      "key": "bubbles",
+      "type": "boolean",
+      "label": "上浮气泡",
+      "group": "气泡",
+      "default": true
+    },
+    {
+      "key": "bubbleAmount",
+      "type": "number",
+      "label": "气泡浓度",
+      "description": "同时控制气泡的疏密与大小",
+      "group": "气泡",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 55
+    },
+    {
+      "key": "bubbleCycle",
+      "type": "number",
+      "label": "气泡周期",
+      "description": "飘完一个循环要多久，越大越慢",
+      "group": "气泡",
+      "min": 30,
+      "max": 300,
+      "step": 10,
+      "default": 140,
+      "unit": "s"
+    },
+    {
+      "key": "wallpaper",
+      "type": "enum",
+      "label": "壁纸",
+      "description": "每个选项自带整串 CSS 图层，选中即换整张壁纸",
+      "group": "壁纸",
+      "default": "sky",
+      "options": [
+        {
+          "value": "sky",
+          "label": "晴空草地",
+          "css": "radial-gradient(78% 52% at 16% 2%, rgba(255,255,255,.96) 0%, rgba(255,255,255,0) 62%), radial-gradient(42% 34% at 86% 6%, rgba(255,248,214,.85) 0%, rgba(255,248,214,0) 72%), radial-gradient(circle 82px at 78% 26%, rgba(255,255,255,0) 56%, rgba(255,255,255,.5) 76%, rgba(255,255,255,.14) 88%, rgba(255,255,255,0) 96%), radial-gradient(140% 62% at 50% 124%, #5fb832 0%, #a6e259 38%, rgba(166,226,89,0) 70%), linear-gradient(180deg, #79cdec 0%, #a5e0f7 28%, #ddf5ff 50%, #cceeb2 76%, #9adf68 100%)",
+          "cssDark": "radial-gradient(72% 48% at 18% 4%, rgba(64,198,255,.34) 0%, rgba(64,198,255,0) 66%), radial-gradient(150% 70% at 50% 132%, #063a24 0%, rgba(6,58,36,0) 66%), linear-gradient(180deg, #03202f 0%, #063c56 30%, #0a5570 52%, #07364c 76%, #041d2c 100%)"
+        },
+        {
+          "value": "meadow",
+          "label": "高调粉彩",
+          "css": "radial-gradient(80% 55% at 20% 0%, rgba(255,255,255,.98) 0%, rgba(255,255,255,0) 66%), radial-gradient(circle 46px at 24% 52%, rgba(255,255,255,0) 55%, rgba(255,255,255,.46) 76%, rgba(255,255,255,.12) 89%, rgba(255,255,255,0) 97%), radial-gradient(140% 58% at 50% 126%, #93d05f 0%, #cbea9f 40%, rgba(203,234,159,0) 72%), linear-gradient(180deg, #9adcf4 0%, #c4ebfa 28%, #eefbff 52%, #e4f6d2 78%, #c2e99b 100%)",
+          "cssDark": "radial-gradient(80% 50% at 20% 2%, rgba(120,220,255,.22) 0%, rgba(120,220,255,0) 68%), linear-gradient(180deg, #06202e 0%, #0a3546 32%, #0d4a5c 54%, #082c3a 78%, #041a24 100%)"
+        },
+        {
+          "value": "deep",
+          "label": "深海夜光",
+          "css": "radial-gradient(72% 48% at 18% 4%, rgba(64,198,255,.34) 0%, rgba(64,198,255,0) 66%), radial-gradient(40% 30% at 86% 8%, rgba(120,255,214,.2) 0%, rgba(120,255,214,0) 72%), linear-gradient(180deg, #03202f 0%, #063c56 30%, #0a5570 52%, #07364c 76%, #041d2c 100%)",
+          "cssDark": "radial-gradient(72% 48% at 18% 4%, rgba(64,198,255,.34) 0%, rgba(64,198,255,0) 66%), radial-gradient(40% 30% at 86% 8%, rgba(120,255,214,.2) 0%, rgba(120,255,214,0) 72%), linear-gradient(180deg, #03202f 0%, #063c56 30%, #0a5570 52%, #07364c 76%, #041d2c 100%)"
+        },
+        {
+          "value": "aurora",
+          "label": "极光水绿",
+          "css": "radial-gradient(60% 40% at 22% 6%, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 64%), radial-gradient(90% 46% at 82% 100%, rgba(90,225,180,.45) 0%, rgba(90,225,180,0) 68%), linear-gradient(180deg, #b8f0e2 0%, #d8f8ee 34%, #f2fffb 56%, #cdeedd 80%, #a5e3c4 100%)",
+          "cssDark": "radial-gradient(60% 40% at 22% 6%, rgba(120,255,220,.24) 0%, rgba(120,255,220,0) 66%), radial-gradient(90% 46% at 82% 100%, rgba(60,220,190,.2) 0%, rgba(60,220,190,0) 70%), linear-gradient(180deg, #04231f 0%, #06403a 32%, #0a5a52 54%, #06342f 78%, #031c19 100%)"
+        },
+        {
+          "value": "plain",
+          "label": "纯色（不要壁纸）",
+          "css": "none",
+          "cssDark": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "id": "calm",
+      "name": "清淡",
+      "description": "面板更实、气泡更少更慢、高光更淡",
+      "values": { "glass": 74, "blur": 8, "gloss": 34, "bubbleAmount": 24, "bubbleCycle": 220 }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "家族的基准配比",
+      "values": { "glass": 55, "blur": 12, "gloss": 62, "bubbleAmount": 55, "bubbleCycle": 140 }
+    },
+    {
+      "id": "rich",
+      "name": "浓郁",
+      "description": "面板更透、气泡更密更快、高光更重",
+      "values": { "glass": 36, "blur": 18, "gloss": 88, "bubbleAmount": 88, "bubbleCycle": 90 }
+    }
+  ]
+}

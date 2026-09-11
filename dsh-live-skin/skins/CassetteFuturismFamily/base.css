@@ -1,0 +1,309 @@
+/* ==========================================================================
+   CassetteFuturismFamily —— 家族层（80 年代机房 · 米白塑料 · 荧光单色屏）
+   依据：doc/punks/cyberpunk/ 卷内把它作为对照项讨论 + 外部资料（已有成熟的社区主题色板）
+   规格：doc/live-skin/07_磁带未来主义.md
+
+   材质签名：平坦的哑光色块，边缘一道 1px 的内嵌亮边。
+   它对应的是「一块可以被拆下来、修好、再装回去的塑料」。
+
+   与赛博朋克的硬分界 —— 卷内给出的判别最锋利的一句：
+     「共享同一批 80 年代界面，但改机房日光灯的均匀白光、米白塑料＋荧光绿字，
+       气质是可修、可懂的暖——加几缕霓虹与义体即滑回赛博，
+       **边界本质是布光与气氛的边界**。」
+
+   所以：本家族**没有方向性光源、没有 bloom、没有暗角**，
+   全家族只有单色辉光与均匀照明。CRT 扫描线是这一支的核心语汇
+   （而它在原子朋克卷里被明确排除）。
+   ========================================================================== */
+
+html[data-live-skin] body {
+  /* —— 由参数派生的中间量 —— */
+  --ls-glass-alpha: calc(.94 - var(--ls-glass, 34) * .0058);
+  /* phosphor：单色屏的辉光半径与强度 */
+  --ls-phos-a: calc(var(--ls-phosphor, 55) * .0062);
+  /* scanline：CRT 细横纹 */
+  --ls-scan-a: calc(var(--ls-scanline, 40) * .0070);
+  /* warmth：把冷银灰推向米白塑料。两侧各一层平坦的洗层，没有方向 */
+  --ls-warm-a: calc(var(--ls-warmth, 50) * .0042);
+  --ls-cool-a: calc((100 - var(--ls-warmth, 50)) * .0032);
+  --ls-int: calc(var(--ls-intensity, 60) * .01);
+  --ls-phos-eff: calc(var(--ls-phos-a) * var(--ls-int));
+  --ls-scan-eff: calc(var(--ls-scan-a) * var(--ls-int));
+  --ls-warm-eff: calc(var(--ls-warm-a) * var(--ls-int));
+  --ls-cool-eff: calc(var(--ls-cool-a) * var(--ls-int));
+
+  --ls-amber: #ffb86c;
+  /* 注意：这里**不能**再声明 --ls-phosphor —— 那是 phosphor 参数自己的变量名。
+     同名重声明会压住滑杆。见 C10 检查。 */
+  --ls-beige: #f5f0e8;
+  --ls-steel: #1a1d21;
+
+  /* variant 私有动效的挂点 */
+  --ls-fx-name: none;
+  --ls-fx-duration: 0s;
+
+  /* —— 底与面板（「Magnetic Night」钢灰档；米白档见下面的亮色块） —— */
+  --dsw-alias-bg-base: rgba(26, 29, 33, var(--ls-glass-alpha));
+  --dsw-alias-bg-layer-1: rgba(31, 35, 39, calc(var(--ls-glass-alpha) + .14));
+  --dsw-alias-bg-layer-2: rgba(37, 41, 46, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-bg-layer-3: rgba(45, 50, 56, calc(var(--ls-glass-alpha) + .24));
+  --dsw-alias-bg-overlay: rgba(58, 63, 69, calc(var(--ls-glass-alpha) + .28));
+  --dsw-alias-bg-module-platform: rgba(31, 35, 39, calc(var(--ls-glass-alpha) + .06));
+  --dsw-alias-bg-multi-select: rgba(45, 50, 56, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-bg-skeleton: rgba(80, 250, 123, .08);
+  --dsw-alias-bg-mask-1: rgba(8, 9, 11, .58);
+  --dsw-alias-bg-mask-2: rgba(8, 9, 11, .32);
+  --dsw-alias-bg-mask-3: rgba(5, 6, 7, .74);
+  --dsw-alias-bg-mask-drop: rgba(24, 27, 30, .74);
+  --dsw-alias-bg-mask-photo: rgba(4, 5, 6, .92);
+
+  /* —— 描边：注塑件倒角的那一条 1px 亮线 —— */
+  --dsw-alias-border-inverted: rgba(200, 205, 210, .16);
+  --dsw-alias-border-inverted2: rgba(200, 205, 210, .1);
+  --dsw-alias-border-l1: rgba(200, 205, 210, .1);
+  --dsw-alias-border-l2: rgba(200, 205, 210, .18);
+  --dsw-alias-border-l2-darkmode-thin: rgba(200, 205, 210, .12);
+  --dsw-alias-border-l3: rgba(200, 205, 210, .16);
+  --dsw-alias-border-l4: rgba(200, 205, 210, .28);
+
+  /* —— 品牌与强调 —— */
+  --dsw-alias-brand-primary: var(--ls-accent, #ffb86c);
+  --dsw-alias-brand-primary-invert: #1a1d21;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #ffb86c);
+  --dsw-alias-brand-text: #d4d4d4;
+  --dsw-alias-link: #8be9fd;
+  --dsw-alias-state-business-primary: #8be9fd;
+  --dsw-alias-state-business-tertiary: rgba(139, 233, 253, .12);
+
+  /* —— 按钮：填充色压到 45% 以承载白字（C4 逐 variant 复核） —— */
+  --dsw-alias-button-contrast-fill: #d4d4d4;
+  --dsw-alias-button-elevated-fill: #262a2f;
+  --dsw-alias-button-floating-fill: #22262b;
+  --dsw-alias-button-floating-hover: #2c3137;
+  --dsw-alias-button-ghost-active-fill: #363b41;
+  --dsw-alias-button-ghost-active-border: rgba(139, 233, 253, .4);
+  --dsw-alias-button-ghost-active-hover: #40464d;
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #ffb86c) 45%, #08090b);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #ffb86c) 38%, #08090b);
+  --dsw-alias-button-primary-dimmed: rgba(255, 184, 108, .28);
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #ffb86c) 45%, #08090b);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #ffb86c) 38%, #08090b);
+  --dsw-alias-button-tool-bar-fill: rgba(10, 12, 14, .62);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(10, 12, 14, .38);
+  --dsw-alias-button-tool-bar-hover: rgba(10, 12, 14, .76);
+
+  /* —— 交互态 —— */
+  --dsw-alias-interactive-bg-active: rgba(139, 233, 253, .14);
+  --dsw-alias-interactive-bg-hover: rgba(200, 205, 210, .08);
+  --dsw-alias-interactive-bg-hover-accent: rgba(255, 184, 108, .14);
+  --dsw-alias-interactive-bg-hover-danger: rgba(255, 85, 85, .16);
+  --dsw-alias-interactive-bg-hover-solid: #2c3137;
+
+  /* —— 文本 —— */
+  --dsw-alias-label-caption: #6f747a;
+  --dsw-alias-label-dimmed: #4a4f55;
+  --dsw-alias-label-primary: #d4d4d4;
+  --dsw-alias-label-primary-bluish: #cdeaf6;
+  --dsw-alias-label-primary-dimmed: #bcbcbc;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #1a1d21;
+  --dsw-alias-label-secondary: #8a8f96;
+  --dsw-alias-label-tertiary: #767b82;
+
+  /* —— Markdown —— */
+  --dsw-alias-markdown-citation: rgba(139, 233, 253, .12);
+  --dsw-alias-markdown-code-block: #171a1e;
+  --dsw-alias-markdown-code-block-banner: #1f2327;
+  --dsw-alias-markdown-code-segment-selected: #3a3f45;
+  --dsw-alias-markdown-code-segment-unselected: #25292e;
+  --dsw-alias-markdown-inline-code: #2d3238;
+  --dsw-alias-markdown-placeholder: #292e33;
+  --dsw-alias-markdown-tag: #2d3238;
+
+  /* —— 滚动条 —— */
+  --dsw-alias-scrollbar-bg-l1: rgba(138, 143, 150, .26);
+  --dsw-alias-scrollbar-bg-l2: rgba(138, 143, 150, .3);
+  --dsw-alias-scrollbar-hover-l1: rgba(200, 205, 210, .42);
+  --dsw-alias-scrollbar-hover-l2: rgba(200, 205, 210, .48);
+
+  /* —— 状态色 —— */
+  --dsw-alias-state-error-primary: #ff5555;
+  --dsw-alias-state-error-secondary: #ff8080;
+  --dsw-alias-state-success-primary: #50fa7b;
+  --dsw-alias-state-success-secondary: #8bfaa8;
+  --dsw-alias-state-success-tertiary: rgba(80, 250, 123, .12);
+  --dsw-alias-state-warn-label: #ffb86c;
+  --dsw-alias-state-warn-primary: #ffb86c;
+  --dsw-alias-state-warn-secondary: #ffcb96;
+  --dsw-alias-state-warn-tertiary: rgba(255, 184, 108, .12);
+
+  /* —— 语义面 —— */
+  --dsw-alias-toast-bg: #1f2327;
+  --dsw-alias-tooltip-bg: #1c2024;
+  --dsw-specific-bubble: #25292e;
+  --dsw-specific-bubble-highlight: #2d3238;
+  --dsw-specific-input-major: #22262b;
+  --dsw-specific-login-input: #1f2327;
+  --dsw-specific-menu: #25292e;
+  --dsw-specific-selector: #2d3238;
+  --dsw-specific-sidebar-fill: #1f2327;
+  --dsw-specific-sidebar-nav-item-active: #2d3238;
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(139, 233, 253, .2);
+  --dsw-specific-sidebar-nav-item-hover: #25292e;
+  --dsw-specific-tip: #22262b;
+
+  /* —— 高度：平坦。注塑件的分层靠 1px 亮边与模具缝，不靠柔和阴影 —— */
+  --dsw-elevation-stroke-color: rgba(200, 205, 210, .16);
+  --dsw-shadow-lv1: 0 1px 0 0 rgba(0, 0, 0, .4);
+  --dsw-shadow-lv2: 0 2px 0 0 rgba(0, 0, 0, .4), 0 0 0 1px rgba(200, 205, 210, .06);
+  --dsw-shadow-lv3: 0 0 0 1px rgba(200, 205, 210, .1), 0 8px 0 -4px rgba(0, 0, 0, .4);
+  --dsw-mask-blur: blur(var(--ls-blur, 12px)) saturate(1.05);
+}
+
+/* —— 亮色档：外部的「Beige Terminal」，是一套一等一的配色而不是降级。
+       Apple II / Commodore 64 的米白机箱 + 深色键帽。 —— */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  --dsw-alias-bg-base: rgba(245, 240, 232, var(--ls-glass-alpha));
+  --dsw-alias-bg-layer-1: rgba(237, 232, 224, calc(var(--ls-glass-alpha) + .14));
+  --dsw-alias-bg-layer-2: rgba(250, 248, 244, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-bg-layer-3: rgba(232, 224, 214, calc(var(--ls-glass-alpha) + .24));
+  --dsw-alias-bg-overlay: rgba(212, 200, 184, calc(var(--ls-glass-alpha) + .28));
+  --dsw-alias-bg-module-platform: rgba(237, 232, 224, calc(var(--ls-glass-alpha) + .06));
+  --dsw-alias-bg-multi-select: rgba(232, 224, 214, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-border-l1: rgba(196, 184, 168, .5);
+  --dsw-alias-border-l2: rgba(196, 184, 168, .7);
+  --dsw-alias-border-l3: rgba(196, 184, 168, .6);
+  --dsw-alias-border-l4: rgba(150, 138, 122, .8);
+  --dsw-alias-border-inverted: rgba(255, 255, 255, .7);
+  --dsw-alias-border-inverted2: rgba(255, 255, 255, .5);
+  --dsw-alias-label-primary: #2d2a27;
+  --dsw-alias-label-secondary: #6b6560;
+  --dsw-alias-label-tertiary: #857f78;
+  --dsw-alias-label-caption: #928374;
+  --dsw-alias-label-dimmed: #c9bfb0;
+  --dsw-alias-label-primary-inverted: #f5f0e8;
+  --dsw-alias-brand-text: #2d2a27;
+  --dsw-alias-link: #076678;
+  --dsw-alias-state-business-primary: #076678;
+  --dsw-alias-markdown-code-block: #e8e0d6;
+  --dsw-alias-markdown-code-block-banner: #ded4c6;
+  --dsw-alias-markdown-code-segment-selected: #d4c8b8;
+  --dsw-alias-markdown-code-segment-unselected: #ede8e0;
+  --dsw-alias-markdown-inline-code: #ded4c6;
+  --dsw-alias-markdown-placeholder: #e2dad0;
+  --dsw-alias-markdown-tag: #e2dad0;
+  --dsw-specific-bubble: #faf8f4;
+  --dsw-specific-bubble-highlight: #e8e0d6;
+  --dsw-specific-input-major: #ffffff;
+  --dsw-specific-login-input: #f5f0e8;
+  --dsw-specific-menu: #faf8f4;
+  --dsw-specific-selector: #e8e0d6;
+  --dsw-specific-sidebar-fill: #ede8e0;
+  --dsw-specific-sidebar-nav-item-active: #d4c8b8;
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(7, 102, 120, .18);
+  --dsw-specific-sidebar-nav-item-hover: #e2dad0;
+  --dsw-specific-tip: #ede8e0;
+  --dsw-alias-button-elevated-fill: #ffffff;
+  --dsw-alias-button-floating-fill: #faf8f4;
+  --dsw-alias-button-floating-hover: #ffffff;
+  --dsw-alias-button-ghost-active-fill: #e8e0d6;
+  --dsw-alias-button-ghost-active-border: rgba(7, 102, 120, .4);
+  --dsw-alias-button-ghost-active-hover: #ded4c6;
+  --dsw-alias-interactive-bg-hover: rgba(255, 255, 255, .6);
+  --dsw-alias-interactive-bg-hover-solid: #f5f0e8;
+  --dsw-alias-toast-bg: #3a342e;
+  --dsw-alias-tooltip-bg: #332e29;
+  --dsw-alias-scrollbar-bg-l1: rgba(150, 138, 122, .3);
+  --dsw-alias-scrollbar-bg-l2: rgba(150, 138, 122, .34);
+  --dsw-alias-scrollbar-hover-l1: rgba(122, 112, 98, .48);
+  --dsw-alias-scrollbar-hover-l2: rgba(122, 112, 98, .54);
+  --dsw-elevation-stroke-color: rgba(255, 255, 255, .8);
+  --dsw-shadow-lv1: 0 1px 0 0 rgba(120, 110, 96, .18);
+  --dsw-shadow-lv2: 0 2px 0 0 rgba(120, 110, 96, .2), 0 0 0 1px rgba(196, 184, 168, .5);
+  --dsw-shadow-lv3: 0 0 0 1px rgba(150, 138, 122, .5), 0 8px 0 -4px rgba(120, 110, 96, .26);
+}
+
+/* ==========================================================================
+   壁纸：各 variant 在自己的 skin.css 里定义 body 的 background-image
+   ========================================================================== */
+
+html[data-live-skin] body {
+  background-color: #1a1d21;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   材质语言 1 · 均匀照明 + CRT 扫描线 + 单色辉光
+   没有方向性光源、没有 bloom、没有暗角 —— 这是与赛博朋克最硬的分界。
+   所有强度都烘进颜色里，图层 opacity 留给各 variant 的动效。
+   ========================================================================== */
+
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: -15%;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* 暖洗层：把冷银灰推向米白塑料。平整、无方向 */
+    linear-gradient(0deg, rgba(245, 240, 232, var(--ls-warm-eff, .13)), rgba(245, 240, 232, var(--ls-warm-eff, .13))),
+    /* 冷洗层：warmth 低时接管，把画面推向冷银灰 */
+    linear-gradient(0deg, rgba(190, 205, 215, var(--ls-cool-eff, .096)), rgba(190, 205, 215, var(--ls-cool-eff, .096))),
+    /* CRT 扫描线：均匀的细横纹。这是本家族的核心语汇 */
+    repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, var(--ls-scan-eff, .28)) 0 1px,
+      rgba(0, 0, 0, 0) 1px 3px),
+    /* 单色屏的辉光：设备自己发的光，不是环境光。柔和、居中、几乎没有方向 */
+    radial-gradient(86% 62% at 50% 46%, rgba(255, 184, 108, calc(var(--ls-phos-eff, .34) * .5)) 0%, rgba(255, 184, 108, 0) 74%);
+  background-repeat: no-repeat;
+}
+
+/* body::after 是纯动效层 */
+html[data-live-skin] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  animation-name: var(--ls-fx-name, none);
+  animation-duration: calc(var(--ls-motion, 1) * var(--ls-fx-duration, 0s));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* ==========================================================================
+   材质语言 2 · 注塑件的 1px 内嵌亮边 + 模具缝
+   面板之间不用投影分层：塑料件的分层靠倒角反光与一条缝。
+   ========================================================================== */
+
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px rgba(200, 205, 210, calc(var(--ls-phos-eff, .34) * .4)),
+    inset 0 1px 0 0 rgba(255, 255, 255, .1),
+    var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] body:not([data-ds-dark-theme]) [data-dsh-surface='composer'],
+html[data-live-skin] body:not([data-ds-dark-theme]) [data-dsh-surface='session-header'] {
+  box-shadow:
+    inset 0 0 0 1px rgba(150, 138, 122, .5),
+    inset 0 1px 0 0 rgba(255, 255, 255, .9),
+    var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] [data-dsh-part='dialog'],
+html[data-live-skin] [role='dialog'],
+html[data-live-skin] [role='menu'],
+html[data-live-skin] [role='tooltip'] {
+  backdrop-filter: blur(var(--ls-blur, 12px)) saturate(1.05);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(200, 205, 210, .2), var(--dsw-shadow-lv3);
+}
+
+html[data-live-skin] body ::selection {
+  background-color: rgba(255, 184, 108, .26);
+}

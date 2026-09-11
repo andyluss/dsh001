@@ -1,0 +1,71 @@
+/* Chimera —— 嵌合
+   ==========================================================================
+   卷内明列的第四个语汇簇：表皮增生物、嵌合、多肢、器官外置。母本《变蝇人》。
+   这一支做的是**异质与不整齐**，不是陌生感之外的任何东西。
+
+   ⚠ 尺度约束（卷内批评明确指出「把恐惧浪漫化为末世寓言」是应当避免的方向）：
+     · 这是「不是同一批长出来的」——**不整齐**，不是**血腥**；
+     · 不使用具象的器官、体液、血肉的写实表现；
+     · 不做「突变爆裂」式的急促动画 —— 家族层的呼吸周期是 7s，这一支
+       再叠一个 5.5s 的第二次心搏，得到**不整齐的节律**，而不是惊吓。
+
+   双心搏：家族层给了 7s 的呼吸，这一支在动效层再叠一个 5.5s 的脉动。
+   两个周期不成整数倍，合起来就是「两个心跳不同步」的观感。
+   ========================================================================== */
+
+html[data-live-skin] body {
+  --ls-fx-name: bio-second-beat;
+  --ls-fx-duration: 5.5s;
+  background-image:
+    /* 两个不同色温的光源在对角线方向对撞：一角冷青、一角暗红 */
+    radial-gradient(46% 38% at 12% 8%, rgba(127, 232, 216, .22) 0%, rgba(127, 232, 216, 0) 74%),
+    radial-gradient(52% 44% at 92% 96%, rgba(122, 59, 59, .34) 0%, rgba(122, 59, 59, 0) 76%),
+    /* 不规则的噪点：两层点阵，尺寸与位置都不对齐 */
+    radial-gradient(circle 1.1px at 3px 5px, rgba(185, 120, 111, .22) 0 60%, rgba(185, 120, 111, 0) 100%),
+    radial-gradient(circle 0.8px at 11px 2px, rgba(127, 232, 216, .18) 0 60%, rgba(127, 232, 216, 0) 100%),
+    linear-gradient(180deg, #0c0908 0%, #080505 100%);
+  background-repeat: no-repeat, no-repeat, repeat, repeat, no-repeat;
+  background-size: 100% 100%, 100% 100%, 17px 13px, 13px 19px, 100% 100%;
+  background-attachment: fixed;
+}
+
+/* 第二次心搏：一个更短的周期，与家族层的 7s 叠成不整齐的节律 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(70% 50% at 42% 44%, rgba(185, 120, 111, .16) 0%, rgba(185, 120, 111, 0) 78%);
+  background-size: 100% 100%;
+  animation-timing-function: ease-in-out;
+}
+
+/* 异质：同一个界面里出现**不一致的圆角与描边宽度** ——
+   模拟「不是同一批长出来的」，而不是某一种统一的风格。 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 6px 14px 9px 17px;
+  box-shadow:
+    inset 0 0 14px 0 rgba(127, 232, 216, .16),
+    inset 0 0 0 2px rgba(185, 120, 111, .14),
+    var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] [data-dsh-surface='composer'] {
+  border-radius: 16px 7px 16px 8px;
+  box-shadow:
+    inset 0 0 20px 0 rgba(185, 120, 111, .18),
+    inset 0 0 0 1px rgba(127, 232, 216, .2),
+    var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] [role='tooltip'] {
+  border-radius: 3px 11px 3px 11px;
+}
+
+@keyframes bio-second-beat {
+  from {
+    opacity: calc(1 - var(--ls-pulse-a, .2) * .8);
+  }
+  42% {
+    opacity: 1;
+  }
+  to {
+    opacity: calc(1 - var(--ls-pulse-a, .2) * .5);
+  }
+}

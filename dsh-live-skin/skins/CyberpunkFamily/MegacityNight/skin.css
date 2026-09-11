@@ -1,0 +1,61 @@
+/* MegacityNight —— 巨企塔
+   把「上下密度对比」推到极致：顶部是资本的高空办公室，底部是雨水霓虹的街巷。
+   **同一个界面里出现两种密度** —— 这是这一支唯一想表达的东西。
+   卷内：「垂直化的社会剖面：巨企塔顶端是资本高空办公室，底部是雨水霓虹的街巷」
+   以及「用上下密度对比表达权力落差」。
+   动效签名：全息广告（一条很宽的扫描光带缓慢下移，12s，透明度极低）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cyber-holo-scan;
+  --ls-fx-duration: 12s;
+  background-image:
+    /* 三段垂直渐变：顶部深蓝黑（高空、冷、净）→ 中部紫 → 底部品红浸染的暗红（街道） */
+    linear-gradient(180deg,
+      rgba(0, 229, 255, .10) 0%,
+      rgba(30, 18, 48, 0) 26%,
+      rgba(72, 28, 84, .14) 58%,
+      rgba(255, 45, 149, .16) 100%),
+    /* 塔身：极淡的垂直条纹，越靠下越密（透视与密集度的暗示） */
+    repeating-linear-gradient(90deg,
+      rgba(0, 229, 255, .05) 0 1px,
+      rgba(0, 229, 255, 0) 1px 34px),
+    linear-gradient(180deg, #0c0818 0%, #140b20 44%, #1a0c1c 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 全息光带：一条很宽、很淡的横向带缓慢下移。
+   它是「扫过街道的广告投影」，不照亮任何对象。 */
+html[data-live-skin] body::after {
+  inset: 0;
+  background-image: linear-gradient(180deg,
+    rgba(0, 229, 255, 0) 0%,
+    rgba(0, 229, 255, .07) 42%,
+    rgba(255, 45, 149, .06) 58%,
+    rgba(0, 229, 255, 0) 100%);
+  background-size: 100% 38%;
+  background-position: center top;
+  animation-timing-function: ease-in-out;
+}
+
+/* 密度的落差：顶部这一条是「资本层」——冷色、细线、留白 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  box-shadow: inset 0 -1px 0 0 rgba(0, 229, 255, .3), 0 1px 0 0 rgba(0, 0, 0, .5);
+}
+
+/* 而输入区是「街道层」——暖色浸染、边界更重 */
+html[data-live-skin] [data-dsh-surface='composer'] {
+  box-shadow:
+    inset 0 -16px 24px -18px rgba(255, 45, 149, .5),
+    inset 0 1px 0 0 rgba(255, 45, 149, .26),
+    var(--dsw-shadow-lv2);
+}
+
+@keyframes cyber-holo-scan {
+  from {
+    transform: translateY(-42%);
+  }
+  to {
+    transform: translateY(142%);
+  }
+}

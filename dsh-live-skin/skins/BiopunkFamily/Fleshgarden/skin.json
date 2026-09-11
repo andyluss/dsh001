@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "Fleshgarden",
+  "nameEn": "Flesh Garden",
+  "description": "肉质花园 · 组织、膜、根须、黏液 · 建筑长肉、机械生藤",
+  "accent": "#5bff9e",
+  "tags": ["tissue", "membrane", "organic"],
+  "defaults": {
+    "accent": "#5bff9e",
+    "glass": 44,
+    "wetness": 82,
+    "pulse": 55,
+    "membrane": 78,
+    "intensity": 76
+  },
+  "styles": ["skin.css"]
+}

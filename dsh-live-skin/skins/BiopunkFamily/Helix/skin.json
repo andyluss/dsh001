@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "Helix",
+  "nameEn": "Helix",
+  "description": "螺旋 · 基因符号系 · 双螺旋与碱基条带充当 logo 系统",
+  "accent": "#5bff9e",
+  "tags": ["helix", "symbol", "sequence"],
+  "defaults": {
+    "accent": "#5bff9e",
+    "glass": 56,
+    "wetness": 40,
+    "pulse": 22,
+    "membrane": 45
+  },
+  "styles": ["skin.css"]
+}

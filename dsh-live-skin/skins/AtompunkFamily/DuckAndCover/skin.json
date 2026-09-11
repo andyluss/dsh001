@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "DuckAndCover",
+  "nameEn": "Duck and Cover",
+  "description": "民防 · 末日侧 · 卧倒掩护、末日时钟、防空洞——用同一套印刷语汇的反面",
+  "accent": "#e8b923",
+  "tags": ["civil-defense", "doomsday", "flipside"],
+  "defaults": {
+    "accent": "#e8b923",
+    "glass": 34,
+    "radiation": 88,
+    "chrome": 40,
+    "flipside": true,
+    "intensity": 74
+  },
+  "styles": ["skin.css"]
+}

@@ -1,0 +1,18 @@
+{
+  "manifestVersion": 1,
+  "name": "TerminalGreen",
+  "nameEn": "Terminal Green",
+  "description": "绿字终端 · 技术残骸 · 方正、无 bloom、强扫描线，全家族最克制",
+  "accent": "#39ff6a",
+  "tags": ["terminal", "crt", "minimal"],
+  "defaults": {
+    "accent": "#39ff6a",
+    "glass": 22,
+    "neon": 20,
+    "rain": 8,
+    "scanline": 78,
+    "tiering": false,
+    "intensity": 48
+  },
+  "styles": ["skin.css"]
+}

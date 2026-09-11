@@ -1,0 +1,26 @@
+{
+  "manifestVersion": 1,
+  "name": "DarkAero",
+  "nameEn": "Dark Aero",
+  "description": "深海夜光 · 青蓝辉光气泡 · 不跟随系统，强制深色",
+  "accent": "#35c6f0",
+  "tags": ["dark", "deep", "glow"],
+  "defaults": {
+    "accent": "#35c6f0",
+    "wallpaper": "deep",
+    "glass": 66,
+    "blur": 14,
+    "gloss": 70,
+    "bubbleAmount": 62,
+    "bubbleCycle": 165
+  },
+  "presets": [
+    {
+      "id": "standard",
+      "name": "标准（夜光）",
+      "description": "覆盖家族的「标准」，换成更深的配比",
+      "values": { "glass": 66, "blur": 14, "gloss": 70, "bubbleAmount": 62, "bubbleCycle": 165 }
+    }
+  ],
+  "styles": ["skin.css"]
+}

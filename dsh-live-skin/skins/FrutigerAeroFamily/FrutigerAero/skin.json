@@ -1,0 +1,26 @@
+{
+  "manifestVersion": 1,
+  "name": "FrutigerAero",
+  "nameEn": "Frutiger Aero",
+  "description": "晴空草地 · 白天水族箱 · 跟随系统亮暗",
+  "accent": "#0f7fc4",
+  "tags": ["day", "sky", "follow-system"],
+  "defaults": {
+    "accent": "#0f7fc4",
+    "wallpaper": "sky",
+    "glass": 55,
+    "blur": 12,
+    "gloss": 62,
+    "bubbleAmount": 55,
+    "bubbleCycle": 140
+  },
+  "presets": [
+    {
+      "id": "standard",
+      "name": "标准（白天）",
+      "description": "覆盖家族的「标准」，把高光调回白天的手感",
+      "values": { "glass": 55, "blur": 12, "gloss": 62, "bubbleAmount": 55, "bubbleCycle": 140 }
+    }
+  ],
+  "styles": ["skin.css"]
+}

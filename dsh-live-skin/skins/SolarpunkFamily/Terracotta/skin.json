@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "Terracotta",
+  "nameEn": "Terracotta",
+  "description": "陶土 · 去掉玻璃只留手工 · 陶土、赭石与木构，社区自建的那一面",
+  "accent": "#9e4a28",
+  "tags": ["clay", "handmade", "community"],
+  "defaults": {
+    "accent": "#9e4a28",
+    "glass": 44,
+    "canopy": 24,
+    "sun": 70,
+    "craft": 88,
+    "intensity": 72
+  },
+  "styles": ["skin.css"]
+}

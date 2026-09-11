@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "Cleanroom",
+  "nameEn": "Cleanroom",
+  "description": "洁净室 · 白／玻璃／液体三段式 · 培养皿冷光与基因扫描界面",
+  "accent": "#2fbfa8",
+  "tags": ["lab", "glass", "clean"],
+  "defaults": {
+    "accent": "#2fbfa8",
+    "glass": 62,
+    "wetness": 34,
+    "pulse": 18,
+    "membrane": 70
+  },
+  "styles": ["skin.css"]
+}

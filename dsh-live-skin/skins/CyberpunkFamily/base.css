@@ -1,0 +1,256 @@
+/* ==========================================================================
+   CyberpunkFamily —— 家族层（雨夜 · 霓虹 · 过期未来）
+   依据：doc/punks/cyberpunk/ ｜ 规格：doc/live-skin/05_赛博朋克.md
+
+   材质签名：雨幕的糊光 + 面板底部的竖向倒影。
+   它是七个家族里**唯一使用向外 bloom 的一支**：
+     蒸汽朋克的光沿边缘走、柴油朋克的光切出硬边、原子朋克的光在镀铬上反照、
+     生物朋克的光向内透出 —— 只有赛博朋克的光**向外扩散**，并被水改变了形状。
+
+   ⚠ 本卷的特殊难点：它的视觉已被过度消费。卷内指出「霓虹＋雨＋塔＋义体＋
+   汉字招牌可以任意组合、无限再生产」——这正是它「母题库化」的证据。
+   所以这一支刻意只取其中两件：**雨**与**霓虹**，靠雨水把光揉糊，
+   而不是靠堆符号。**不出现任何文字招牌**（见雷区：东方主义）。
+   ========================================================================== */
+
+html[data-live-skin] body {
+  /* —— 由参数派生的中间量 —— */
+  --ls-glass-alpha: calc(.94 - var(--ls-glass, 52) * .0056);
+  /* neon：霓虹强度。驱动 bloom 半径与色光饱和度 */
+  --ls-neon-a: calc(var(--ls-neon, 68) * .0070);
+  /* rain：雨幕。驱动雨丝密度、噪点与底部倒影 */
+  --ls-rain-a: calc(var(--ls-rain, 55) * .0055);
+  /* scanline：CRT 细横纹 */
+  --ls-scan-a: calc(var(--ls-scanline, 35) * .0075);
+  --ls-int: calc(var(--ls-intensity, 62) * .01);
+  --ls-neon-eff: calc(var(--ls-neon-a) * var(--ls-int));
+  --ls-rain-eff: calc(var(--ls-rain-a) * var(--ls-int));
+  --ls-scan-eff: calc(var(--ls-scan-a) * var(--ls-int));
+  /* tiering：垂直分层。顶部是资本的高空，底部是雨里的街道 */
+  --ls-tier: var(--ls-tiering, 1);
+
+  --ls-magenta: #ff2d95;
+  --ls-cyan: #00e5ff;
+  --ls-ember: #ff5a1f;
+  --ls-term: #39ff6a;
+
+  /* variant 私有动效的挂点 */
+  --ls-fx-name: none;
+  --ls-fx-duration: 0s;
+
+  /* —— 底与面板（黑紫） —— */
+  --dsw-alias-bg-base: rgba(18, 10, 26, var(--ls-glass-alpha));
+  --dsw-alias-bg-layer-1: rgba(30, 18, 44, calc(var(--ls-glass-alpha) + .1));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(38, 22, 52, calc(var(--ls-glass-alpha) + .16)), rgba(26, 15, 38, calc(var(--ls-glass-alpha) + .14)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(44, 26, 60, calc(var(--ls-glass-alpha) + .2)), rgba(30, 17, 44, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(48, 28, 66, calc(var(--ls-glass-alpha) + .24)), rgba(32, 18, 46, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-alias-bg-module-platform: rgba(30, 18, 44, calc(var(--ls-glass-alpha) + .04));
+  --dsw-alias-bg-multi-select: rgba(40, 24, 56, calc(var(--ls-glass-alpha) + .18));
+  --dsw-alias-bg-skeleton: rgba(0, 229, 255, .08);
+  --dsw-alias-bg-mask-1: rgba(4, 2, 8, .6);
+  --dsw-alias-bg-mask-2: rgba(4, 2, 8, .34);
+  --dsw-alias-bg-mask-3: rgba(2, 1, 4, .76);
+  --dsw-alias-bg-mask-drop: rgba(16, 8, 24, .76);
+  --dsw-alias-bg-mask-photo: rgba(2, 1, 4, .92);
+
+  /* —— 描边：冷光的一圈，青为主、品红只在激活时出现 —— */
+  --dsw-alias-border-inverted: rgba(0, 229, 255, .18);
+  --dsw-alias-border-inverted2: rgba(0, 229, 255, .1);
+  --dsw-alias-border-l1: rgba(0, 229, 255, .16);
+  --dsw-alias-border-l2: rgba(0, 229, 255, .28);
+  --dsw-alias-border-l2-darkmode-thin: rgba(0, 229, 255, .18);
+  --dsw-alias-border-l3: rgba(0, 229, 255, .24);
+  --dsw-alias-border-l4: rgba(0, 229, 255, .38);
+
+  /* —— 品牌与强调 —— */
+  --dsw-alias-brand-primary: var(--ls-accent, #ff2d95);
+  --dsw-alias-brand-primary-invert: #120a1a;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #ff2d95);
+  --dsw-alias-brand-text: #ede6f5;
+  --dsw-alias-link: var(--ls-cyan);
+  --dsw-alias-state-business-primary: var(--ls-cyan);
+  --dsw-alias-state-business-tertiary: rgba(0, 229, 255, .16);
+
+  /* —— 按钮：填充色压到 45% 以承载白字（C4 逐 variant 复核） —— */
+  --dsw-alias-button-contrast-fill: #ede6f5;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, rgba(46, 28, 62, .96), rgba(30, 17, 44, .96));
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(42, 25, 58, .98), rgba(26, 15, 38, .96));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, rgba(54, 32, 72, 1), rgba(34, 19, 48, 1));
+  --dsw-alias-button-ghost-active-fill: rgba(52, 34, 74, .84);
+  --dsw-alias-button-ghost-active-border: rgba(0, 229, 255, .46);
+  --dsw-alias-button-ghost-active-hover: rgba(62, 40, 88, .9);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #ff2d95) 45%, #0a0410);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #ff2d95) 38%, #0a0410);
+  --dsw-alias-button-primary-dimmed: rgba(255, 45, 149, .3);
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #ff2d95) 45%, #0a0410);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #ff2d95) 38%, #0a0410);
+  --dsw-alias-button-tool-bar-fill: rgba(6, 3, 12, .66);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(6, 3, 12, .42);
+  --dsw-alias-button-tool-bar-hover: rgba(6, 3, 12, .8);
+
+  /* —— 交互态 —— */
+  --dsw-alias-interactive-bg-active: rgba(0, 229, 255, .16);
+  --dsw-alias-interactive-bg-hover: rgba(0, 229, 255, .1);
+  --dsw-alias-interactive-bg-hover-accent: rgba(255, 45, 149, .18);
+  --dsw-alias-interactive-bg-hover-danger: rgba(255, 90, 31, .16);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(46, 28, 62, .96), rgba(30, 17, 44, .94));
+
+  /* —— 文本 —— */
+  --dsw-alias-label-caption: #8f7aa8;
+  --dsw-alias-label-dimmed: #523c68;
+  --dsw-alias-label-primary: #ede6f5;
+  --dsw-alias-label-primary-bluish: #d8f6ff;
+  --dsw-alias-label-primary-dimmed: #ded2ee;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #120a1a;
+  --dsw-alias-label-secondary: #b49ac8;
+  --dsw-alias-label-tertiary: #9d86b5;
+
+  /* —— Markdown：代码块用终端绿，这是全家族唯一允许绿色出现的地方 —— */
+  --dsw-alias-markdown-citation: rgba(0, 229, 255, .14);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(12, 6, 20, calc(var(--ls-glass-alpha) + .26)), rgba(8, 4, 14, calc(var(--ls-glass-alpha) + .26)));
+  --dsw-alias-markdown-code-block-banner: rgba(20, 11, 30, .94);
+  --dsw-alias-markdown-code-segment-selected: rgba(38, 22, 52, .94);
+  --dsw-alias-markdown-code-segment-unselected: rgba(20, 11, 30, .9);
+  --dsw-alias-markdown-inline-code: rgba(28, 16, 40, .86);
+  --dsw-alias-markdown-placeholder: rgba(24, 14, 36, .84);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(34, 20, 48, .94), rgba(20, 11, 30, .9));
+
+  /* —— 滚动条 —— */
+  --dsw-alias-scrollbar-bg-l1: rgba(0, 229, 255, .2);
+  --dsw-alias-scrollbar-bg-l2: rgba(0, 229, 255, .24);
+  --dsw-alias-scrollbar-hover-l1: rgba(255, 45, 149, .4);
+  --dsw-alias-scrollbar-hover-l2: rgba(255, 45, 149, .46);
+
+  /* —— 状态色 —— */
+  --dsw-alias-state-error-primary: #ff5a1f;
+  --dsw-alias-state-error-secondary: #ff8a5c;
+  --dsw-alias-state-success-primary: #39ff6a;
+  --dsw-alias-state-success-secondary: #7cffa0;
+  --dsw-alias-state-success-tertiary: rgba(57, 255, 106, .16);
+  --dsw-alias-state-warn-label: #ffd166;
+  --dsw-alias-state-warn-primary: #ffb020;
+  --dsw-alias-state-warn-secondary: #ffcb5c;
+  --dsw-alias-state-warn-tertiary: rgba(255, 176, 32, .16);
+
+  /* —— 语义面 —— */
+  --dsw-alias-toast-bg: rgba(20, 11, 30, .96);
+  --dsw-alias-tooltip-bg: rgba(16, 9, 24, .97);
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(40, 24, 56, calc(var(--ls-glass-alpha) + .16)), rgba(28, 16, 40, calc(var(--ls-glass-alpha) + .14)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(52, 30, 68, calc(var(--ls-glass-alpha) + .2)), rgba(34, 19, 48, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(46, 28, 62, calc(var(--ls-glass-alpha) + .2)), rgba(28, 16, 40, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-specific-login-input: rgba(26, 15, 38, .92);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(48, 28, 66, calc(var(--ls-glass-alpha) + .24)), rgba(30, 17, 44, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(42, 25, 58, calc(var(--ls-glass-alpha) + .2)), rgba(28, 16, 40, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(24, 14, 36, calc(var(--ls-glass-alpha) + .08)), rgba(14, 8, 22, calc(var(--ls-glass-alpha) + .02)));
+  --dsw-specific-sidebar-nav-item-active: rgba(52, 34, 74, .86);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(0, 229, 255, .26);
+  --dsw-specific-sidebar-nav-item-hover: rgba(38, 22, 52, .68);
+  --dsw-specific-tip: rgba(30, 17, 44, calc(var(--ls-glass-alpha) + .22));
+
+  /* —— 高度：冷色的低对比阴影，靠近霓虹时才有色 —— */
+  --dsw-elevation-stroke-color: rgba(0, 229, 255, .16);
+  --dsw-shadow-lv1: 0 2px 6px 0 rgba(2, 1, 6, .5);
+  --dsw-shadow-lv2: 0 5px 14px 0 rgba(2, 1, 6, .54), 0 0 0 1px rgba(0, 229, 255, .08);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(0, 229, 255, .22), 0 0 18px 0 rgba(255, 45, 149, .14), 0 12px 30px 0 rgba(2, 1, 4, .6);
+  --dsw-mask-blur: blur(var(--ls-blur, 12px)) saturate(1.15);
+}
+
+/* —— 亮色档：赛博朋克天生是夜里的，亮档只做「降级适配」——
+       把底抬到深紫灰、保证对比达标，但仍然是夜。 —— */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  --dsw-alias-bg-base: rgba(26, 16, 36, var(--ls-glass-alpha));
+  --dsw-alias-label-primary: #f2ecf8;
+  --dsw-alias-label-secondary: #c4aed6;
+  --dsw-alias-label-tertiary: #a892bf;
+}
+
+/* ==========================================================================
+   壁纸：各 variant 在自己的 skin.css 里定义 body 的 background-image
+   ========================================================================== */
+
+html[data-live-skin] body {
+  background-color: #120a1a;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   材质语言 · 雨幕、扫描线、垂直分层、底部倒影
+   全部烘进颜色里，不吃图层的 opacity —— 那一层要留给各 variant 的动效。
+   ========================================================================== */
+
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* 垂直分层：顶部是资本的高空（冷、净），底部是雨里的街道（暖、脏、密） */
+    linear-gradient(180deg,
+      rgba(0, 229, 255, calc(var(--ls-tier) * .07)) 0%,
+      rgba(0, 229, 255, 0) 30%,
+      rgba(255, 45, 149, 0) 62%,
+      rgba(255, 45, 149, calc(var(--ls-tier) * .10)) 100%),
+    /* 雨丝：极细的斜向条，雨的密度由 rain 驱动 */
+    repeating-linear-gradient(76deg,
+      rgba(216, 240, 255, calc(var(--ls-rain-eff) * .5)) 0 1px,
+      rgba(216, 240, 255, 0) 1px 9px),
+    /* 扫描线：CRT 的细横纹，只在终端类语义上本来就该有，这里作为氛围铺一层极淡的 */
+    repeating-linear-gradient(0deg,
+      rgba(0, 229, 255, var(--ls-scan-eff)) 0 1px,
+      rgba(0, 0, 0, 0) 1px 3px),
+    /* 噪点：雨带来的脏。与柴油朋克的胶片颗粒不同 —— 这是湿的，不是陈旧的 */
+    radial-gradient(circle 0.7px at 2px 2px, rgba(255, 255, 255, calc(var(--ls-rain-eff) * .5)) 0 60%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 0.7px at 5px 4px, rgba(0, 0, 0, calc(var(--ls-rain-eff) * .7)) 0 60%, rgba(0, 0, 0, 0) 100%),
+    /* 底部倒影：上方霓虹在湿地面上的竖向镜像。这是本家族的材质签名之一。 */
+    linear-gradient(0deg,
+      rgba(255, 45, 149, calc(var(--ls-rain-eff) * .42)) 0%,
+      rgba(255, 45, 149, calc(var(--ls-rain-eff) * .12)) 8%,
+      rgba(0, 229, 255, 0) 20%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 7px 7px, 7px 7px, 100% 100%;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, no-repeat;
+}
+
+/* body::after 是纯动效层：家族层不给它静止内容 */
+html[data-live-skin] body::after {
+  content: '';
+  position: fixed;
+  inset: -35%;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation-name: var(--ls-fx-name, none);
+  animation-duration: calc(var(--ls-motion, 1) * var(--ls-fx-duration, 0s));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* ==========================================================================
+   材质语言 · 面板底部的竖向倒影 + 向外 bloom
+   浮层是唯一允许 backdrop-filter 的地方；面板自己的下缘发一道被雨水抬起的光。
+   ========================================================================== */
+
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'],
+html[data-live-skin] [data-dsh-part='dialog'],
+html[data-live-skin] [role='dialog'],
+html[data-live-skin] [role='menu'],
+html[data-live-skin] [role='tooltip'] {
+  backdrop-filter: blur(var(--ls-blur, 12px)) saturate(1.15);
+  box-shadow:
+    inset 0 -14px 20px -16px rgba(255, 45, 149, calc(var(--ls-neon-eff) * .8)),
+    inset 0 1px 0 0 rgba(0, 229, 255, .16),
+    var(--dsw-shadow-lv2);
+}
+
+/* 这是全家族唯一使用「向外扩散的光」的地方 —— 发光元素带大半径 bloom，不是锐利描边 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  text-shadow: 0 0 12px rgba(0, 229, 255, calc(var(--ls-neon-eff) * .5));
+}
+
+html[data-live-skin] body ::selection {
+  background-color: rgba(255, 45, 149, .34);
+}

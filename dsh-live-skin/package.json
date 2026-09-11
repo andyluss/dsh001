@@ -1,0 +1,23 @@
+{
+  "name": "dsh-live-skin",
+  "version": "0.1.0",
+  "description": "LiveSkin —— DSH Web 的皮肤系统插件：分级皮肤（family / variant / preset）、参数化实时调节、家族级 CSS 层叠，与 skin-center 完全独立。",
+  "keywords": ["dsh", "dsh-plugin", "deepseek-harness", "skin", "theme", "liveskin"],
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": ["lib", "skins", "cordis.patch.yml", "README.md"],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "license": "MIT"
+}

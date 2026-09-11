@@ -1,0 +1,113 @@
+{
+  "manifestVersion": 1,
+  "name": "磁带未来主义家族",
+  "nameEn": "Cassette Futurism Family",
+  "description": "80 年代技术想象的另一面：不是霓虹雨夜的街头，而是机房日光灯下的工作台。它与赛博朋克共享同一批界面，器物却完全不同——米白塑料机箱、荧光绿单色终端、磁带与软驱。边界本质是布光与气氛的边界。",
+  "accent": "#ffb86c",
+  "tags": ["cassette-futurism", "crt", "terminal", "analog"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 34
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "琥珀、磷绿、信号青或深橙——都是机箱上的指示灯色",
+      "group": "材质",
+      "default": "#ffb86c"
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "氛围总强度",
+      "description": "统一缩放辉光、扫描线与塑料洗层",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "标志性动效",
+      "description": "光标、辉光、指示灯或卷带轮；关掉即静止",
+      "group": "氛围",
+      "default": true
+    },
+    {
+      "key": "phosphor",
+      "type": "number",
+      "label": "荧光辉光",
+      "description": "单色屏的辉光半径与强度。这是全家族唯一的发光方式",
+      "group": "机器",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 55
+    },
+    {
+      "key": "scanline",
+      "type": "number",
+      "label": "CRT 扫描线",
+      "description": "细横纹的透明度。磁带未来主义的核心语汇（原子朋克卷明确排除它）",
+      "group": "机器",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 40
+    },
+    {
+      "key": "warmth",
+      "type": "number",
+      "label": "塑料暖度",
+      "description": "从冷银灰推向米白塑料。两侧各是一层平坦无方向的洗层",
+      "group": "机器",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "辉光与扫描线压到最低，接近一块没通电的塑料面板",
+      "values": { "glass": 60, "blur": 8, "intensity": 24, "phosphor": 22, "scanline": 12, "motion": false }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "该支皮肤的设计意图原样呈现",
+      "values": { "glass": 34, "blur": 12, "intensity": 60, "phosphor": 55, "scanline": 40, "motion": true }
+    },
+    {
+      "id": "cinematic",
+      "name": "浓烈",
+      "description": "辉光与扫描线拉满，屏幕感最强",
+      "values": { "glass": 26, "blur": 16, "intensity": 92, "phosphor": 78, "scanline": 62, "motion": true }
+    }
+  ]
+}

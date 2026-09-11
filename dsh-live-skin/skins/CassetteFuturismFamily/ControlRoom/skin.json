@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "ControlRoom",
+  "nameEn": "Control Room",
+  "description": "控制室 · NASA 控制台式 · 等距面板、指示灯阵列、装饰为零",
+  "accent": "#8be9fd",
+  "tags": ["console", "nasa", "regular"],
+  "defaults": {
+    "accent": "#8be9fd",
+    "glass": 18,
+    "phosphor": 28,
+    "scanline": 12,
+    "warmth": 34,
+    "intensity": 52
+  },
+  "styles": ["skin.css"]
+}

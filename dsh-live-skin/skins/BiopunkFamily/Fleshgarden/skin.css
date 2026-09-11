@@ -1,0 +1,49 @@
+/* Fleshgarden —— 肉质花园
+   卷内明列的第二个语汇簇：组织、膜、根须、黏液；建筑长肉、机械生藤。
+   这是家族里最浓的一支 —— 湿润感 82、膜层 78，没有一条硬边。
+   家族级的生物脉冲在这一支也最强（pulse 55），所以画面是缓慢起伏的。
+   动效签名：根须蔓延（组织团块以 30s 周期极缓慢地扩缩，幅度 3%）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: bio-root-spread;
+  --ls-fx-duration: 30s;
+  background-image:
+    /* 纤维纹理：极密的斜向细线，像结缔组织 */
+    repeating-linear-gradient(58deg, rgba(185, 120, 111, .05) 0 1px, rgba(185, 120, 111, 0) 1px 5px),
+    /* 三团大小不一的暗红团块，位置刻意不对称 */
+    radial-gradient(38% 30% at 22% 30%, rgba(122, 59, 59, .34) 0%, rgba(122, 59, 59, 0) 76%),
+    radial-gradient(30% 26% at 74% 62%, rgba(122, 59, 59, .28) 0%, rgba(122, 59, 59, 0) 78%),
+    radial-gradient(44% 34% at 52% 92%, rgba(122, 59, 59, .3) 0%, rgba(122, 59, 59, 0) 80%),
+    linear-gradient(180deg, #171211 0%, #120e0d 58%, #0d0a09 100%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 根须：一层更窄的组织色，做极缓慢的蔓延 —— 幅度刻意压在 3%，
+   「生长」不该被看见，只该被感觉到。 */
+html[data-live-skin] body::after {
+  background-image:
+    radial-gradient(26% 20% at 26% 34%, rgba(185, 120, 111, .16) 0%, rgba(185, 120, 111, 0) 78%),
+    radial-gradient(22% 18% at 70% 66%, rgba(185, 120, 111, .13) 0%, rgba(185, 120, 111, 0) 80%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* 不等圆角 + 更厚的膜：这一支的面板边界最柔 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 17px 12px 18px 11px;
+}
+
+html[data-live-skin] [data-dsh-part='message-row'] {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .3);
+}
+
+@keyframes bio-root-spread {
+  from {
+    transform: scale(0.97);
+  }
+  to {
+    transform: scale(1);
+  }
+}

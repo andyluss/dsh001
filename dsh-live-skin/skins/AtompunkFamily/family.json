@@ -1,0 +1,110 @@
+{
+  "manifestVersion": 1,
+  "name": "原子朋克家族",
+  "nameEn": "Atompunk Family",
+  "description": "回望原子纪（约 1945—1969）的前数字时代美国。它的核心张力是「双面未来」——幸福原子与核末日同源共档：同一套物理、同一个机构、同一家印刷厂、同一批商业插画语汇。所以这个家族的任何一支都能一键翻到另一面。",
+  "accent": "#e4572e",
+  "tags": ["atompunk", "chrome", "googie", "atomic-age"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 55
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "默认是「放射红橙」——它同时意味着能量与威胁",
+      "group": "材质",
+      "default": "#e4572e"
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "氛围总强度",
+      "description": "统一缩放放射辉光与镀铬反光",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 62
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "标志性动效",
+      "description": "扫光、时钟、轨道环或垂直脉冲；关掉即静止",
+      "group": "氛围",
+      "default": true
+    },
+    {
+      "key": "radiation",
+      "type": "number",
+      "label": "放射色",
+      "description": "红橙的强度与出现频率。拉高时它既更亮也更危险——这个双义性是设计意图",
+      "group": "原子",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 62
+    },
+    {
+      "key": "chrome",
+      "type": "number",
+      "label": "镀铬",
+      "description": "镜面反光带的对比度与覆盖面。硬边、可预测的反光角度",
+      "group": "原子",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 65
+    },
+    {
+      "key": "flipside",
+      "type": "boolean",
+      "label": "双面底片",
+      "description": "翻到民防那一面：底色转黑与黄、加末日时钟刻度、放射色从「能量」转为「威胁」",
+      "group": "原子",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "辉光与反光压到最低，可读性优先",
+      "values": { "glass": 74, "blur": 8, "intensity": 26, "radiation": 31, "chrome": 45, "motion": false }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "该支皮肤的设计意图原样呈现",
+      "values": { "glass": 55, "blur": 12, "intensity": 62, "radiation": 62, "chrome": 65, "motion": true }
+    },
+    {
+      "id": "cinematic",
+      "name": "浓烈",
+      "description": "辐射辉光与镀铬反光拉满，适合展示",
+      "values": { "glass": 40, "blur": 16, "intensity": 94, "radiation": 80, "chrome": 84, "motion": true }
+    }
+  ]
+}

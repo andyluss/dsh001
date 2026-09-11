@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# DSH 实验室 001 号 · commit-msg 钩子
+#
+# 校验提交信息是否为「Conventional Commits 子集 + 中文描述」：
+#     <type>(<scope>): <中文描述>
+#
+# 规则详见 CONTRIBUTING.md。确需跳过时用 git commit --no-verify（慎用）。
+# 启用：git config core.hooksPath .githooks
+# ---------------------------------------------------------------------------
+set -u
+
+msg_file="${1:-}"
+if [ -z "$msg_file" ] || [ ! -f "$msg_file" ]; then
+  echo "commit-msg: 没有拿到提交信息文件（参数：'${msg_file}'）" >&2
+  exit 1
+fi
+
+# 取「去掉注释行与空行」后的第一行作为主题行
+subject="$(grep -v '^#' "$msg_file" | sed -e '/^[[:space:]]*$/d' | head -n 1 | sed -e 's/[[:space:]]*$//')"
+
+if [ -z "$subject" ]; then
+  echo "commit-msg: 提交信息为空" >&2
+  exit 1
+fi
+
+# 放行 git 自己生成的、不适合套用本规范的提交
+case "$subject" in
+  Merge\ *|Revert\ *|fixup!\ *|squash!\ *)
+    exit 0
+    ;;
+esac
+
+types='feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert'
+pattern="^(${types})(\([^()]+\))?!?: (.+)$"
+
+fail() {
+  {
+    echo ""
+    echo "✗ commit-msg 校验未通过：$1"
+    echo ""
+    echo "  你的主题行：$subject"
+    echo "  要求格式  ：<type>(<scope>): <中文描述>"
+    echo "  可用 type ：feat fix docs style refactor perf test build ci chore revert"
+    echo "  正确示例  ：feat(001-cards): 新增分类树拖拽排序"
+    echo "  正确示例  ：docs: 补充实验 002 的设计文档索引"
+    echo "  完整规则见 CONTRIBUTING.md；确需跳过用 git commit --no-verify"
+    echo ""
+  } >&2
+  exit 1
+}
+
+# 1) 格式：type + 可选 (scope) + 可选 ! + ": " + 描述
+printf '%s' "$subject" | grep -Eq "$pattern" \
+  || fail "不符合「<type>(<scope>): <中文描述>」格式"
+
+# 2) 中文：描述部分必须含汉字（CJK 统一表意文字，UTF-8 首字节 0xE4–0xE9）
+printf '%s' "$subject" | LC_ALL=C grep -q "$(printf '[\344-\351]')" \
+  || fail "描述必须是中文（专有名词可保留英文）"
+
+# 3) 长度：主题行不超过 50 个字符（无 UTF-8 locale 时按字节计，阈值放宽到 150）
+probe='中文'
+if [ "${#probe}" -eq 2 ]; then
+  max_len=50
+else
+  max_len=150
+fi
+if [ "${#subject}" -gt "$max_len" ]; then
+  fail "主题行过长（${#subject} > ${max_len} 个字符），请精简或把细节移到正文"
+fi
+
+exit 0

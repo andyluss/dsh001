@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "Dawnlight",
+  "nameEn": "Dawnlight",
+  "description": "晨光 · 太阳朋克里最冷静的一支 · 绿意在窗外而不在屏幕上",
+  "accent": "#2e7db8",
+  "tags": ["dawn", "calm", "minimal"],
+  "defaults": {
+    "accent": "#2e7db8",
+    "glass": 72,
+    "canopy": 10,
+    "sun": 40,
+    "craft": 22,
+    "intensity": 40
+  },
+  "styles": ["skin.css"]
+}

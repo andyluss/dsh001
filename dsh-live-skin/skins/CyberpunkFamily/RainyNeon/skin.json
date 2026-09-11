@@ -1,0 +1,15 @@
+{
+  "manifestVersion": 1,
+  "name": "RainyNeon",
+  "nameEn": "Rainy Neon",
+  "description": "雨夜霓虹 · 标准支 · 品红与青的双主光，被雨揉糊",
+  "accent": "#ff2d95",
+  "tags": ["standard", "rain", "neon"],
+  "defaults": {
+    "accent": "#ff2d95",
+    "glass": 52,
+    "neon": 68,
+    "rain": 55
+  },
+  "styles": ["skin.css"]
+}

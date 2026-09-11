@@ -1,0 +1,66 @@
+/* Cleanroom —— 洁净室
+   卷内明列的第一个语汇簇：白／玻璃／液体、培养皿冷光、基因扫描界面。
+   影像原型上溯 1931 年《弗兰肯斯坦》的实验室；代表作品《千钧一发》。
+   家族里最亮的一支 —— 但即便是洁净室，也仍然是湿的（膜与液体都在）。
+   动效签名：液体位移（一层极缓慢的液体以 20s 周期上下浮动）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: bio-liquid-shift;
+  --ls-fx-duration: 20s;
+  background-image:
+    /* 玻璃格栅：细网格，暗示隔断 */
+    repeating-linear-gradient(90deg, rgba(47, 191, 168, .05) 0 1px, rgba(47, 191, 168, 0) 1px 92px),
+    repeating-linear-gradient(0deg, rgba(47, 191, 168, .05) 0 1px, rgba(47, 191, 168, 0) 1px 92px),
+    /* 顶部一片极淡的青绿辉光：培养皿的冷光 */
+    radial-gradient(90% 46% at 50% -4%, rgba(127, 232, 216, .30) 0%, rgba(127, 232, 216, 0) 70%),
+    linear-gradient(180deg, #eff4f2 0%, #eaf1ef 62%, #e4ecea 100%);
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 洁净侧的整体配色覆盖：这一支无论系统亮暗都是白房间 */
+html[data-live-skin] body,
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(239, 244, 242, calc(var(--ls-glass-alpha) + .34));
+  --dsw-alias-bg-layer-1: rgba(250, 253, 252, calc(var(--ls-glass-alpha) + .4));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(252, 254, 253, calc(var(--ls-glass-alpha) + .42)), rgba(240, 247, 245, calc(var(--ls-glass-alpha) + .4)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(253, 255, 254, calc(var(--ls-glass-alpha) + .44)), rgba(242, 249, 247, calc(var(--ls-glass-alpha) + .42)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(255, 255, 255, calc(var(--ls-glass-alpha) + .46)), rgba(244, 250, 248, calc(var(--ls-glass-alpha) + .44)));
+  --dsw-alias-bg-module-platform: rgba(246, 251, 249, calc(var(--ls-glass-alpha) + .34));
+  --dsw-alias-bg-multi-select: rgba(228, 240, 237, calc(var(--ls-glass-alpha) + .4));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(248, 252, 251, calc(var(--ls-glass-alpha) + .38)), rgba(236, 245, 242, calc(var(--ls-glass-alpha) + .3)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(255, 255, 255, calc(var(--ls-glass-alpha) + .46)), rgba(242, 250, 247, calc(var(--ls-glass-alpha) + .44)));
+  --dsw-specific-menu: linear-gradient(180deg, rgba(255, 255, 255, calc(var(--ls-glass-alpha) + .48)), rgba(244, 250, 248, calc(var(--ls-glass-alpha) + .46)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(250, 254, 253, calc(var(--ls-glass-alpha) + .42)), rgba(236, 245, 242, calc(var(--ls-glass-alpha) + .4)));
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(255, 255, 255, calc(var(--ls-glass-alpha) + .42)), rgba(238, 248, 245, calc(var(--ls-glass-alpha) + .4)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(226, 246, 241, calc(var(--ls-glass-alpha) + .44)), rgba(203, 235, 228, calc(var(--ls-glass-alpha) + .4)));
+  --dsw-specific-tip: rgba(240, 248, 246, calc(var(--ls-glass-alpha) + .4));
+  --dsw-alias-label-primary: #10201e;
+  --dsw-alias-label-secondary: #3f5b55;
+  --dsw-alias-label-tertiary: #5d7a74;
+  --dsw-alias-label-caption: #7d968f;
+  --dsw-alias-label-dimmed: #c2d6d0;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #eff4f2;
+  --dsw-alias-border-l1: rgba(47, 191, 168, .16);
+  --dsw-alias-border-l2: rgba(47, 191, 168, .26);
+  --dsw-alias-border-l3: rgba(47, 191, 168, .22);
+  --dsw-alias-border-l4: rgba(28, 148, 128, .34);
+  --dsw-alias-toast-bg: rgba(28, 62, 56, .94);
+  --dsw-alias-tooltip-bg: rgba(24, 54, 49, .95);
+}
+
+/* 液体：一层极缓慢上下浮动的膜，是「液体」那一格 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(120% 42% at 50% 108%, rgba(127, 232, 216, .2) 0%, rgba(127, 232, 216, 0) 72%);
+  background-size: 100% 100%;
+}
+
+@keyframes bio-liquid-shift {
+  from {
+    transform: translateY(-2.5%);
+  }
+  to {
+    transform: translateY(2.5%);
+  }
+}

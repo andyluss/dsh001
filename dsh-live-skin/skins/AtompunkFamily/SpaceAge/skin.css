@@ -1,0 +1,48 @@
+/* SpaceAge —— 太空纪
+   第三序混血与太空纪接头：迪士尼明日世界（1955 起）、1958 布鲁塞尔世博会原子球、
+   鹦鹉螺号。更亮、更白、更空。
+   原子图案系统在这一支用得最完整：轨道环做进度、星爆做焦点、放射线做分隔、
+   太阳形做空状态。
+   动效签名：轨道环旋转（80s 一圈）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: atom-orbit-turn;
+  --ls-fx-duration: 80s;
+  background-image:
+    /* 同心轨道环：三圈细椭圆，从中心偏左展开 */
+    radial-gradient(26% 18% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .22) 58.6%, rgba(46, 125, 184, 0) 59.4%),
+    radial-gradient(36% 25% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .16) 58.6%, rgba(46, 125, 184, 0) 59.4%),
+    radial-gradient(46% 32% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .11) 58.6%, rgba(46, 125, 184, 0) 59.4%),
+    /* 星：稀疏的白色点阵 */
+    radial-gradient(circle 1.1px at 18px 22px, rgba(255, 255, 255, .85) 0 60%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 0.9px at 92px 64px, rgba(255, 255, 255, .6) 0 60%, rgba(255, 255, 255, 0) 100%),
+    /* 下方升起的深蓝渐隐（夜空），与上方的瓷釉白形成「地面—天空」的分界 */
+    linear-gradient(0deg, rgba(24, 52, 84, .5) 0%, rgba(24, 52, 84, .14) 26%, rgba(24, 52, 84, 0) 46%),
+    linear-gradient(180deg, #fbf7f0 0%, #f7f2e9 60%, #eee7da 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 128px 128px, 128px 128px, 100% 100%, 100% 100%;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 轨道上的一个亮点：轨道环本身不转，转的是这一颗 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(circle 2.4px at 50% 6%, rgba(46, 125, 184, .8) 0 55%, rgba(46, 125, 184, 0) 100%);
+  background-size: 36% 25%;
+  background-position: 42% 40%;
+  transform-origin: 42% 40%;
+}
+
+/* 最干净的一支：描边极细，圆角大而有方向 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 18px 18px 6px 6px;
+  border-bottom: 1px solid rgba(46, 125, 184, .22);
+}
+
+@keyframes atom-orbit-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

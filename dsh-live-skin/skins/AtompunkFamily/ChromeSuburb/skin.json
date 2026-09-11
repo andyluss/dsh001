@@ -1,0 +1,15 @@
+{
+  "manifestVersion": 1,
+  "name": "ChromeSuburb",
+  "nameEn": "Chrome Suburb",
+  "description": "镀铬郊区 · 幸福原子 · Googie 斜挑与尾鳍",
+  "accent": "#e4572e",
+  "tags": ["standard", "suburb", "googie"],
+  "defaults": {
+    "accent": "#e4572e",
+    "glass": 58,
+    "radiation": 55,
+    "chrome": 72
+  },
+  "styles": ["skin.css"]
+}

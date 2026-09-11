@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "BeigeTerminal",
+  "nameEn": "Beige Terminal",
+  "description": "米白终端 · Apple II 与 Commodore 64 的机箱 · 可修、可懂的暖",
+  "accent": "#2f7a3e",
+  "tags": ["standard", "beige", "apple-ii"],
+  "defaults": {
+    "accent": "#2f7a3e",
+    "glass": 24,
+    "phosphor": 35,
+    "scanline": 30,
+    "warmth": 82
+  },
+  "styles": ["skin.css"]
+}

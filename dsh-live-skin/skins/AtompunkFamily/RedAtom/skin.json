@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "RedAtom",
+  "nameEn": "Red Atom",
+  "description": "红旗原子 · 苏联侧 · 哑光拉丝与垂直塔尖，不用消费繁荣的那套语汇",
+  "accent": "#b3352c",
+  "tags": ["soviet", "matte", "monument"],
+  "defaults": {
+    "accent": "#b3352c",
+    "glass": 44,
+    "radiation": 68,
+    "chrome": 30,
+    "intensity": 70
+  },
+  "styles": ["skin.css"]
+}

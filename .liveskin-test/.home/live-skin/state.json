@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "active": "FrutigerAeroFamily/AeroGlass",
+  "values": {
+    "FrutigerAeroFamily/DarkAero": {
+      "glass": 74,
+      "blur": 8,
+      "gloss": 34,
+      "accent": "#35c6f0",
+      "bubbles": false,
+      "bubbleAmount": 24,
+      "bubbleCycle": 220,
+      "wallpaper": "deep"
+    }
+  },
+  "presets": {
+    "FrutigerAeroFamily/DarkAero": "calm"
+  },
+  "prefs": {}
+}

@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "BoilerDeck",
+  "nameEn": "Boiler Deck",
+  "description": "锅炉舱 · 修正取向 · 把视角从客厅移到锅炉舱，铁灰与煤烟成为主体",
+  "accent": "#c1663b",
+  "tags": ["labour", "iron", "soot"],
+  "defaults": {
+    "accent": "#c1663b",
+    "glass": 30,
+    "patina": 78,
+    "gaslight": 40,
+    "haze": 66,
+    "intensity": 78
+  },
+  "styles": ["skin.css"]
+}

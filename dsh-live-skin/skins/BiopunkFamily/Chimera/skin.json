@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "Chimera",
+  "nameEn": "Chimera",
+  "description": "嵌合 · 异质与不整齐 · 同一个界面里出现不一致的圆角与描边",
+  "accent": "#8cf0c0",
+  "tags": ["chimera", "heterogeneous", "uneven"],
+  "defaults": {
+    "accent": "#8cf0c0",
+    "glass": 38,
+    "wetness": 76,
+    "pulse": 68,
+    "membrane": 60,
+    "intensity": 88
+  },
+  "styles": ["skin.css"]
+}

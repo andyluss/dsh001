@@ -1,0 +1,113 @@
+{
+  "manifestVersion": 1,
+  "name": "柴油朋克家族",
+  "nameEn": "Dieselpunk Family",
+  "description": "回望柴油纪（约 1918—1945）：内燃机许诺过的垂直都会、流线型交通与天空舰队。它是复古未来家族里回望距离最近、也最被迫回答「如何消费一段还带着伤口的过去」的一支——所以它的光是切出来的，画面浮在一层胶片颗粒上。",
+  "accent": "#c8ccd0",
+  "tags": ["dieselpunk", "streamline", "noir", "film"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "铬银、暖黄霓虹、装饰金或纪念碑灰",
+      "group": "材质",
+      "default": "#c8ccd0"
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "氛围总强度",
+      "description": "统一缩放分光与颗粒的强度",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "标志性动效",
+      "description": "云带、霓虹、旭日或聚光灯；关掉即静止",
+      "group": "氛围",
+      "default": true
+    },
+    {
+      "key": "grain",
+      "type": "number",
+      "label": "胶片颗粒",
+      "description": "这一支的底色。拉到 0 会失去大部分年代感",
+      "group": "胶片",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 55
+    },
+    {
+      "key": "noir",
+      "type": "number",
+      "label": "黑色电影分光",
+      "description": "单侧强光的落差与暗部深度",
+      "group": "胶片",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 60
+    },
+    {
+      "key": "chrome",
+      "type": "number",
+      "label": "铬银高光",
+      "description": "金属描边与仪表刻度的亮度",
+      "group": "胶片",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "颗粒与分光压到最低，可读性优先",
+      "values": { "glass": 68, "blur": 8, "intensity": 26, "grain": 22, "noir": 33, "chrome": 40, "motion": false }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "该支皮肤的设计意图原样呈现",
+      "values": { "glass": 50, "blur": 12, "intensity": 60, "grain": 55, "noir": 60, "chrome": 50, "motion": true }
+    },
+    {
+      "id": "cinematic",
+      "name": "浓烈",
+      "description": "颗粒、分光与硬投影拉满，适合展示",
+      "values": { "glass": 36, "blur": 16, "intensity": 94, "grain": 78, "noir": 80, "chrome": 62, "motion": true }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "DecoMetropolis",
+  "nameEn": "Deco Metropolis",
+  "description": "装饰都会 · Art Deco 退台与旭日纹 · 焦点从动力机器转向装饰",
+  "accent": "#d9c27a",
+  "tags": ["deco", "geometric", "symmetry"],
+  "defaults": {
+    "accent": "#d9c27a",
+    "glass": 48,
+    "grain": 30,
+    "noir": 55,
+    "chrome": 45,
+    "intensity": 52
+  },
+  "styles": ["skin.css"]
+}

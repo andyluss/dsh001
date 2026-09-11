@@ -1,0 +1,30 @@
+/* ==========================================================================
+   FrutigerAero —— 小类层（叠在大类层之上）
+   只写这个气质独有的东西：白天水面的柔光、向阳一侧的暖调。
+   ========================================================================== */
+
+/* 水面光泽：左上大片柔光 + 右下青蓝反射 */
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 46% at 10% -8%, rgba(255, 255, 255, .6) 0%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(90% 42% at 92% 108%, rgba(150, 226, 255, .38) 0%, rgba(150, 226, 255, 0) 66%);
+}
+
+html[data-live-skin] body[data-ds-dark-theme]::before {
+  background: radial-gradient(120% 46% at 12% -8%, rgba(60, 200, 255, .24) 0%, rgba(60, 200, 255, 0) 64%),
+    radial-gradient(90% 42% at 90% 108%, rgba(0, 220, 180, .14) 0%, rgba(0, 220, 180, 0) 66%);
+}
+
+/* 白天的阴影偏青，不用纯黑 */
+html[data-live-skin] body {
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(10, 80, 120, .24), 0 14px 34px 0 rgba(12, 90, 130, .2);
+}
+
+/* 对话行压一层极淡的白描边，正文像浮在玻璃上 */
+html[data-live-skin] [data-dsh-part='message-row'] {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .35);
+}

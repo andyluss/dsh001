@@ -1,0 +1,43 @@
+/* Gaslight —— 煤气灯
+   相邻术语「煤气灯奇幻」：偏奇幻、机械与角色浪漫，工程学浓度略低。
+   这一支只有一处光源，其余全是暗部——对比度最高。
+   动效签名：灯火摇曳（三个光斑以不同周期做极小幅度的透明度起伏）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: steampunk-lamp-flicker;
+  --ls-fx-duration: 9s;
+  background-image:
+    radial-gradient(38% 30% at 24% 62%, rgba(255, 196, 107, .16) 0%, rgba(255, 196, 107, 0) 72%),
+    radial-gradient(30% 26% at 76% 34%, rgba(255, 196, 107, .12) 0%, rgba(255, 196, 107, 0) 74%),
+    linear-gradient(180deg, #191510 0%, #100e0b 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 三处灯斑各自独立地呼吸，合成出「不是一处光在抖」的感觉 */
+html[data-live-skin] body::after {
+  background-image:
+    radial-gradient(22% 20% at 26% 60%, rgba(255, 196, 107, .13) 0%, rgba(255, 196, 107, 0) 70%),
+    radial-gradient(18% 18% at 72% 38%, rgba(255, 196, 107, .10) 0%, rgba(255, 196, 107, 0) 72%),
+    radial-gradient(16% 16% at 54% 84%, rgba(255, 196, 107, .08) 0%, rgba(255, 196, 107, 0) 74%);
+  background-size: 100% 100%;
+}
+
+@keyframes steampunk-lamp-flicker {
+  0%,
+  100% {
+    opacity: .85;
+  }
+  18% {
+    opacity: 1;
+  }
+  34% {
+    opacity: .78;
+  }
+  52% {
+    opacity: .96;
+  }
+  71% {
+    opacity: .82;
+  }
+}

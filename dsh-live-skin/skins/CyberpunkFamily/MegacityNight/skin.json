@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "MegacityNight",
+  "nameEn": "Megacity Night",
+  "description": "巨企塔 · 把垂直分层推到极致：顶栏是资本高空，往下每深一层更脏更密",
+  "accent": "#00e5ff",
+  "tags": ["megacity", "tiering", "hologram"],
+  "defaults": {
+    "accent": "#00e5ff",
+    "glass": 60,
+    "neon": 82,
+    "rain": 30,
+    "tiering": true,
+    "intensity": 70
+  },
+  "styles": ["skin.css"]
+}

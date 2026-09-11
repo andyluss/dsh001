@@ -1,0 +1,18 @@
+{
+  "manifestVersion": 1,
+  "name": "PostCyber",
+  "nameEn": "PostCyber",
+  "description": "后赛博 · 网络已成熟 · 无雨无塔，用克制的青与琥珀代替对撞的霓虹",
+  "accent": "#4fd1c5",
+  "tags": ["postcyberpunk", "calm", "analysis"],
+  "defaults": {
+    "accent": "#4fd1c5",
+    "glass": 72,
+    "neon": 34,
+    "rain": 0,
+    "scanline": 0,
+    "tiering": false,
+    "intensity": 44
+  },
+  "styles": ["skin.css"]
+}

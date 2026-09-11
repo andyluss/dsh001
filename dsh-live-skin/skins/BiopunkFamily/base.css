@@ -1,0 +1,272 @@
+/* ==========================================================================
+   BiopunkFamily —— 家族层（湿件 · 组织 · 培养皿冷光）
+   依据：doc/punks/biopunk/ ｜ 规格：doc/live-skin/06_生物朋克.md
+
+   材质签名：**没有一条硬边，且所有高光都向内发光。**
+   这是七个家族里唯一一支「识别完全由材质承担」的 —— 卷内明确说它
+   「最不怀旧……复古只落在母题层而非视觉层」，所以它**没有时代脸**，
+   不能像蒸汽朋克那样靠黄铜、像柴油朋克那样靠胶片来认。它只剩材质。
+
+   与相邻的赛博朋克的硬分界（方向正好相反）：
+     赛博朋克的光**向外扩散**（bloom），被水揉糊；
+     生物朋克的光**向内透出**（inset glow），是膜而不是灯泡。
+
+   卷内明确排除：义眼、霓虹雨（那是赛博朋克侧）。
+   ========================================================================== */
+
+html[data-live-skin] body {
+  /* —— 由参数派生的中间量 —— */
+  --ls-glass-alpha: calc(.92 - var(--ls-glass, 52) * .0058);
+  /* wetness：湿润感。内发光的强度与高光的柔度 —— 这是本家族的主控参数 */
+  --ls-wet-a: calc(var(--ls-wetness, 60) * .0060);
+  /* membrane：膜层。面板边缘半透明内发光的厚度 */
+  --ls-memb-a: calc(var(--ls-membrane, 60) * .0055);
+  /* pulse：生物脉冲的幅度。由家族层的 @keyframes 消费（见文件末） */
+  --ls-pulse-a: calc(var(--ls-pulse, 40) * .005);
+  --ls-int: calc(var(--ls-intensity, 60) * .01);
+  --ls-wet-eff: calc(var(--ls-wet-a) * var(--ls-int));
+  --ls-memb-eff: calc(var(--ls-memb-a) * var(--ls-int));
+
+  --ls-mucus: 220, 255, 240;
+  --ls-dish: #7fe8d8;
+  --ls-fluor: #5bff9e;
+  --ls-tissue: #7a3b3b;
+  --ls-tissue-soft: #b9786f;
+
+  /* variant 私有动效的挂点 */
+  --ls-fx-name: none;
+  --ls-fx-duration: 0s;
+
+  /* —— 底与面板（肉质侧的暗棕黑。洁净侧由 Cleanroom 覆盖） —— */
+  --dsw-alias-bg-base: rgba(20, 16, 15, var(--ls-glass-alpha));
+  --dsw-alias-bg-layer-1: rgba(34, 26, 25, calc(var(--ls-glass-alpha) + .1));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(42, 31, 30, calc(var(--ls-glass-alpha) + .16)), rgba(28, 21, 20, calc(var(--ls-glass-alpha) + .14)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(48, 35, 33, calc(var(--ls-glass-alpha) + .2)), rgba(32, 24, 23, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(52, 38, 36, calc(var(--ls-glass-alpha) + .24)), rgba(34, 25, 24, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-alias-bg-module-platform: rgba(34, 26, 25, calc(var(--ls-glass-alpha) + .04));
+  --dsw-alias-bg-multi-select: rgba(44, 32, 31, calc(var(--ls-glass-alpha) + .18));
+  --dsw-alias-bg-skeleton: rgba(127, 232, 216, .08);
+  --dsw-alias-bg-mask-1: rgba(6, 4, 4, .6);
+  --dsw-alias-bg-mask-2: rgba(6, 4, 4, .34);
+  --dsw-alias-bg-mask-3: rgba(4, 3, 3, .76);
+  --dsw-alias-bg-mask-drop: rgba(18, 13, 12, .76);
+  --dsw-alias-bg-mask-photo: rgba(3, 2, 2, .92);
+
+  /* —— 描边：没有硬边。这里给的是极低的底色，实际的「边」由内发光承担 —— */
+  --dsw-alias-border-inverted: rgba(220, 255, 240, .14);
+  --dsw-alias-border-inverted2: rgba(220, 255, 240, .08);
+  --dsw-alias-border-l1: rgba(220, 255, 240, .08);
+  --dsw-alias-border-l2: rgba(220, 255, 240, .16);
+  --dsw-alias-border-l2-darkmode-thin: rgba(220, 255, 240, .1);
+  --dsw-alias-border-l3: rgba(220, 255, 240, .14);
+  --dsw-alias-border-l4: rgba(220, 255, 240, .24);
+
+  /* —— 品牌与强调：荧光绿是唯一的强调色（卷内光源语汇只有培养皿冷光与荧光绿） —— */
+  --dsw-alias-brand-primary: var(--ls-accent, #5bff9e);
+  --dsw-alias-brand-primary-invert: #14100f;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #5bff9e);
+  --dsw-alias-brand-text: #e8f5f0;
+  --dsw-alias-link: var(--ls-dish);
+  --dsw-alias-state-business-primary: var(--ls-dish);
+  --dsw-alias-state-business-tertiary: rgba(127, 232, 216, .16);
+
+  /* —— 按钮：填充色压到 45% 以承载白字（C4 逐 variant 复核） —— */
+  --dsw-alias-button-contrast-fill: #e8f5f0;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, rgba(46, 35, 33, .96), rgba(30, 22, 21, .96));
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(42, 32, 30, .98), rgba(26, 19, 18, .96));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, rgba(54, 40, 38, 1), rgba(34, 25, 24, 1));
+  --dsw-alias-button-ghost-active-fill: rgba(54, 40, 38, .84);
+  --dsw-alias-button-ghost-active-border: rgba(127, 232, 216, .4);
+  --dsw-alias-button-ghost-active-hover: rgba(64, 47, 45, .9);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #5bff9e) 45%, #080505);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #5bff9e) 38%, #080505);
+  --dsw-alias-button-primary-dimmed: rgba(91, 255, 158, .28);
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #5bff9e) 45%, #080505);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #5bff9e) 38%, #080505);
+  --dsw-alias-button-tool-bar-fill: rgba(8, 5, 5, .64);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(8, 5, 5, .4);
+  --dsw-alias-button-tool-bar-hover: rgba(8, 5, 5, .78);
+
+  /* —— 交互态 —— */
+  --dsw-alias-interactive-bg-active: rgba(127, 232, 216, .14);
+  --dsw-alias-interactive-bg-hover: rgba(220, 255, 240, .07);
+  --dsw-alias-interactive-bg-hover-accent: rgba(91, 255, 158, .14);
+  --dsw-alias-interactive-bg-hover-danger: rgba(185, 120, 111, .18);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(46, 35, 33, .96), rgba(30, 22, 21, .94));
+
+  /* —— 文本 —— */
+  --dsw-alias-label-caption: #8fa89c;
+  --dsw-alias-label-dimmed: #4e5f58;
+  --dsw-alias-label-primary: #e8f5f0;
+  --dsw-alias-label-primary-bluish: #d0f5ec;
+  --dsw-alias-label-primary-dimmed: #cfe6dd;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-label-primary-inverted: #14100f;
+  --dsw-alias-label-secondary: #a9c4b9;
+  --dsw-alias-label-tertiary: #8fa89c;
+
+  /* —— Markdown —— */
+  --dsw-alias-markdown-citation: rgba(127, 232, 216, .12);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(14, 11, 10, calc(var(--ls-glass-alpha) + .24)), rgba(10, 8, 7, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-alias-markdown-code-block-banner: rgba(24, 18, 17, .94);
+  --dsw-alias-markdown-code-segment-selected: rgba(42, 31, 30, .94);
+  --dsw-alias-markdown-code-segment-unselected: rgba(24, 18, 17, .9);
+  --dsw-alias-markdown-inline-code: rgba(32, 24, 23, .86);
+  --dsw-alias-markdown-placeholder: rgba(28, 21, 20, .84);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(38, 28, 27, .94), rgba(24, 18, 17, .9));
+
+  /* —— 滚动条 —— */
+  --dsw-alias-scrollbar-bg-l1: rgba(127, 232, 216, .18);
+  --dsw-alias-scrollbar-bg-l2: rgba(127, 232, 216, .22);
+  --dsw-alias-scrollbar-hover-l1: rgba(91, 255, 158, .36);
+  --dsw-alias-scrollbar-hover-l2: rgba(91, 255, 158, .42);
+
+  /* —— 状态色 —— */
+  --dsw-alias-state-error-primary: #d4695a;
+  --dsw-alias-state-error-secondary: #e08c80;
+  --dsw-alias-state-success-primary: #5bff9e;
+  --dsw-alias-state-success-secondary: #96ffc2;
+  --dsw-alias-state-success-tertiary: rgba(91, 255, 158, .14);
+  --dsw-alias-state-warn-label: #e8d06b;
+  --dsw-alias-state-warn-primary: #d9b23c;
+  --dsw-alias-state-warn-secondary: #e8cd72;
+  --dsw-alias-state-warn-tertiary: rgba(217, 178, 60, .14);
+
+  /* —— 语义面 —— */
+  --dsw-alias-toast-bg: rgba(24, 18, 17, .96);
+  --dsw-alias-tooltip-bg: rgba(20, 15, 14, .97);
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(44, 32, 31, calc(var(--ls-glass-alpha) + .16)), rgba(30, 22, 21, calc(var(--ls-glass-alpha) + .14)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(56, 41, 39, calc(var(--ls-glass-alpha) + .2)), rgba(36, 27, 26, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(46, 35, 33, calc(var(--ls-glass-alpha) + .2)), rgba(30, 22, 21, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-specific-login-input: rgba(28, 21, 20, .92);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(52, 38, 36, calc(var(--ls-glass-alpha) + .24)), rgba(32, 24, 23, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(46, 35, 33, calc(var(--ls-glass-alpha) + .2)), rgba(30, 22, 21, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(28, 21, 20, calc(var(--ls-glass-alpha) + .08)), rgba(16, 12, 11, calc(var(--ls-glass-alpha) + .02)));
+  --dsw-specific-sidebar-nav-item-active: rgba(56, 41, 39, .86);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(127, 232, 216, .22);
+  --dsw-specific-sidebar-nav-item-hover: rgba(42, 31, 30, .68);
+  --dsw-specific-tip: rgba(34, 25, 24, calc(var(--ls-glass-alpha) + .22));
+
+  /* —— 高度：没有硬边，阴影也柔 —— */
+  --dsw-elevation-stroke-color: rgba(220, 255, 240, .12);
+  --dsw-shadow-lv1: 0 2px 8px 0 rgba(2, 1, 1, .44);
+  --dsw-shadow-lv2: 0 6px 18px 0 rgba(2, 1, 1, .48);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(220, 255, 240, .14), 0 0 26px 0 rgba(91, 255, 158, .08), 0 14px 34px 0 rgba(2, 1, 1, .58);
+  --dsw-mask-blur: blur(var(--ls-blur, 12px)) saturate(1.1);
+}
+
+/* —— 暗色档：同一套湿润材质，整体再压深（降级适配） —— */
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(12, 9, 9, calc(var(--ls-glass-alpha) + .14));
+  --dsw-alias-bg-layer-1: rgba(24, 18, 17, calc(var(--ls-glass-alpha) + .14));
+  --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(30, 22, 21, calc(var(--ls-glass-alpha) + .2)), rgba(18, 13, 12, calc(var(--ls-glass-alpha) + .18)));
+  --dsw-alias-bg-layer-3: linear-gradient(180deg, rgba(36, 26, 25, calc(var(--ls-glass-alpha) + .24)), rgba(22, 16, 15, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-alias-bg-overlay: linear-gradient(180deg, rgba(40, 29, 28, calc(var(--ls-glass-alpha) + .28)), rgba(24, 18, 17, calc(var(--ls-glass-alpha) + .26)));
+  --dsw-alias-bg-module-platform: rgba(24, 18, 17, calc(var(--ls-glass-alpha) + .06));
+  --dsw-alias-bg-multi-select: rgba(32, 24, 23, calc(var(--ls-glass-alpha) + .2));
+  --dsw-alias-label-primary: #f0fbf7;
+  --dsw-alias-label-secondary: #b8d2c7;
+  --dsw-alias-label-tertiary: #93ada1;
+  --dsw-alias-label-caption: #7d968a;
+  --dsw-alias-label-dimmed: #47564f;
+  --dsw-specific-sidebar-fill: linear-gradient(180deg, rgba(20, 15, 14, calc(var(--ls-glass-alpha) + .12)), rgba(10, 7, 7, calc(var(--ls-glass-alpha) + .04)));
+  --dsw-alias-toast-bg: rgba(16, 12, 11, .97);
+  --dsw-alias-tooltip-bg: rgba(14, 10, 9, .98);
+}
+
+/* ==========================================================================
+   壁纸：各 variant 在自己的 skin.css 里定义 body 的 background-image
+   ========================================================================== */
+
+html[data-live-skin] body {
+  background-color: #14100f;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   材质语言 1 · 向内发光 + 生物脉冲
+   这一层既承载「湿润」（所有光都从材料里透出来，而不是打在表面上），
+   也承载家族级的呼吸 —— 整个界面的明度以 7s 周期缓慢起伏。
+   脉冲幅度来自 pulse 参数（0 时完全静止），开关来自 motion。
+   ========================================================================== */
+
+html[data-live-skin] body::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* 黏液高光：从材料内部透出的柔光，没有方向性、没有边缘 */
+    radial-gradient(58% 44% at 26% 22%, rgba(220, 255, 240, calc(var(--ls-wet-eff) * .5)) 0%, rgba(220, 255, 240, 0) 74%),
+    radial-gradient(46% 38% at 78% 74%, rgba(220, 255, 240, calc(var(--ls-wet-eff) * .34)) 0%, rgba(220, 255, 240, 0) 76%),
+    /* 膜：一层极薄的、覆盖整幅画面的半透明组织色 */
+    radial-gradient(120% 90% at 50% 50%, rgba(122, 59, 59, calc(var(--ls-wet-eff) * .3)) 0%, rgba(122, 59, 59, 0) 78%),
+    /* 培养皿冷光：环境辉光，冷而无方向 */
+    radial-gradient(80% 60% at 50% 0%, rgba(127, 232, 216, calc(var(--ls-wet-eff) * .22)) 0%, rgba(127, 232, 216, 0) 70%);
+  background-repeat: no-repeat;
+  animation-name: biopunk-breathe;
+  animation-duration: calc(var(--ls-motion, 1) * 7s);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* body::after 是纯动效层：家族层不给它静止内容 */
+html[data-live-skin] body::after {
+  content: '';
+  position: fixed;
+  inset: -35%;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation-name: var(--ls-fx-name, none);
+  animation-duration: calc(var(--ls-motion, 1) * var(--ls-fx-duration, 0s));
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* ==========================================================================
+   材质语言 2 · 膜层边缘（取代硬边）
+   面板之间不用 1px 的实线分隔，用一圈向内的膜状发光。
+   圆角不等 —— 生长出来的东西不会每个角都一样。
+   ========================================================================== */
+
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 14px 11px 15px 10px;
+  box-shadow:
+    inset 0 0 18px 0 rgba(220, 255, 240, calc(var(--ls-memb-eff) * .5)),
+    inset 0 0 0 1px rgba(220, 255, 240, calc(var(--ls-memb-eff) * .3)),
+    var(--dsw-shadow-lv2);
+}
+
+html[data-live-skin] [data-dsh-part='dialog'],
+html[data-live-skin] [role='dialog'],
+html[data-live-skin] [role='menu'],
+html[data-live-skin] [role='tooltip'] {
+  backdrop-filter: blur(var(--ls-blur, 12px)) saturate(1.1);
+  border-radius: 16px 12px 14px 13px;
+  box-shadow:
+    inset 0 0 20px 0 rgba(220, 255, 240, calc(var(--ls-memb-eff) * .4)),
+    var(--dsw-shadow-lv3);
+}
+
+html[data-live-skin] body ::selection {
+  background-color: rgba(91, 255, 158, .24);
+}
+
+/* ==========================================================================
+   材质语言 3 · 生物脉冲（家族级）
+   幅度由 pulse 决定：pulse=0 时 from 与 to 都是 1，画面完全静止。
+   ========================================================================== */
+
+@keyframes biopunk-breathe {
+  from {
+    opacity: calc(1 - var(--ls-pulse-a, .2));
+  }
+  to {
+    opacity: 1;
+  }
+}

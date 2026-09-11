@@ -1,0 +1,60 @@
+/* TerminalGreen —— 绿字终端
+   卷内点出的「过期倒计时最省力的载体」：CRT、绿字、扫描线、成排屏幕。
+   这一支是家族里最克制的一支 —— 面板接近实色，适合写代码。
+   与其它三支的形态分界：**方正**（圆角归零、1px 实线边框）、**没有 bloom**
+   （荧光屏不发光晕，只有微弱的字符辉光）。
+   动效签名：CRT 刷新（一条细亮带用 steps() 自上而下扫过，9s 一轮）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cyber-crt-refresh;
+  --ls-fx-duration: 9s;
+  background-image:
+    /* CRT 玻璃的反射：一圈极淡的同心辉光 */
+    radial-gradient(60% 44% at 50% 34%, rgba(57, 255, 106, .05) 0 58%, rgba(57, 255, 106, 0) 62%),
+    radial-gradient(42% 32% at 50% 34%, rgba(57, 255, 106, .04) 0 58%, rgba(57, 255, 106, 0) 62%),
+    /* 纯黑底，不做渐变 —— 单色屏没有环境光 */
+    linear-gradient(180deg, #050705 0%, #030503 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 刷新线：贴齐视口的一条细亮带，用 steps 一格一格往下推进 ——
+   这是合成层里的平移，不是逐帧重绘；也不是全屏闪烁。 */
+html[data-live-skin] body::after {
+  inset: 0;
+  background-image: linear-gradient(180deg,
+    rgba(57, 255, 106, 0) 0%,
+    rgba(57, 255, 106, .30) 45%,
+    rgba(57, 255, 106, .55) 50%,
+    rgba(57, 255, 106, .30) 55%,
+    rgba(57, 255, 106, 0) 100%);
+  background-size: 100% 2.5%;
+  background-position: center top;
+  animation-timing-function: steps(240, end);
+}
+
+/* 方正 + 无 bloom：把家族层的品红倒影与青描边都收掉 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px rgba(57, 255, 106, .22);
+  text-shadow: none;
+}
+
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-bottom: 1px solid rgba(57, 255, 106, .26);
+}
+
+/* 唯一的发光处：正文行带一点字符辉光 */
+html[data-live-skin] [data-dsh-part='message-row'] {
+  text-shadow: 0 0 6px rgba(57, 255, 106, .18);
+}
+
+@keyframes cyber-crt-refresh {
+  from {
+    transform: translateY(-12%);
+  }
+  to {
+    transform: translateY(112%);
+  }
+}

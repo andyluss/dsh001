@@ -1,0 +1,44 @@
+/* ChromeSuburb —— 镀铬郊区
+   幸福原子：镀铬郊区、Populuxe 消费繁荣、Googie 建筑。莱维敦、孟山都未来之家、
+   Googie 咖啡屋。1950 年代的未来是新的 —— 这一支没有一点做旧。
+   动效签名：镀铬扫光（底部亮带以 steps() 做一次横向扫过，14s）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: atom-chrome-sweep;
+  --ls-fx-duration: 14s;
+  background-image:
+    /* 右上角一片薄荷绿柔光 */
+    radial-gradient(70% 52% at 84% 4%, rgba(168, 205, 187, .34) 0%, rgba(168, 205, 187, 0) 72%),
+    /* 底边一条贴地的暖白，托住画面 */
+    linear-gradient(0deg, rgba(255, 253, 248, .5) 0%, rgba(255, 253, 248, 0) 18%),
+    linear-gradient(180deg, #f6efe3 0%, #f3ebdd 52%, #ece3d2 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 扫光：一条窄而硬的反光带，用 steps 模拟金属反射的跳跃而不是平滑过渡 */
+html[data-live-skin] body::after {
+  background-image: linear-gradient(96deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, .34) 47%,
+    rgba(226, 234, 240, .5) 50%,
+    rgba(255, 255, 255, .30) 53%,
+    rgba(255, 255, 255, 0) 60%);
+  background-size: 46% 100%;
+  animation-timing-function: steps(9, end);
+}
+
+/* 尾鳍式的大圆角 + 底边一条贴地的镀铬亮线 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 16px 16px 8px 8px;
+  border-bottom: 1px solid rgba(200, 210, 218, .8);
+}
+
+@keyframes atom-chrome-sweep {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(60%);
+  }
+}

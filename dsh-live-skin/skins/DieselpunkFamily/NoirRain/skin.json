@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "NoirRain",
+  "nameEn": "Noir Rain",
+  "description": "黑色电影 · noir 高反差 · 雨夜、湿路面与霓虹倒影",
+  "accent": "#e8b04b",
+  "tags": ["noir", "rain", "neon"],
+  "defaults": {
+    "accent": "#e8b04b",
+    "glass": 30,
+    "grain": 72,
+    "noir": 92,
+    "chrome": 30
+  },
+  "styles": ["skin.css"]
+}

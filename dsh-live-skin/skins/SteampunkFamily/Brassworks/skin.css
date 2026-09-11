@@ -1,0 +1,32 @@
+/* Brassworks —— 黄铜工坊
+   装饰—冒险取向：煤气灯拱廊车站、外露的齿轮、铜色的地平线。
+   动效签名：齿轮转动（一个 30 齿的黄铜轮，60s 一圈）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: steampunk-gear-turn;
+  --ls-fx-duration: 60s;
+  background-image:
+    radial-gradient(120% 40% at 50% 110%, rgba(176, 141, 87, .26) 0%, rgba(176, 141, 87, 0) 72%),
+    repeating-linear-gradient(0deg, rgba(216, 185, 120, .035) 0 1px, transparent 1px 8px),
+    linear-gradient(180deg, #2f2b26 0%, #26221f 55%, #1d1a17 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 齿轮：用重复圆锥渐变画出 30 根辐条，整层缓慢转动。
+   尺寸取 46% 并居中，转起来是一枚嵌在背景里的轮子，不遮挡内容（z-index 已在家族层定为 -1）。 */
+html[data-live-skin] body::after {
+  background-image: repeating-conic-gradient(from 0deg at 50% 50%,
+      rgba(216, 185, 120, .055) 0deg 2.4deg,
+      rgba(216, 185, 120, 0) 2.4deg 12deg);
+  background-size: 46% 46%;
+}
+
+@keyframes steampunk-gear-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# DSH 实验室 001 号 · pre-commit 钩子
+#
+# 在提交前拦截「不该入库的东西」：
+#   1. 可再生的依赖目录与构建产物（node_modules / dist / build / .npm-cache …）
+#   2. 系统与编辑器垃圾（.DS_Store / *.log / .env …）
+#   3. 超过 2MB 的单个文件（大文件请走 Git LFS 或外部存储）
+#
+# 这些约定与根 .gitignore 一致，详见 CONTRIBUTING.md「忽略配置」。
+# 确需跳过时用 git commit --no-verify（慎用）。
+# 启用：git config core.hooksPath .githooks
+# ---------------------------------------------------------------------------
+set -u
+
+max_kb=2048
+bad_pattern='(^|/)(node_modules|dist|build|\.npm-cache|\.venv|__pycache__|\.pytest_cache)(/|$)|(^|/)\.DS_Store$|(^|/)Thumbs\.db$|\.log$|(^|/)\.env(\.|$)'
+
+staged="$(git diff --cached --name-only --diff-filter=ACM)"
+[ -z "$staged" ] && exit 0
+
+status=0
+while IFS= read -r path; do
+  [ -z "$path" ] && continue
+
+  if printf '%s' "$path" | grep -Eq "$bad_pattern"; then
+    echo "✗ pre-commit: 这个路径按约定不应入库 → $path" >&2
+    status=1
+    continue
+  fi
+
+  if [ -f "$path" ]; then
+    size_kb="$(wc -c < "$path" | awk '{printf "%d", $1 / 1024}')"
+    if [ "$size_kb" -gt "$max_kb" ]; then
+      echo "✗ pre-commit: 文件过大（${size_kb}KB > ${max_kb}KB）→ $path" >&2
+      status=1
+    fi
+  fi
+done <<< "$staged"
+
+if [ "$status" -ne 0 ]; then
+  {
+    echo ""
+    echo "  以上内容被 CONTRIBUTING.md 的忽略约定排除。"
+    echo "  若确属要入库的实验产物，请先把规则写进 .gitignore 的反向例外，再提交。"
+    echo ""
+  } >&2
+  exit 1
+fi
+
+exit 0

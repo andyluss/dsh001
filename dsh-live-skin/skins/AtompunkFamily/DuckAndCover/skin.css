@@ -1,0 +1,58 @@
+/* DuckAndCover —— 民防
+   ==========================================================================
+   双面底片的另一面。卷内的核心张力是「幸福原子与核末日同源共档」——
+   同一套物理、同一个机构、同一家印刷厂、同一批商业插画语汇。
+   所以这一支**不换骨架**：圆角、镀铬描边、瓷釉平面全部沿用家族层，
+   只把同一张底片翻到反面（flipside 默认打开）。
+
+   雷区处理（卷内明确要求）：
+     · **不出现蘑菇云**。这是硬约束——在一个长时间注视的工作界面里，
+       蘑菇云无法承载「看点与语境」，只会退化成图案。
+     · **不做玩梗式的黑色幽默**。卷内指出「笑体制＝清算，笑受害＝消费」，
+       民防侧的视觉必须是冷峻的，不是滑稽的。
+     · **不复制冷战性别脚本**，不使用「家庭主妇 / 防空洞主妇」式的视觉隐喻。
+   ==========================================================================
+   动效签名：末日时钟刻度（分针以 steps(60) 每分钟推进一格，60s 一圈）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: atom-doomsday-tick;
+  --ls-fx-duration: 60s;
+  background-image:
+    /* 末日时钟的刻度环：一圈极淡的同心环，位于画面中心偏上。
+       它只是刻度，不是表盘 —— 不画指针图形，指针由动效层承担。 */
+    radial-gradient(30% 30% at 50% 34%, rgba(232, 185, 35, .07) 0 62%, rgba(232, 185, 35, 0) 63%),
+    radial-gradient(23% 23% at 50% 34%, rgba(232, 185, 35, .05) 0 61%, rgba(232, 185, 35, 0) 62%),
+    /* 顶部一片被压住的暖黄，像防空洞里唯一的一盏灯 */
+    linear-gradient(180deg, rgba(232, 185, 35, .10) 0%, rgba(232, 185, 35, 0) 26%),
+    linear-gradient(180deg, #1a1a1c 0%, #141416 62%, #0f0f11 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 分针：一条细而硬的黄线，从刻度环中心指向外，用 steps 一格一格走 */
+html[data-live-skin] body::after {
+  background-image: linear-gradient(90deg,
+    rgba(232, 185, 35, .42) 0%,
+    rgba(232, 185, 35, .42) 12%,
+    rgba(232, 185, 35, 0) 12.5%,
+    rgba(232, 185, 35, 0) 100%);
+  background-size: 26% 1px;
+  background-position: calc(50% + 13%) 34%;
+  background-repeat: no-repeat;
+  transform-origin: 50% 34%;
+  animation-timing-function: steps(60, end);
+}
+
+/* 冷峻的边界：告警色只描一道边，不做填充 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-bottom: 1px solid rgba(232, 185, 35, .34);
+}
+
+@keyframes atom-doomsday-tick {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

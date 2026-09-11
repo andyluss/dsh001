@@ -1,0 +1,73 @@
+/* Unbuilt —— 未建成巨构
+   ==========================================================================
+   设计立场：这一支是对本卷最重的雷区「酷法西斯」的正面回答。
+
+   卷内判据：「看挪用是否冒犯一种秩序」；并明确「可以借用纪念碑的视觉，
+   必须与纪念碑的价值观保持距离」。柴油朋克同一套词汇表长出两副面孔——
+   可亲近的冒险英雄尺度，与压人的法西斯纪念碑尺度。这一支取后者的视觉，
+   但把对象换成**未建成与被摧毁的巨构**：1939 世博会「建设明日世界」、
+   施佩尔的「日耳曼尼亚」、兴登堡号——都是没能落成或已经烧毁的方案。
+
+   落地办法是让巨构显式地「空」：
+     · 画面里没有人群、没有旗帜、没有制服、没有徽记；
+     · 对称轴线是空的，聚光灯照在没有人的广场上；
+     · 情绪是废墟与雾，不是力量。
+
+   禁止事项（不要在这里加东西）：
+     · 不加鹰徽、卐字、党卫队符文、领袖崇拜式构图；
+     · 不加制服、勋章、队列、升旗；
+     · 不加任何可识别为具体政权或组织的符号。
+   体积感来自「重复与对称」，不来自「符号」。
+   ==========================================================================
+   动效签名：聚光灯扫过（一条极宽的光带以 45s 缓慢横扫，透明度仅 0.06）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: diesel-spotlight-sweep;
+  --ls-fx-duration: 45s;
+  background-image:
+    /* 严格垂直的对称轴线：整幅画面唯一的铬银，也是唯一的「竖向」元素。
+       放在壁纸层而不是动效层，因为它必须一动不动。 */
+    linear-gradient(90deg,
+      rgba(200, 204, 208, 0) 0%,
+      rgba(200, 204, 208, .14) calc(50% - 0.5px),
+      rgba(200, 204, 208, .14) calc(50% + 0.5px),
+      rgba(200, 204, 208, 0) 100%),
+    /* 两侧复沓的几何块：等距重复的竖向暗块，模拟透视中的建筑阵列。
+       它们严格对称于中线，且没有门窗——是未建成的体量，不是可辨认的建筑。 */
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, .22) 0 42px,
+      rgba(0, 0, 0, 0) 42px 96px),
+    /* 浓雾：顶到底渐浓的灰雾 */
+    linear-gradient(180deg, rgba(160, 166, 170, .20) 0%, rgba(120, 126, 130, .10) 44%, rgba(70, 74, 78, .26) 100%),
+    linear-gradient(180deg, #4a4e50 0%, #363a3c 58%, #24272a 100%);
+  background-repeat: no-repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* 聚光灯：一条很宽的斜向光带横扫。它是「扫过空广场」的光，不照亮任何对象。
+   只动 transform —— 早先写成 animating background-position，那会逐帧栅格化，
+   被 C5 检查挡下，改成合成层里的平移。 */
+html[data-live-skin] body::after {
+  background-image: linear-gradient(102deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, .055) 44%,
+    rgba(255, 255, 255, .055) 56%,
+    rgba(255, 255, 255, 0) 100%);
+  background-size: 260% 100%;
+  animation-timing-function: ease-in-out;
+}
+
+/* 极简：面板哑光深灰，描边极细——没有任何装饰性细节 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  box-shadow: inset 0 0 0 1px rgba(200, 204, 208, .18), 5px 5px 0 0 rgba(6, 7, 8, .55);
+}
+
+@keyframes diesel-spotlight-sweep {
+  from {
+    transform: translateX(-16%);
+  }
+  to {
+    transform: translateX(16%);
+  }
+}

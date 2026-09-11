@@ -1,0 +1,17 @@
+{
+  "manifestVersion": 1,
+  "name": "MagneticNight",
+  "nameEn": "Magnetic Night",
+  "description": "磁夜 · 深夜机房 · 深钢灰底与琥珀单色辉光",
+  "accent": "#ffb86c",
+  "tags": ["night", "amber", "machine-room"],
+  "defaults": {
+    "accent": "#ffb86c",
+    "glass": 34,
+    "phosphor": 72,
+    "scanline": 55,
+    "warmth": 18,
+    "intensity": 68
+  },
+  "styles": ["skin.css"]
+}

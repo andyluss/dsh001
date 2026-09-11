@@ -1,0 +1,34 @@
+/* MagneticNight —— 磁夜
+   深夜机房：房间里只有屏幕亮着。这是外部色板「Magnetic Night」档的落地。
+   注意它仍然遵守家族纪律 —— 没有方向性光源、没有 bloom、没有暗角。
+   屏幕的辉光是**设备自己发的光**，不是环境光。
+   动效签名：辉光呼吸（琥珀辉光以 9s 周期做极小幅度的强度起伏）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cf-glow-breathe;
+  --ls-fx-duration: 9s;
+  background-image:
+    /* 磁带噪声的视觉等价物：一层非常轻、非常均匀的噪点（不是颗粒，是信号） */
+    radial-gradient(circle 0.6px at 2px 3px, rgba(255, 255, 255, .05) 0 60%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 0.6px at 5px 1px, rgba(0, 0, 0, .18) 0 60%, rgba(0, 0, 0, 0) 100%),
+    /* 顶部一片琥珀，来自屏幕的反射 —— 均匀、没有明确方向 */
+    linear-gradient(180deg, rgba(255, 184, 108, .07) 0%, rgba(255, 184, 108, 0) 30%),
+    linear-gradient(180deg, #1a1d21 0%, #15181b 100%);
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  background-size: 7px 7px, 7px 7px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body::after {
+  background-image: linear-gradient(0deg, rgba(255, 184, 108, .1), rgba(255, 184, 108, .1));
+  background-repeat: no-repeat;
+}
+
+@keyframes cf-glow-breathe {
+  from {
+    opacity: .72;
+  }
+  to {
+    opacity: 1;
+  }
+}

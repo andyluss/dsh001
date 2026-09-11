@@ -1,0 +1,113 @@
+{
+  "manifestVersion": 1,
+  "name": "蒸汽朋克家族",
+  "nameEn": "Steampunk Family",
+  "description": "维多利亚基座，把超前技术翻译成蒸汽、齿轮与黄铜的语法。它回望的不是维多利亚的真实当下，而是后世反推、从未被许诺也未存在的「可能拥有的蒸汽未来」——所以高光只沿金属边缘走，平面上什么都不留。",
+  "accent": "#b08d57",
+  "tags": ["steampunk", "brass", "victorian", "gaslight"],
+  "styles": ["base.css"],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 52
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "决定黄铜的色相：偏金、偏绿（铜绿）或偏红",
+      "group": "材质",
+      "default": "#b08d57"
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "氛围总强度",
+      "description": "统一缩放煤气灯、雾与铜绿洗层的强度",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "标志性动效",
+      "description": "齿轮、灯火、穿孔卡或炉火；关掉即静止",
+      "group": "氛围",
+      "default": true
+    },
+    {
+      "key": "patina",
+      "type": "number",
+      "label": "铜绿",
+      "description": "0 是新打磨的黄铜，100 是重度氧化的旧铜",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 45
+    },
+    {
+      "key": "gaslight",
+      "type": "number",
+      "label": "煤气灯",
+      "description": "暖黄光源的强度与范围（只有右上这一处光源）",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 62
+    },
+    {
+      "key": "haze",
+      "type": "number",
+      "label": "雾感",
+      "description": "雾都的散射浓度与暗角深度",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "雾与灯火压到最低，可读性优先，适合长时间工作",
+      "values": { "glass": 70, "blur": 8, "intensity": 26, "patina": 27, "gaslight": 43, "haze": 14, "motion": false }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "该支皮肤的设计意图原样呈现",
+      "values": { "glass": 52, "blur": 12, "intensity": 60, "patina": 45, "gaslight": 62, "haze": 40, "motion": true }
+    },
+    {
+      "id": "cinematic",
+      "name": "浓烈",
+      "description": "雾、灯火与铜绿拉满，适合展示",
+      "values": { "glass": 38, "blur": 16, "intensity": 92, "patina": 56, "gaslight": 74, "haze": 60, "motion": true }
+    }
+  ]
+}

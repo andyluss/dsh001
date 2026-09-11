@@ -1,0 +1,32 @@
+{
+  "manifestVersion": 1,
+  "name": "AeroGlass",
+  "nameEn": "Aero Glass",
+  "description": "极简玻璃 · 纯色底 · 厚面板 · 几乎无气泡，长文与代码优先",
+  "accent": "#1f8fd6",
+  "tags": ["minimal", "flat", "legibility"],
+  "defaults": {
+    "accent": "#1f8fd6",
+    "wallpaper": "plain",
+    "glass": 10,
+    "blur": 8,
+    "gloss": 26,
+    "bubbleAmount": 10,
+    "bubbleCycle": 260
+  },
+  "presets": [
+    {
+      "id": "standard",
+      "name": "标准（极简）",
+      "description": "覆盖家族的「标准」：面板做实、气泡压到最低",
+      "values": { "glass": 10, "blur": 8, "gloss": 26, "bubbleAmount": 10, "bubbleCycle": 260 }
+    },
+    {
+      "id": "airy",
+      "name": "透气",
+      "description": "极简但保留一点壁纸的呼吸感",
+      "values": { "glass": 34, "blur": 10, "gloss": 40, "bubbleAmount": 26, "bubbleCycle": 220 }
+    }
+  ],
+  "styles": ["skin.css"]
+}

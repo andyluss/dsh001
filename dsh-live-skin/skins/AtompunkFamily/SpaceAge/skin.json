@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "name": "SpaceAge",
+  "nameEn": "Space Age",
+  "description": "太空纪 · 明日世界与原子球 · 最干净的一支，原子图案系统在此最完整",
+  "accent": "#2e7db8",
+  "tags": ["space-age", "orbit", "clean"],
+  "defaults": {
+    "accent": "#2e7db8",
+    "glass": 66,
+    "radiation": 42,
+    "chrome": 58,
+    "intensity": 58
+  },
+  "styles": ["skin.css"]
+}

@@ -1,0 +1,44 @@
+/* Dawnlight —— 晨光
+   太阳朋克里最冷静的一支：清晨的工作台，绿意在窗外而不在屏幕上。
+   它是家族里 craft 最低、纹理最少的一支 —— 圆角接近规整、几乎没有编织。
+   这一支的存在意义是给「不想被氛围打扰」的人留一个位置，
+   同时也说明 craft 这个参数确实是可调的，而不是装饰。
+   动效签名：晨光渐亮（地平线暖白带以 180s 做一次几乎不可察觉的明暗循环）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: sp-dawn-brighten;
+  --ls-fx-duration: 180s;
+  background-image:
+    /* 地平线：从底边升起的一条暖白带 */
+    linear-gradient(0deg, rgba(255, 244, 214, .6) 0%, rgba(255, 244, 214, .18) 12%, rgba(255, 244, 214, 0) 26%),
+    /* 极少的绿：只有底边一条细绿线 */
+    linear-gradient(0deg, rgba(107, 127, 74, .22) 0%, rgba(107, 127, 74, 0) 2%),
+    linear-gradient(180deg, #dce9f0 0%, #e8eef0 46%, #f4f2ea 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body::after {
+  background-image: linear-gradient(180deg, rgba(255, 246, 220, 0) 0%, rgba(255, 246, 220, .22) 100%);
+  background-size: 100% 100%;
+  animation-timing-function: ease-in-out;
+}
+
+/* 最规整的一支：圆角整齐、线条为主、玻璃多于材质 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .8),
+    inset 0 -1px 0 0 rgba(46, 125, 184, .12),
+    var(--dsw-shadow-lv2);
+}
+
+@keyframes sp-dawn-brighten {
+  from {
+    opacity: .5;
+  }
+  to {
+    opacity: 1;
+  }
+}

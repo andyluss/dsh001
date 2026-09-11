@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.linxin666.org/dsh-skin/v2.json",
+  "skinManifestVersion": 2,
+  "id": "frutiger-aero-rich",
+  "name": "Frutiger Aero · 浓郁",
+  "nameEn": "Frutiger Aero · Rich",
+  "version": "1.0.0",
+  "author": "dsh001 · 由动态 Cordis 插件固化",
+  "tagline": "饱和蓝天 · 密集气泡 · 最重的玻璃与磨砂",
+  "description": "Frutiger Aero 的浓口版本：天空更饱和、草地更绿，气泡又密又小，玻璃高光与磨砂都加码，最接近 2007 年那张桌面壁纸。信息密度高的界面会显得更「满」，适合展示与短会话。同样接入「背景遮蔽」与「气泡不透明度」两支滑杆。",
+  "tags": [
+    "frutiger-aero",
+    "rich",
+    "vivid",
+    "glass",
+    "y2k"
+  ],
+  "accent": "#1a94dd",
+  "order": 12,
+  "license": "MIT",
+  "contributes": {
+    "stylesheet": "skin.css",
+    "patches": "patches.css"
+  }
+}

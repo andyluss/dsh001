@@ -1,0 +1,39 @@
+/* DifferenceEngine —— 差分机
+   思想实验取向：把蒸汽世界当历史哲学的试验台。这一支主动去掉装饰——
+   不加铆钉与齿边，改用刻度线与孔阵，黄铜只出现在数值与刻度上。
+   动效签名：穿孔卡推进（用 steps() 步进，机械而非流体）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: steampunk-card-advance;
+  --ls-fx-duration: 30s;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(216, 185, 120, .06) 0 1px, transparent 1px 24px),
+    linear-gradient(180deg, #221f1b 0%, #1a1815 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 穿孔卡的孔阵：等距点阵，用 steps 一行一行往下推 */
+html[data-live-skin] body::after {
+  background-image:
+    radial-gradient(circle 1.6px at 12px 12px, rgba(216, 185, 120, .16) 0 60%, rgba(216, 185, 120, 0) 100%),
+    radial-gradient(circle 1.6px at 36px 12px, rgba(216, 185, 120, .10) 0 60%, rgba(216, 185, 120, 0) 100%);
+  background-size: 48px 14px;
+  background-repeat: repeat;
+  animation-timing-function: steps(14, end);
+}
+
+/* 顶部一条冷白刻度带：与「煤气灯暖黄」形成对照，暗示这里不是工坊而是试验台 */
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  background-image: linear-gradient(180deg, rgba(226, 232, 236, .10) 0%, rgba(226, 232, 236, 0) 100%);
+  border-bottom: 1px solid rgba(216, 185, 120, .18);
+}
+
+@keyframes steampunk-card-advance {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(4%);
+  }
+}

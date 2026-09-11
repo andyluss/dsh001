@@ -1,0 +1,111 @@
+/* ==========================================================================
+   Frutiger Aero — L3 装饰层
+   全部只加视觉，不碰布局；动画只用合成属性（transform），静止层不做动画。
+   ========================================================================== */
+
+/* —— 水面光泽：静止的柔光层，压在壁纸之上、内容之下 —— */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 46% at 10% -8%, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, 0) 62%),
+    radial-gradient(90% 42% at 92% 108%, rgba(150, 226, 255, .4) 0%, rgba(150, 226, 255, 0) 66%);
+}
+
+body[data-ds-dark-theme]::before {
+  background:
+    radial-gradient(120% 46% at 12% -8%, rgba(60, 200, 255, .28) 0%, rgba(60, 200, 255, 0) 64%),
+    radial-gradient(90% 42% at 90% 108%, rgba(0, 220, 180, .16) 0%, rgba(0, 220, 180, 0) 66%);
+}
+
+/* —— 上浮气泡 ——
+   一块 620px 见方、可平铺的玻璃气泡贴图，每块 3 颗（1440×900 上约 10 颗），
+   三颗沿对角线错开，平铺时不会看出网格。
+   元素高 100vh + 一个平铺高度，每 620px 平移一次即无缝循环，
+   只跑 transform，留在合成层里。
+   z-index: 1 → 浮在玻璃面板「前面」（外框有一层半透明 bg-base，
+   放在它后面的白气泡会被那层纱冲平）；菜单/弹窗/Toast 的 z-index 更高，
+   所以气泡不会盖住浮层。 */
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(100vh + 490px);
+  z-index: 1;
+  pointer-events: none;
+  /* 密度/透明度接皮肤中心的「气泡不透明度」滑杆（--dsh-skin-bubble-alpha = 0..1）：
+     拉到 0 就是整层关掉，拉到 100% 拉到最明显。 */
+  opacity: calc(var(--dsh-skin-bubble-alpha, .5) * 1.44);
+  background-repeat: repeat;
+  background-size: 470px 470px;
+  background-image:
+    /* 大泡：高光 + 玻璃边 */
+    radial-gradient(circle 5.2px at 66.7px 84.1px, rgba(255, 255, 255, .98) 0 55%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 22.6px at 72.8px 91px, rgba(255, 255, 255, 0) 46%, rgba(255, 255, 255, .92) 68%, rgba(126, 206, 240, .6) 84%, rgba(126, 206, 240, 0) 97%),
+    /* 中泡 */
+    radial-gradient(circle 3.5px at 338.9px 250.9px, rgba(255, 255, 255, .95) 0 55%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 14.8px at 342.6px 254.7px, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, .88) 68%, rgba(126, 206, 240, .5) 84%, rgba(126, 206, 240, 0) 97%),
+    /* 小泡 */
+    radial-gradient(circle 2.6px at 196.3px 398px, rgba(255, 255, 255, .95) 0 55%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 9.6px at 198.6px 400.3px, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, .85) 70%, rgba(126, 206, 240, .45) 86%, rgba(126, 206, 240, 0) 98%);
+  animation: frutiger-aero-rich-rise 94s linear infinite;
+  will-change: transform;
+}
+
+/* 深海模式：整体压暗，玻璃边收到淡青，避免夜里发亮 */
+body[data-ds-dark-theme]::after {
+  /* 深海模式同滑杆，但整体再乘 0.7，夜里不会发亮 */
+  opacity: calc(var(--dsh-skin-bubble-alpha, .5) * 1.44 * .70);
+  background-image:
+    radial-gradient(circle 5.2px at 66.7px 84.1px, rgba(206, 245, 255, .55) 0 55%, rgba(206, 245, 255, 0) 100%),
+    radial-gradient(circle 22.6px at 72.8px 91px, rgba(130, 222, 250, 0) 46%, rgba(130, 222, 250, .5) 68%, rgba(52, 158, 200, .26) 84%, rgba(52, 158, 200, 0) 97%),
+    radial-gradient(circle 3.5px at 338.9px 250.9px, rgba(206, 245, 255, .5) 0 55%, rgba(206, 245, 255, 0) 100%),
+    radial-gradient(circle 14.8px at 342.6px 254.7px, rgba(130, 222, 250, 0) 44%, rgba(130, 222, 250, .46) 68%, rgba(52, 158, 200, .22) 84%, rgba(52, 158, 200, 0) 97%),
+    radial-gradient(circle 2.6px at 196.3px 398px, rgba(206, 245, 255, .5) 0 55%, rgba(206, 245, 255, 0) 100%),
+    radial-gradient(circle 9.6px at 198.6px 400.3px, rgba(130, 222, 250, 0) 42%, rgba(130, 222, 250, .44) 70%, rgba(52, 158, 200, .2) 86%, rgba(52, 158, 200, 0) 98%);
+}
+
+@keyframes frutiger-aero-rich-rise {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, -470px, 0);
+  }
+}
+
+/* —— 磨砂：只给「浮在内容之上」的小面积表面，避免大面积实时模糊 —— */
+[data-dsh-surface="composer"],
+[data-dsh-surface="session-header"],
+[data-dsh-part="dialog"],
+[role="dialog"],
+[role="menu"],
+[role="tooltip"] {
+  backdrop-filter: blur(16px) saturate(1.25);
+}
+
+/* —— 玻璃高光：会话头与输入区顶部的 Aero 反光带 —— */
+[data-dsh-surface="session-header"],
+[data-dsh-surface="composer"] {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .64) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+body[data-ds-dark-theme] [data-dsh-surface="session-header"],
+body[data-ds-dark-theme] [data-dsh-surface="composer"] {
+  background-image: linear-gradient(180deg, rgba(150, 235, 255, .18) 0%, rgba(150, 235, 255, 0) 100%);
+}
+
+/* —— 对话气泡与浮层：加一层内高光，坐实「玻璃罐」质感 —— */
+[data-dsh-part="message-row"] {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+body[data-ds-dark-theme] [data-dsh-part="message-row"] {
+  text-shadow: 0 1px 0 rgba(0, 20, 32, .45);
+}

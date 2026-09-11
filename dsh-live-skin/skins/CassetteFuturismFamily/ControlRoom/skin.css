@@ -1,0 +1,48 @@
+/* ControlRoom —— 控制室
+   外部资料自述的「NASA consoles」。成排的灰色面板、指示灯阵列、拨杆。
+   家族里最规整的一支：**严格等距、圆角接近直角、装饰为零** ——
+   只有功能性的分隔与指示灯。这是它和其余三支的形态分界。
+   动效签名：指示灯轮询（一颗亮点以 steps(6) 一格一格地跳过去，3s 一轮）。 */
+
+html[data-live-skin] body {
+  --ls-fx-name: cf-indicator-scan;
+  --ls-fx-duration: 3s;
+  background-image:
+    /* 指示灯阵列：两层错开亮度的等距点阵 */
+    radial-gradient(circle 1.6px at 14px 14px, rgba(139, 233, 253, .3) 0 60%, rgba(139, 233, 253, 0) 100%),
+    radial-gradient(circle 1.6px at 38px 14px, rgba(139, 233, 253, .12) 0 60%, rgba(139, 233, 253, 0) 100%),
+    /* 凹槽分隔：等距的横向暗线，像面板之间的接缝 */
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .22) 0 1px, rgba(0, 0, 0, 0) 1px 56px),
+    linear-gradient(180deg, #24282c 0%, #1e2225 100%);
+  background-repeat: repeat, repeat, repeat, no-repeat;
+  background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+}
+
+/* 一颗会跳的指示灯：单点、很亮、用 steps 跳而不是滑 */
+html[data-live-skin] body::after {
+  background-image: radial-gradient(circle 2.6px at 18px 18px, rgba(160, 240, 255, .85) 0 55%, rgba(160, 240, 255, 0) 100%);
+  background-size: 48px 48px;
+  background-position: left 30px top 30px;
+  background-repeat: repeat-x;
+  animation-timing-function: steps(6, end);
+}
+
+/* 装饰为零：只有功能性的分隔与直角 */
+html[data-live-skin] [data-dsh-surface='composer'],
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-radius: 2px;
+}
+
+html[data-live-skin] [data-dsh-surface='session-header'] {
+  border-bottom: 1px solid rgba(139, 233, 253, .2);
+}
+
+@keyframes cf-indicator-scan {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(48px);
+  }
+}
