@@ -10,7 +10,7 @@
 
 | 路径 | 内容 |
 | --- | --- |
-| `plugin/` | **插件包根**（`package.json` 所在层）。`lib/` 三个文件分别是宿主半边、客户端半边与档位推导；`skins/` 8 家族 31 套皮肤；`scripts/gen-dark-parity.py` 是暗色 token 的补齐工具 |
+| `plugin/` | **插件包根**（`package.json` 所在层）。`lib/` 三个文件分别是宿主半边、客户端半边与档位推导；`skins/` 11 家族 43 套皮肤；`scripts/gen-dark-parity.py` 补齐暗色 token、`scripts/gen-family.py` 从色板规格生成整个家族 |
 | `docs/` | 设计文档集：家族总表、光谱轴、材质签名登记、七份分支规格、工程约束 C1–C13 |
 | `test/` | 冒烟测试台 `run.mjs`，63 项断言 |
 | `archive/aero-skin-build/` | **前身**：skin-center 时代的 Frutiger Aero 皮肤构建脚手架（见文末） |
