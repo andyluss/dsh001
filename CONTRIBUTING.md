@@ -69,7 +69,7 @@
 | scope | 含义 |
 | --- | --- |
 | `001-cards` | 实验 001 · 知识卡片（`lab/001-knowledge-cards/`） |
-| `002-liveskin` | 实验 002 · LiveSkin 皮肤系统（`dsh-live-skin/`、`doc/live-skin/`） |
+| `002-liveskin` | 实验 002 · LiveSkin 皮肤系统（`lab/002-liveskin/`） |
 | `docs` / `punks` | `doc/` 下的文档与研究卷 |
 | `repo` | 仓库级：README、CONTRIBUTING、.gitignore、.githooks |
 | `git` | Git 工作流本身（钩子、模板、脚本） |
@@ -201,7 +201,8 @@ git log --oneline -1                    # 4. 提交后回看
 2. **实验自己的 `.gitignore`**（如 `lab/001-knowledge-cards/react-app/.gitignore`）：
    只写该实验特有的产物，**不重复**根目录已有的规则。
 
-刻意入库的例外：`.aero-skin-build/out/`（皮肤构建产物的样本）与 `.liveskin-test/.home/`（测试用的最小 DSH home）。
+刻意入库的例外：`lab/002-liveskin/archive/aero-skin-build/out/`（皮肤构建产物的样本）。
+`lab/002-liveskin/test/.home/`（测试用的最小 DSH home）已改为运行时生成，不入库。
 它们是实验结论的一部分，不叫 `dist`/`build`，因此不受上面的规则影响——要新增这类例外时，
 **必须在 `.gitignore` 里写清原因**，不要靠改名绕过。
 

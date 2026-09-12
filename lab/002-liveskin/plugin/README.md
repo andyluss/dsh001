@@ -163,7 +163,7 @@ html[data-live-skin] body[data-ds-dark-theme] {
 ## 安装
 
 ```sh
-dsh plugin --profile web add link:/absolute/path/to/dsh-live-skin
+dsh plugin --profile web add link:/absolute/path/to/lab/002-liveskin/plugin
 ```
 
 若该命令被 profile 的 pnpm 策略拒绝（`minimumReleaseAge` 等），等价的手工接线是：
@@ -177,7 +177,7 @@ dsh plugin --profile web add link:/absolute/path/to/dsh-live-skin
 ## 开发
 
 ```sh
-node ../.liveskin-test/run.mjs
+node ../test/run.mjs
 ```
 
 60 项断言，分十二段（另含 `[5b] CSS 审计` 的 C2、C4–C11）：
@@ -246,7 +246,7 @@ node ../.liveskin-test/run.mjs
 6. **亮色默认的家族，暗色块要写全**：不只是 bg-base / layers / labels，还包括零件级 token
    （遮罩、滚动条、状态色、markdown 芯片、按钮变体、交互底色、阴影）。只写主体面的话，
    其余会沿用浅色值或落回官方中性色。补齐可用 `python3 scripts/gen-dark-parity.py --check`
-   看还缺哪些，`--emit <Family>` 打印建议值（规则与踩坑见 `doc/live-skin/10_工程约束与验收.md`）。
+   看还缺哪些，`--emit <Family>` 打印建议值（规则与踩坑见 `../docs/10_工程约束与验收.md`）。
 7. **链接不能直接用强调色**：它是为填充与描边挑的。亮底压深、暗底提亮，
    `color-mix(in srgb, var(--ls-accent, …) 42%, #0b1116)` / `… 44%, #ffffff`。
    极性跟着**页面**走：暗色默认的家族两档都要提亮；强制单一观感的变体写自己的链接。

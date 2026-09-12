@@ -23,7 +23,14 @@ Thumbs.db
 # ---------------------------------------------------------------------------
 # 说明：本仓库是 DSH 实验室沙盒。实验源码、文档、设计稿一律入库；
 # 可再生的依赖与构建产物一律不入库（换机器 npm install / npm run build 即可）。
-# 例外：.aero-skin-build/out/ 与 .liveskin-test/.home/ 是刻意提交的实验产物与样本，
-# 它们不叫 dist/build，所以不受上面规则影响。
+# 例外：lab/002-liveskin/archive/aero-skin-build/out/ 是刻意提交的产物样本，
+# 它不叫 dist/build，所以不受上面规则影响。
 # 详细约定见 CONTRIBUTING.md「忽略配置」一节。
 # ---------------------------------------------------------------------------
+
+# 冒烟测试台每次运行都会 rmSync + mkdirSync 重建的最小 DSH home，不入库。
+lab/002-liveskin/test/.home/
+
+# 目录迁移期的兼容符号链接：让**重启前**已在运行的宿主仍能按旧路径读到插件。
+# 重启 DSH 后即可删除。详见 lab/002-liveskin/README.md。
+/dsh-live-skin

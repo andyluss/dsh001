@@ -9,7 +9,7 @@
 | 编号 | 实验 | 目录 | 状态 | 一句话 |
 | --- | --- | --- | --- | --- |
 | 001 | 知识卡片 | `lab/001-knowledge-cards/` | 可用 | 零依赖的知识卡片管理程序，原生单文件版 + React 版共享同一份本地数据（分类树、标签树、SM-2 间隔重复复习） |
-| 002 | LiveSkin 皮肤系统 | `dsh-live-skin/` | 进行中 | DSH Web 的皮肤插件，用 family（大类）/ variant（小类）/ preset（档位）三级模型替代「一整块 CSS」 |
+| 002 | LiveSkin 皮肤系统 | `lab/002-liveskin/` | 进行中 | DSH Web 的皮肤插件，用 family（大类）/ variant（小类）/ preset（档位）三级模型替代「一整块 CSS」 |
 
 新增实验的约定：
 
@@ -27,21 +27,26 @@ dsh001/
 ├── .gitignore / .gitmessage      # 忽略配置、提交信息模板
 ├── .githooks/                    # 版本化的 Git 钩子（commit-msg / pre-commit）
 ├── lab/
-│   └── 001-knowledge-cards/      # 实验 001：知识卡片
-│       ├── README.md             #   实验自己的说明（功能、快捷键、运行方式、数据结构）
-│       ├── index.html            #   原生版：单文件，双击即用
-│       ├── react-app/            #   React 版：Vite + React 18 + vitest
-│       └── viz/                  #   排序算法可视化（卡片排序特性的配套页面）
-├── dsh-live-skin/                # 实验 002：LiveSkin 插件本体
-├── doc/
-│   ├── live-skin/                #   LiveSkin 设计文档集
-│   └── punks/                    #   朋克专题五卷（LiveSkin 的内容底座）
-├── .aero-skin-build/             # Frutiger Aero 皮肤构建脚手架与产物
-└── .liveskin-test/               # LiveSkin 冒烟测试脚本与临时 DSH home
+│   ├── 001-knowledge-cards/      # 实验 001：知识卡片
+│   │   ├── README.md             #   实验自己的说明（功能、快捷键、运行方式、数据结构）
+│   │   ├── index.html            #   原生版：单文件，双击即用
+│   │   ├── react-app/            #   React 版：Vite + React 18 + vitest
+│   │   └── viz/                  #   排序算法可视化（卡片排序特性的配套页面）
+│   └── 002-liveskin/             # 实验 002：LiveSkin 皮肤系统
+│       ├── README.md             #   实验说明与文件索引
+│       ├── plugin/               #   插件包根：package.json / lib / skins
+│       ├── docs/                 #   设计文档集（家族总表、分支规格、工程约束）
+│       ├── test/                 #   冒烟测试台 run.mjs
+│       └── archive/              #   前身：skin-center 时代的 Aero 皮肤构建脚手架
+└── doc/
+    └── punks/                    #   朋克专题五卷（LiveSkin 的内容底座）
 ```
 
-> ⚠️ `dsh-live-skin/` 的路径被 DSH Web profile 以 `link:<绝对路径>` 引用
-> （见 `~/.dsh/profiles/web/package.json`），**请勿移动或改名**，否则已安装的皮肤插件会失效。
+> ⚠️ `lab/002-liveskin/plugin/` 被 DSH Web profile 以 `link:<绝对路径>` 引用，
+> 另有一个 `node_modules/dsh-live-skin` 符号链接指向它（见 `~/.dsh/profiles/web/`）。
+> **移动或改名这个目录会让已安装的皮肤插件失效** —— 必须同步改这两处并重启 DSH。
+> 仓库根目前留着一个迁移期的兼容符号链接 `dsh-live-skin → lab/002-liveskin/plugin`，
+> 让**重启前**已在运行的宿主仍能按旧路径读到插件；重启后可删除（已加进 `.gitignore`）。
 
 ## 运行实验 001
 

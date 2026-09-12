@@ -16,7 +16,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const PKG = resolve(HERE, '..', 'dsh-live-skin')
+const PKG = resolve(HERE, '..', 'plugin')
 
 // 测试自己的 harness home：放在工作区内，既不用碰真实 $DSH_HOME，
 // 也不受文件沙箱限制。插件在调用时读 process.env.DSH_HOME，所以这里设了就生效。
