@@ -303,6 +303,7 @@ window.__ModuleLoader__.load({
       [data-live-skin-panel] .ls-cat-row + .ls-cat-row { margin-top:6px; }
       [data-live-skin-panel] .ls-cat-label { font:var(--dsw-font-xxxs-11); color:var(--dsw-alias-label-tertiary);
         padding-top:5px; text-align:right; }
+      [data-live-skin-panel] .ls-cat-row[data-plain="true"] { grid-template-columns:1fr; }
       [data-live-skin-panel] .ls-chip { border:1px solid var(--dsw-alias-border-l2); background:var(--dsw-alias-bg-layer-1);
         color:var(--dsw-alias-label-secondary); border-radius:999px; padding:4px 12px; cursor:pointer; font:var(--dsw-font-xxs-12); }
       [data-live-skin-panel] .ls-chip:hover { background:var(--dsw-alias-interactive-bg-hover); color:var(--dsw-alias-label-secondary); }
@@ -740,9 +741,11 @@ window.__ModuleLoader__.load({
 
       // 按宿主给的分类顺序分行；顺序里没有的分类（目录册比宿主新时可能出现）
       // 追加在后面，不丢家族。
-      const categoryOrder = Array.isArray(catalog.categories) && catalog.categories.length > 0
-        ? catalog.categories
-        : [...new Set(catalog.families.map((entry) => entry.category))]
+      // 宿主可能比客户端旧（宿主半边要重启才更新，客户端由 HMR 现取），
+      // 那时目录册里还没有 categories/category —— 退回「一排全部家族」，
+      // 而不是渲染出一行没有标签、装着所有家族的东西。
+      const hasCategories = Array.isArray(catalog.categories) && catalog.categories.length > 0
+      const categoryOrder = hasCategories ? catalog.categories : ['']
       const categoryRows = []
       for (const name of categoryOrder) {
         const families = catalog.families.filter((entry) => entry.category === name)
@@ -754,6 +757,7 @@ window.__ModuleLoader__.load({
         if (row === undefined) categoryRows.push({ name: entry.category, families: [entry] })
         else row.families.push(entry)
       }
+      // 每个家族的分类都取不到时（旧宿主），就是上面那个单行 `''` —— 不显示标签。
 
       // 这一份就是运行时此刻写到 <html> 上的全部变量 —— 与 runtime.writeVars
       // 走同一个 paramVars，所以面板里看到的就是 DOM 里的。
@@ -799,8 +803,8 @@ window.__ModuleLoader__.load({
         // 面板不自己排 —— 那是数据不是显示。
         h('div', { className: 'ls-group' },
           h('span', { className: 'ls-group-label' }, '皮肤家族'),
-          categoryRows.map((row) => h('div', { key: row.name, className: 'ls-cat-row' },
-            h('span', { className: 'ls-cat-label' }, row.name),
+          categoryRows.map((row) => h('div', { key: row.name, className: 'ls-cat-row', 'data-plain': row.name === '' ? 'true' : 'false' },
+            row.name === '' ? null : h('span', { className: 'ls-cat-label' }, row.name),
             h('div', { className: 'ls-chips' }, row.families.map((entry) => h(Chip, {
               key: entry.id,
               on: entry.id === familyId,
