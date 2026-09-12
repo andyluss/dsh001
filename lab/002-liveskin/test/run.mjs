@@ -8,7 +8,8 @@
  * 用法： node run.mjs
  */
 import { createServer } from 'node:http'
-import { existsSync, readFileSync, rmSync, mkdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, rmSync, mkdirSync, readdirSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { createRequire } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { strict as assert } from 'node:assert'
@@ -1886,22 +1887,34 @@ if (!liveUp) {
       `线上 bundle 尾部出现了预期外的内容：${JSON.stringify(trailer)}`)
   })
 
-  await checkAsync('线上宿主与磁盘上的 lib/index.js 是同一版（否则需要重启 DSH）', async () => {
+  await checkAsync('线上宿主与磁盘上的宿主源文件是同一版（否则需要重启 DSH）', async () => {
     const health = await (await fetch(`${LIVE}/api/live-skin/v1/health`)).json()
     assert.equal(health.name, 'dsh-live-skin')
 
-    // 判据一（通用）：宿主报告它在**加载那一刻**读到的自身 mtime。它与磁盘现值不一致，
-    // 就说明宿主是旧的。不能只靠「某个历史版本才有的行为」去猜 —— 那种探针在下一版
-    // 就失效了，而且它真的漏报过一次（host 已经旧到不认识 appearance，它还是绿的）。
-    const onDisk = statSync(join(PKG, 'lib', 'index.js')).mtimeMs
-    assert.ok(typeof health.loadedMtime === 'number',
-      '线上宿主没有上报 loadedMtime —— 宿主半边是旧的，需要重启 DSH 才能看到本次改动')
-    assert.ok(Math.abs(health.loadedMtime - onDisk) < 1,
-      `线上宿主加载的是 mtime=${new Date(health.loadedMtime).toISOString()} 的版本，`
-      + `磁盘上已是 ${new Date(onDisk).toISOString()} —— 需要重启 DSH 才能生效`)
+    // 判据一：**内容哈希**，不是文件 mtime。
+    // 用 mtime 会有两个方向的错：
+    //   假阳性 —— `git checkout` / `git reset` / 编辑器保存 / `touch` 会把文件重写成
+    //             一模一样的内容却改掉 mtime，于是「明明重启过了却还被判成需要重启」；
+    //   假阴性 —— 只比 lib/index.js 的 mtime 会漏掉另一半宿主代码 appearance.js 的改动。
+    const hostFiles = readdirSync(join(PKG, 'lib'))
+      .filter((name) => name.endsWith('.js') && name !== 'client.js')   // client.js 由上面那条逐字节比对
+      .sort()
+    const computeHash = (names) => {
+      const hash = createHash('sha256')
+      for (const name of names) hash.update(name).update('\0').update(readFileSync(join(PKG, 'lib', name)))
+      return hash.digest('hex').slice(0, 16)
+    }
+    assert.ok(Array.isArray(health.hostSources),
+      '线上宿主没有上报 hostSources —— 宿主半边是旧的，需要重启 DSH 才能看到本次改动')
+    assert.deepEqual([...health.hostSources].sort(), hostFiles,
+      `线上宿主登记的宿主源清单是 [${health.hostSources}]，lib/ 下实际是 [${hostFiles}]`
+      + ' —— 新增宿主模块后忘了登记进 HOST_SOURCES，或忘了重启')
+    assert.equal(health.sourcesHash, computeHash(hostFiles),
+      `线上宿主加载的宿主源与磁盘不一致（宿主加载于 ${new Date(health.loadedAt).toISOString()}）`
+      + ' —— 需要重启 DSH 才能生效')
 
     // 判据二（行为）：非法颜色回落到参数默认值，而不是早先的 #888888。
-    // 这两条互补：前者查「是不是同一份文件」，后者查「关键行为在不在」。
+    // 两条互补：前者查「是不是同一份代码」，后者查「关键行为在不在」。
     // 宿主代码是否最新，用一个只有新实现才有的行为判定
     const response = await fetch(`${LIVE}/api/live-skin/v1/state`, {
       method: 'POST',

@@ -21,6 +21,7 @@
  * @module dsh-live-skin
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { homedir } from 'node:os'
@@ -39,12 +40,6 @@ const BUILTIN_SKINS_DIR = join(PACKAGE_ROOT, 'skins')
 const STATE_FILE = 'state.json'
 
 /**
- * 本模块被**加载的那一刻**，它自己在磁盘上的 mtime。
- * 宿主半边是进程启动时加载的，改了 host 代码不重启就不会生效；客户端半边则由 HMR 现取。
- * 把这两个值报给 /health，验收台就能判断「线上宿主是不是旧的」，而不是靠某个只有
- * 历史某一版才有的行为去猜 —— 那种探针在下一版就失效了（它曾经漏报过一次）。
- */
-/**
  * 插件版本，取自 package.json。
  * 发布之后要能在**运行时**被问出来：`/health` 与设置面板都会带上它 ——
  * 否则「线上跑的是哪一版」只能靠 git tag 猜。
@@ -57,10 +52,30 @@ const VERSION = (() => {
   }
 })()
 
+/**
+ * 宿主半边（本进程加载的那一半）的源文件清单与内容哈希。
+ *
+ * 宿主是进程启动时加载的，改了不重启不生效；客户端半边由 HMR 现取，另有逐字节比对。
+ * 把这几个值报给 /health，验收台就能判断「线上宿主是不是旧的」。
+ *
+ * 为什么用**内容哈希**而不是文件 mtime：内容相同的重写会改 mtime 却什么都没变 ——
+ * `git checkout` / `git reset` / 编辑器保存 / `touch` 都会触发，
+ * 于是「明明重启过了却还被判成需要重启」。反过来，只比单个文件的 mtime 又会漏掉
+ * 另一半宿主代码（appearance.js）的改动。
+ *
+ * 新增宿主半边模块时**必须登记进 HOST_SOURCES**：验收台会核对这份清单与 lib/ 下的
+ * 实际文件，忘了登记会直接报错，而不是静默漏检。
+ */
+const HOST_SOURCES = ['appearance.js', 'index.js']
 const LOADED_AT = Date.now()
-const LOADED_MTIME = (() => {
+const SOURCES_HASH = (() => {
   try {
-    return statSync(fileURLToPath(import.meta.url)).mtimeMs
+    const libDir = dirname(fileURLToPath(import.meta.url))
+    const hash = createHash('sha256')
+    for (const name of HOST_SOURCES) {
+      hash.update(name).update('\0').update(readFileSync(join(libDir, name)))
+    }
+    return hash.digest('hex').slice(0, 16)
   } catch {
     return null
   }
@@ -716,9 +731,10 @@ async function handle(req, res) {
       version: VERSION,
       builtinSkinsDir: BUILTIN_SKINS_DIR,
       userSkinsDir: userSkinsDir(),
-      // 加载时刻 + 加载时读到的自身 mtime：验收台拿它判断「线上宿主是不是旧的」。
+      // 宿主半边的源文件清单与内容哈希：验收台拿它判断「线上宿主是不是旧的」。
       loadedAt: LOADED_AT,
-      loadedMtime: LOADED_MTIME
+      hostSources: HOST_SOURCES,
+      sourcesHash: SOURCES_HASH
     })
     return
   }
