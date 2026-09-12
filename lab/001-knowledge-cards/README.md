@@ -2,6 +2,7 @@
 
 > DSH 实验室 001 号的第一个独立实验。实验总览与新增实验的约定见根目录 [`../../README.md`](../../README.md)。
 > 本目录自包含：`index.html`（原生版）、`react-app/`（React 版）、`viz/`（排序算法可视化）。
+> 本实验的变更记录见 [`CHANGELOG.md`](CHANGELOG.md)。
 
 一个零依赖的知识卡片管理程序，有两个实现版本，共享同一份本地数据
 （localStorage 的 `kcards.v1` / `kcats.v1` / `ktags.v1`，两个版本可随时切换使用）。

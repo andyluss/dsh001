@@ -14,6 +14,7 @@
 | `docs/` | 设计文档集：家族总表、光谱轴、材质签名登记、七份分支规格、工程约束 C1–C13 |
 | `test/` | 冒烟测试台 `run.mjs`，63 项断言 |
 | `archive/aero-skin-build/` | **前身**：skin-center 时代的 Frutiger Aero 皮肤构建脚手架（见文末） |
+| `CHANGELOG.md` | 本实验的变更日志（仓库级改动见[根变更日志](../../CHANGELOG.md)） |
 
 ## 跑测试
 
