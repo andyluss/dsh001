@@ -201,12 +201,16 @@ git log --oneline -1                    # 4. 提交后回看
    不要另写一份 —— 两份说明必然漂移：
 
 ```sh
-VER=1.0.0
 LAB=lab/002-liveskin                      # 换成要发布的实验
+NAME=LiveSkin                             # 实验的展示名，用于 Release 标题
+VER=1.0.0
 TAG=002-liveskin-v$VER                    # <编号>-<名称>-v<版本>
 
-awk -v v="## [$VER]" 'index($0,v)==1{f=1;next} /^## \[/{f=0} f' "$LAB/CHANGELOG.md" > /tmp/notes.md
-gh release create "$TAG" --title "LiveSkin $VER" --notes-file /tmp/notes.md
+# 取日志里这一版的小节：从 "## [<版本>]" 起，到下一个 "## [" 前
+awk -v v="## [$VER]" 'index($0,v)==1{f=1;next} /^## \[/{f=0} f' \
+  "$LAB/CHANGELOG.md" > /tmp/notes.md
+
+gh release create "$TAG" --title "$NAME $VER" --notes-file /tmp/notes.md
 ```
 
 `gh` 需要先 `gh auth login`。若手边没有 `gh`，等价做法是调 REST API
