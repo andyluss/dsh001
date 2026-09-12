@@ -3,6 +3,8 @@ node_modules/
 dist/
 build/
 .npm-cache/
+__pycache__/
+*.pyc
 *.tsbuildinfo
 
 # 系统与编辑器垃圾
