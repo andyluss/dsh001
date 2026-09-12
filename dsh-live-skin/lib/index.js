@@ -24,6 +24,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, s
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { homedir } from 'node:os'
+import { analyzeAppearance } from './appearance.js'
 
 export const name = 'dsh-live-skin'
 export const inject = ['webServer']
@@ -36,6 +37,21 @@ export const API_PREFIX = '/api/live-skin/v1'
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILTIN_SKINS_DIR = join(PACKAGE_ROOT, 'skins')
 const STATE_FILE = 'state.json'
+
+/**
+ * 本模块被**加载的那一刻**，它自己在磁盘上的 mtime。
+ * 宿主半边是进程启动时加载的，改了 host 代码不重启就不会生效；客户端半边则由 HMR 现取。
+ * 把这两个值报给 /health，验收台就能判断「线上宿主是不是旧的」，而不是靠某个只有
+ * 历史某一版才有的行为去猜 —— 那种探针在下一版就失效了（它曾经漏报过一次）。
+ */
+const LOADED_AT = Date.now()
+const LOADED_MTIME = (() => {
+  try {
+    return statSync(fileURLToPath(import.meta.url)).mtimeMs
+  } catch {
+    return null
+  }
+})()
 
 /** 参数类型表；enum 的取值来自 options。 */
 const PARAM_TYPES = new Set(['number', 'boolean', 'color', 'enum', 'text'])
@@ -436,6 +452,16 @@ export function loadCatalog() {
   }
 
   const ordered = [...families.values()].sort((left, right) => left.id.localeCompare(right.id))
+
+  // 给每个小类标注它在亮/暗两档分别画出来的是亮色还是暗色。
+  // 这是**推导**出来的（读它自己的 CSS），不是手写声明 —— 手写的「支持亮色/暗色」
+  // 一旦皮肤改了就会漂移，而面板显示的正是用户据以判断的那句话。
+  for (const family of ordered) {
+    for (const variant of family.variants) {
+      // 只为分析借用一次组合结果；诊断不在这里报，取样式时还会再报一次。
+      variant.appearance = analyzeAppearance(composeSkinCss(family, variant).css)
+    }
+  }
   return { families: ordered, diagnostics: problems }
 }
 
@@ -636,7 +662,9 @@ function projectCatalog(catalog, state) {
         tags: variant.tags,
         params: variant.params,
         defaults: variant.defaults,
-        presets: variant.presets
+        presets: variant.presets,
+        // 面板要靠它标出「这一支在亮/暗两档分别是什么样」。宿主推导，客户端只显示。
+        appearance: variant.appearance
       }))
     })),
     diagnostics: catalog.diagnostics
@@ -671,7 +699,10 @@ async function handle(req, res) {
       name,
       apiVersion: MANIFEST_VERSION,
       builtinSkinsDir: BUILTIN_SKINS_DIR,
-      userSkinsDir: userSkinsDir()
+      userSkinsDir: userSkinsDir(),
+      // 加载时刻 + 加载时读到的自身 mtime：验收台拿它判断「线上宿主是不是旧的」。
+      loadedAt: LOADED_AT,
+      loadedMtime: LOADED_MTIME
     })
     return
   }
