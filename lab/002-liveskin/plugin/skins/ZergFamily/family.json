@@ -2,6 +2,7 @@
   "manifestVersion": 1,
   "name": "虫族",
   "nameEn": "Zerg",
+  "category": "星际争霸",
   "description": "星际争霸 · 虫族：不是造出来的，是长出来的。几丁质甲壳、菌毯、生物荧光；没有一条直线，高光向内汇聚而不是向外扩散。",
   "accent": "#7d3f9c",
   "tags": [

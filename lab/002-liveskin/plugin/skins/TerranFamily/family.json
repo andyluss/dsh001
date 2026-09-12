@@ -2,6 +2,7 @@
   "manifestVersion": 1,
   "name": "人族",
   "nameEn": "Terran",
+  "category": "星际争霸",
   "description": "星际争霸 · 人族：被流放者用铆钉和胶带把旧联邦的破烂拼成能用的东西。冲压钢板、橄榄绿、琥珀色仪表背光；光是均匀的顶灯，不为戏剧性服务。",
   "accent": "#b8641f",
   "tags": [

@@ -297,6 +297,12 @@ window.__ModuleLoader__.load({
       [data-live-skin-panel] .ls-group { display:flex; flex-direction:column; gap:8px; }
       [data-live-skin-panel] .ls-group-label { font:var(--dsw-font-xxs-strong-12); color:var(--dsw-alias-label-secondary); text-transform:none; }
       [data-live-skin-panel] .ls-chips { display:flex; flex-wrap:wrap; gap:6px; }
+      /* 分类行：左侧一个窄标签列，右侧是这一类的家族。
+         不用分割线 —— 标签本身已经足够分组，加线只会让面板更吵。 */
+      [data-live-skin-panel] .ls-cat-row { display:grid; grid-template-columns:88px 1fr; gap:8px; align-items:start; }
+      [data-live-skin-panel] .ls-cat-row + .ls-cat-row { margin-top:6px; }
+      [data-live-skin-panel] .ls-cat-label { font:var(--dsw-font-xxxs-11); color:var(--dsw-alias-label-tertiary);
+        padding-top:5px; text-align:right; }
       [data-live-skin-panel] .ls-chip { border:1px solid var(--dsw-alias-border-l2); background:var(--dsw-alias-bg-layer-1);
         color:var(--dsw-alias-label-secondary); border-radius:999px; padding:4px 12px; cursor:pointer; font:var(--dsw-font-xxs-12); }
       [data-live-skin-panel] .ls-chip:hover { background:var(--dsw-alias-interactive-bg-hover); color:var(--dsw-alias-label-secondary); }
@@ -732,6 +738,23 @@ window.__ModuleLoader__.load({
       }
       const viewingOther = appliedKey !== null && currentKey !== appliedKey
 
+      // 按宿主给的分类顺序分行；顺序里没有的分类（目录册比宿主新时可能出现）
+      // 追加在后面，不丢家族。
+      const categoryOrder = Array.isArray(catalog.categories) && catalog.categories.length > 0
+        ? catalog.categories
+        : [...new Set(catalog.families.map((entry) => entry.category))]
+      const categoryRows = []
+      for (const name of categoryOrder) {
+        const families = catalog.families.filter((entry) => entry.category === name)
+        if (families.length > 0) categoryRows.push({ name, families })
+      }
+      for (const entry of catalog.families) {
+        if (categoryOrder.includes(entry.category)) continue
+        const row = categoryRows.find((item) => item.name === entry.category)
+        if (row === undefined) categoryRows.push({ name: entry.category, families: [entry] })
+        else row.families.push(entry)
+      }
+
       // 这一份就是运行时此刻写到 <html> 上的全部变量 —— 与 runtime.writeVars
       // 走同一个 paramVars，所以面板里看到的就是 DOM 里的。
       const varTable = {}
@@ -772,18 +795,22 @@ window.__ModuleLoader__.load({
             '建议先到「设置 → 皮肤中心」切回「官方默认」，再启用 LiveSkin。')
           : null,
 
-        // 大类
+        // 大类：按分类分成几行。分类与行序来自宿主（`categories`），
+        // 面板不自己排 —— 那是数据不是显示。
         h('div', { className: 'ls-group' },
           h('span', { className: 'ls-group-label' }, '皮肤家族'),
-          h('div', { className: 'ls-chips' }, catalog.families.map((entry) => h(Chip, {
-            key: entry.id,
-            on: entry.id === familyId,
-            applied: appliedFamily !== null && entry.id === appliedFamily.id,
-            onClick: () => {
-              const first = entry.variants[0]
-              if (first !== undefined) void select(entry.id, first.id)
-            }
-          }, entry.name)))),
+          categoryRows.map((row) => h('div', { key: row.name, className: 'ls-cat-row' },
+            h('span', { className: 'ls-cat-label' }, row.name),
+            h('div', { className: 'ls-chips' }, row.families.map((entry) => h(Chip, {
+              key: entry.id,
+              on: entry.id === familyId,
+              applied: appliedFamily !== null && entry.id === appliedFamily.id,
+              onClick: () => {
+                const first = entry.variants[0]
+                if (first !== undefined) void select(entry.id, first.id)
+              }
+            }, entry.name))))
+          )),
 
         family !== null && family.description.length > 0
           ? h('div', { className: 'ls-muted' }, family.description)

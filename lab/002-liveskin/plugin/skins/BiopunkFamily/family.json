@@ -2,10 +2,18 @@
   "manifestVersion": 1,
   "name": "生物朋克家族",
   "nameEn": "Biopunk Family",
+  "category": "朋克美学",
   "description": "硅对碳的湿件朋克。它是七支里最不怀旧的一支——素材是当下的细胞与基因，写的是「现在的下一格」，复古只落在母题层，**视觉上没有年代脸**。所以它的识别完全由材质承担：没有一条硬边，所有高光都向内发光。",
   "accent": "#5bff9e",
-  "tags": ["biopunk", "wetware", "membrane", "lab"],
-  "styles": ["base.css"],
+  "tags": [
+    "biopunk",
+    "wetware",
+    "membrane",
+    "lab"
+  ],
+  "styles": [
+    "base.css"
+  ],
   "params": [
     {
       "key": "glass",
@@ -95,19 +103,43 @@
       "id": "restrained",
       "name": "克制",
       "description": "湿润与脉冲压到最低，接近干燥的扁平界面，可读性优先",
-      "values": { "glass": 72, "blur": 8, "intensity": 24, "wetness": 26, "pulse": 8, "membrane": 34, "motion": false }
+      "values": {
+        "glass": 72,
+        "blur": 8,
+        "intensity": 24,
+        "wetness": 26,
+        "pulse": 8,
+        "membrane": 34,
+        "motion": false
+      }
     },
     {
       "id": "standard",
       "name": "标准",
       "description": "该支皮肤的设计意图原样呈现",
-      "values": { "glass": 52, "blur": 12, "intensity": 60, "wetness": 60, "pulse": 40, "membrane": 60, "motion": true }
+      "values": {
+        "glass": 52,
+        "blur": 12,
+        "intensity": 60,
+        "wetness": 60,
+        "pulse": 40,
+        "membrane": 60,
+        "motion": true
+      }
     },
     {
       "id": "cinematic",
       "name": "浓烈",
       "description": "湿润、脉冲与膜层拉满，适合展示",
-      "values": { "glass": 38, "blur": 16, "intensity": 92, "wetness": 86, "pulse": 62, "membrane": 82, "motion": true }
+      "values": {
+        "glass": 38,
+        "blur": 16,
+        "intensity": 92,
+        "wetness": 86,
+        "pulse": 62,
+        "membrane": 82,
+        "motion": true
+      }
     }
   ]
 }

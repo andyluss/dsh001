@@ -2,10 +2,18 @@
   "manifestVersion": 1,
   "name": "磁带未来主义家族",
   "nameEn": "Cassette Futurism Family",
+  "category": "朋克美学",
   "description": "80 年代技术想象的另一面：不是霓虹雨夜的街头，而是机房日光灯下的工作台。它与赛博朋克共享同一批界面，器物却完全不同——米白塑料机箱、荧光绿单色终端、磁带与软驱。边界本质是布光与气氛的边界。",
   "accent": "#ffb86c",
-  "tags": ["cassette-futurism", "crt", "terminal", "analog"],
-  "styles": ["base.css"],
+  "tags": [
+    "cassette-futurism",
+    "crt",
+    "terminal",
+    "analog"
+  ],
+  "styles": [
+    "base.css"
+  ],
   "params": [
     {
       "key": "glass",
@@ -95,19 +103,40 @@
       "id": "restrained",
       "name": "克制",
       "description": "辉光与扫描线压到最低，接近一块没通电的塑料面板",
-      "values": { "glass": 60, "blur": 8, "intensity": 24, "phosphor": 22, "scanline": 12, "motion": false }
+      "values": {
+        "glass": 60,
+        "blur": 8,
+        "intensity": 24,
+        "phosphor": 22,
+        "scanline": 12,
+        "motion": false
+      }
     },
     {
       "id": "standard",
       "name": "标准",
       "description": "该支皮肤的设计意图原样呈现",
-      "values": { "glass": 34, "blur": 12, "intensity": 60, "phosphor": 55, "scanline": 40, "motion": true }
+      "values": {
+        "glass": 34,
+        "blur": 12,
+        "intensity": 60,
+        "phosphor": 55,
+        "scanline": 40,
+        "motion": true
+      }
     },
     {
       "id": "cinematic",
       "name": "浓烈",
       "description": "辉光与扫描线拉满，屏幕感最强",
-      "values": { "glass": 26, "blur": 16, "intensity": 92, "phosphor": 78, "scanline": 62, "motion": true }
+      "values": {
+        "glass": 26,
+        "blur": 16,
+        "intensity": 92,
+        "phosphor": 78,
+        "scanline": 62,
+        "motion": true
+      }
     }
   ]
 }

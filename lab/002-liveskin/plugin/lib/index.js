@@ -35,6 +35,16 @@ export const MANIFEST_VERSION = 1
 /** 整条 HTTP 面的版本前缀。 */
 export const API_PREFIX = '/api/live-skin/v1'
 
+/**
+ * 家族分类（面板里一行一类）与**行序**。
+ *
+ * 顺序不写死在面板里：面板只是显示，分类与顺序是数据。
+ * 这一行是轴序不是字母序 —— 七个朋克家族组成那条时间轴，千禧年美学紧挨着它的
+ * 右端（Aero 是这批可疑未来全部落空之后企业给出的最后一次乐观），
+ * 星际争霸三族不在轴上，单独一行。
+ */
+export const CATEGORIES = ['朋克美学', '千禧年美学', '星际争霸']
+
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILTIN_SKINS_DIR = join(PACKAGE_ROOT, 'skins')
 const STATE_FILE = 'state.json'
@@ -441,6 +451,7 @@ function loadFamily(familyDir, familyId, origin, problems) {
     nameEn: str(raw.nameEn, ''),
     description: str(raw.description, ''),
     accent: str(raw.accent, ''),
+    category: str(raw.category, ''),
     tags: strArray(raw.tags),
     hidden: raw.hidden === true,
     params: normalizeParams(raw.params, where, problems),
@@ -459,6 +470,12 @@ function loadFamily(familyDir, familyId, origin, problems) {
   }
   if (family.variants.length === 0) {
     problems.push(`${where}: 没有任何含 skin.json 的小类目录`)
+  }
+  // 分类是面板分组与排序的依据：漏了或写错就会让家族混进别的行里，
+  // 所以当作错误报出来，而不是让它悄悄落到「未分类」。
+  if (!CATEGORIES.includes(family.category)) {
+    problems.push(`${where}: 家族 "${familyId}" 的 category 是 ${JSON.stringify(family.category)}，`
+      + `必须是 ${CATEGORIES.map((c) => `"${c}"`).join(' / ')} 之一`)
   }
   return family
 }
@@ -676,12 +693,15 @@ function projectCatalog(catalog, state) {
     apiVersion: MANIFEST_VERSION,
     // 面板标题上会显示它，用户一眼能对上是哪一版。
     version: VERSION,
+    // 分类与行序由宿主给出；面板按它把家族分成几行。
+    categories: CATEGORIES,
     active: state.active,
     families: catalog.families.filter((family) => !family.hidden).map((family) => ({
       id: family.id,
       name: family.name,
       description: family.description,
       accent: family.accent,
+      category: family.category,
       tags: family.tags,
       params: family.params,
       variants: family.variants.filter((variant) => !variant.hidden).map((variant) => ({

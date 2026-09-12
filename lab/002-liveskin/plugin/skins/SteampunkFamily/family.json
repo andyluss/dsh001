@@ -2,10 +2,18 @@
   "manifestVersion": 1,
   "name": "蒸汽朋克家族",
   "nameEn": "Steampunk Family",
+  "category": "朋克美学",
   "description": "维多利亚基座，把超前技术翻译成蒸汽、齿轮与黄铜的语法。它回望的不是维多利亚的真实当下，而是后世反推、从未被许诺也未存在的「可能拥有的蒸汽未来」——所以高光只沿金属边缘走，平面上什么都不留。",
   "accent": "#b08d57",
-  "tags": ["steampunk", "brass", "victorian", "gaslight"],
-  "styles": ["base.css"],
+  "tags": [
+    "steampunk",
+    "brass",
+    "victorian",
+    "gaslight"
+  ],
+  "styles": [
+    "base.css"
+  ],
   "params": [
     {
       "key": "glass",
@@ -95,19 +103,43 @@
       "id": "restrained",
       "name": "克制",
       "description": "雾与灯火压到最低，可读性优先，适合长时间工作",
-      "values": { "glass": 70, "blur": 8, "intensity": 26, "patina": 27, "gaslight": 43, "haze": 14, "motion": false }
+      "values": {
+        "glass": 70,
+        "blur": 8,
+        "intensity": 26,
+        "patina": 27,
+        "gaslight": 43,
+        "haze": 14,
+        "motion": false
+      }
     },
     {
       "id": "standard",
       "name": "标准",
       "description": "该支皮肤的设计意图原样呈现",
-      "values": { "glass": 52, "blur": 12, "intensity": 60, "patina": 45, "gaslight": 62, "haze": 40, "motion": true }
+      "values": {
+        "glass": 52,
+        "blur": 12,
+        "intensity": 60,
+        "patina": 45,
+        "gaslight": 62,
+        "haze": 40,
+        "motion": true
+      }
     },
     {
       "id": "cinematic",
       "name": "浓烈",
       "description": "雾、灯火与铜绿拉满，适合展示",
-      "values": { "glass": 38, "blur": 16, "intensity": 92, "patina": 56, "gaslight": 74, "haze": 60, "motion": true }
+      "values": {
+        "glass": 38,
+        "blur": 16,
+        "intensity": 92,
+        "patina": 56,
+        "gaslight": 74,
+        "haze": 60,
+        "motion": true
+      }
     }
   ]
 }

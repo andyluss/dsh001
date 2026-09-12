@@ -2,10 +2,18 @@
   "manifestVersion": 1,
   "name": "赛博朋克家族",
   "nameEn": "Cyberpunk Family",
+  "category": "朋克美学",
   "description": "高科技，低生活。它的核心不是一个年代，而是一个倒计时——设定年份写死在标题里，时间一到，「预言」当场变成「账本」。所以这个家族的未来感自带墓碑：质感里必须同时有许诺与被霓虹照亮的破败。",
   "accent": "#ff2d95",
-  "tags": ["cyberpunk", "neon", "rain", "noir"],
-  "styles": ["base.css"],
+  "tags": [
+    "cyberpunk",
+    "neon",
+    "rain",
+    "noir"
+  ],
+  "styles": [
+    "base.css"
+  ],
   "params": [
     {
       "key": "glass",
@@ -103,19 +111,43 @@
       "id": "restrained",
       "name": "克制",
       "description": "霓虹与雨压到最低、扫描线几乎关闭，可读性优先",
-      "values": { "glass": 72, "blur": 8, "intensity": 26, "neon": 27, "rain": 17, "scanline": 11, "motion": false }
+      "values": {
+        "glass": 72,
+        "blur": 8,
+        "intensity": 26,
+        "neon": 27,
+        "rain": 17,
+        "scanline": 11,
+        "motion": false
+      }
     },
     {
       "id": "standard",
       "name": "标准",
       "description": "该支皮肤的设计意图原样呈现",
-      "values": { "glass": 52, "blur": 12, "intensity": 62, "neon": 68, "rain": 55, "scanline": 35, "motion": true }
+      "values": {
+        "glass": 52,
+        "blur": 12,
+        "intensity": 62,
+        "neon": 68,
+        "rain": 55,
+        "scanline": 35,
+        "motion": true
+      }
     },
     {
       "id": "cinematic",
       "name": "浓烈",
       "description": "霓虹、雨幕与倒影拉满，适合展示",
-      "values": { "glass": 36, "blur": 18, "intensity": 92, "neon": 92, "rain": 82, "scanline": 49, "motion": true }
+      "values": {
+        "glass": 36,
+        "blur": 18,
+        "intensity": 92,
+        "neon": 92,
+        "rain": 82,
+        "scanline": 49,
+        "motion": true
+      }
     }
   ]
 }

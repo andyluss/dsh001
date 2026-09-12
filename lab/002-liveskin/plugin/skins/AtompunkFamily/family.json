@@ -2,10 +2,18 @@
   "manifestVersion": 1,
   "name": "原子朋克家族",
   "nameEn": "Atompunk Family",
+  "category": "朋克美学",
   "description": "回望原子纪（约 1945—1969）的前数字时代美国。它的核心张力是「双面未来」——幸福原子与核末日同源共档：同一套物理、同一个机构、同一家印刷厂、同一批商业插画语汇。所以这个家族的任何一支都能一键翻到另一面。",
   "accent": "#e4572e",
-  "tags": ["atompunk", "chrome", "googie", "atomic-age"],
-  "styles": ["base.css"],
+  "tags": [
+    "atompunk",
+    "chrome",
+    "googie",
+    "atomic-age"
+  ],
+  "styles": [
+    "base.css"
+  ],
   "params": [
     {
       "key": "glass",
@@ -92,19 +100,40 @@
       "id": "restrained",
       "name": "克制",
       "description": "辉光与反光压到最低，可读性优先",
-      "values": { "glass": 74, "blur": 8, "intensity": 26, "radiation": 31, "chrome": 45, "motion": false }
+      "values": {
+        "glass": 74,
+        "blur": 8,
+        "intensity": 26,
+        "radiation": 31,
+        "chrome": 45,
+        "motion": false
+      }
     },
     {
       "id": "standard",
       "name": "标准",
       "description": "该支皮肤的设计意图原样呈现",
-      "values": { "glass": 55, "blur": 12, "intensity": 62, "radiation": 62, "chrome": 65, "motion": true }
+      "values": {
+        "glass": 55,
+        "blur": 12,
+        "intensity": 62,
+        "radiation": 62,
+        "chrome": 65,
+        "motion": true
+      }
     },
     {
       "id": "cinematic",
       "name": "浓烈",
       "description": "辐射辉光与镀铬反光拉满，适合展示",
-      "values": { "glass": 40, "blur": 16, "intensity": 94, "radiation": 80, "chrome": 84, "motion": true }
+      "values": {
+        "glass": 40,
+        "blur": 16,
+        "intensity": 94,
+        "radiation": 80,
+        "chrome": 84,
+        "motion": true
+      }
     }
   ]
 }
