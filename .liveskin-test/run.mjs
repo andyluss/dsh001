@@ -8,7 +8,7 @@
  * 用法： node run.mjs
  */
 import { createServer } from 'node:http'
-import { existsSync, readFileSync, rmSync, mkdirSync } from 'node:fs'
+import { existsSync, readFileSync, rmSync, mkdirSync, statSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { strict as assert } from 'node:assert'
@@ -275,6 +275,37 @@ const lintCatalog = plugin.loadCatalog()
 const allVariants = lintCatalog.families.flatMap((family) =>
   family.variants.map((variant) => ({ family, variant }))
 )
+
+check('每套皮肤都能推导出「亮/暗两档分别是什么样」，且与已知事实一致', () => {
+  // 面板上那句「亮 / 暗 跟随系统」是用户据以判断「切到暗色会不会变样」的，
+  // 它由宿主读皮肤自己的 CSS 推导。这里把已知事实钉住，防止推导悄悄退化。
+  const all = lintCatalog.families.flatMap((family) => family.variants.map((v) => ({ family: family.id, v })))
+  const unknown = all.filter(({ v }) => v.appearance === undefined
+    || v.appearance.light === null || v.appearance.dark === null)
+  assert.deepEqual(unknown.map((x) => `${x.family}/${x.v.id}`), [], '有皮肤推导不出档位')
+
+  const label = (a) => (a.followsSystem ? `${a.light}/${a.dark}` : `仅${a.light}`)
+  const got = Object.fromEntries(all.map(({ family, v }) => [`${family}/${v.id}`, label(v.appearance)]))
+  const expected = {
+    // 亮色默认 + 暗色覆盖
+    'FrutigerAeroFamily/FrutigerAero': 'light/dark',
+    'AtompunkFamily/SpaceAge': 'light/dark',
+    'SolarpunkFamily/Dawnlight': 'light/dark',
+    'CassetteFuturismFamily/ControlRoom': 'light/dark',
+    // 强制单一观感的变体：无论系统在哪一档都是同一套观感
+    'FrutigerAeroFamily/DarkAero': '仅dark',
+    'SolarpunkFamily/Overgrown': '仅dark',
+    'BiopunkFamily/Cleanroom': '仅light',
+    'CassetteFuturismFamily/BeigeTerminal': '仅light',
+    // 暗色默认的家族：两档都是暗色
+    'SteampunkFamily/Brassworks': '仅dark',
+    'DieselpunkFamily/NoirRain': '仅dark',
+    'CyberpunkFamily/MegacityNight': '仅dark'
+  }
+  const wrong = Object.entries(expected).filter(([key, want]) => got[key] !== want)
+    .map(([key, want]) => `${key}: 期望 ${want}，实际 ${got[key]}`)
+  assert.deepEqual(wrong, [], wrong.join('\n'))
+})
 
 check('三个小类都在册，且整个目录册零诊断', () => {
   const ids = lintCatalog.families
@@ -660,71 +691,371 @@ check('C8 · 零外部资产：不出现 url() 与 @import', () => {
   assert.deepEqual(problems, [], problems.join('\n'))
 })
 
-// ---- C4：只解算能静态求值的颜色对（字面量，以及 var() 指向字面量） ----
+// ---- C4：对比度 ----
+//
+// 这一节的难点是**级联**：皮肤样式表由运行时后插进 head，于是「官方值」和「皮肤值」
+// 谁生效取决于**特异性**，而不是文档顺序：
+//
+//   皮肤浅色块   html[data-live-skin] body                      → (0,1,2)
+//   官方暗色块   body[data-ds-dark-theme]                       → (0,1,1)
+//   皮肤暗色块   html[data-live-skin] body[data-ds-dark-theme]  → (0,2,2)
+//
+// 中间那行是关键：**皮肤在浅色块里声明、却没在暗色块里重写的 token，在暗色模式下
+// 拿到的是浅色值** —— 它压过了官方暗色值。「亮色输入框 + 浅色文字」就是这么来的。
+//
+// 所以检查器必须做三件旧版没做的事：
+//   1. 皮肤没声明时**回落到官方值**（旧版返回 null 直接跳过，于是「皮肤没写」被
+//      当成了「没有问题」）；
+//   2. 按**特异性**而不是文档顺序决定谁生效；
+//   3. **半透明与渐变也要算**（输入框、代码块恰恰普遍是半透明渐变），
+//      合成到该模式的页面底色上再比 —— 否则这些表面会被整片跳过，
+//      检查又一次形同虚设。
 
-function parseOpaqueColor(text) {
-  const t = String(text ?? '').trim()
-  const hex = t.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)
-  if (hex !== null) {
-    const h = hex[1].length === 3 ? [...hex[1]].map((c) => c + c).join('') : hex[1]
-    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
+const PROFILE_FOR_THEME = '/Users/lu/.dsh/profiles/web'
+
+/** 从已安装的官方主题插件里读出 light / dark 两张 token 表（含 --dsw-static-* 展开）。 */
+function loadOfficialPalette() {
+  const out = { light: {}, dark: {}, prim: {}, source: null }
+  let src
+  try {
+    const req = createRequire(join(PROFILE_FOR_THEME, 'package.json'))
+    const dir = dirname(req.resolve('@deepseek-ai/dsh-client-ui-theme/package.json'))
+    out.source = join(dir, 'lib', 'client.js')
+    src = readFileSync(out.source, 'utf8')
+  } catch {
+    return out
   }
-  const rgb = t.match(/^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:[\s,/]+([\d.]+%?))?\s*\)$/i)
-  if (rgb === null) return null
-  const alpha = rgb[4] === undefined ? 1 : (rgb[4].endsWith('%') ? Number.parseFloat(rgb[4]) / 100 : Number.parseFloat(rgb[4]))
-  if (alpha < 1) return null // 半透明底无法静态判定，跳过
-  return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])]
+  const pick = (pattern) => {
+    let best = {}
+    for (const match of src.matchAll(pattern)) {
+      const map = {}
+      for (const decl of match[1].split(';')) {
+        const colon = decl.indexOf(':')
+        if (colon > 0) map[decl.slice(0, colon).trim()] = decl.slice(colon + 1).trim()
+      }
+      if (Object.keys(map).length > Object.keys(best).length) best = map
+    }
+    return best
+  }
+  const light = pick(/(?:^|[};])\s*body\s*\{((?:--dsw-[^{}]*?)+)\}/g)
+  const dark = pick(/(?:^|[};])\s*body\[data-ds-dark-theme\]\s*\{((?:--dsw-[^{}]*?)+)\}/g)
+  const prim = {}
+  for (const match of src.matchAll(/(--dsw-static-[\w-]+)\s*:\s*([^;}]+)/g)) prim[match[1]] = match[2].trim()
+  const expand = (map) => {
+    const one = (value, depth = 0) => {
+      if (depth > 8) return value
+      const ref = /^var\(\s*(--dsw-[\w-]+)\s*\)$/.exec(value.trim())
+      if (ref === null) return value
+      const next = prim[ref[1]] ?? map[ref[1]]
+      return next === undefined ? value : one(next, depth + 1)
+    }
+    return Object.fromEntries(Object.entries(map).map(([key, value]) => [key, one(value)]))
+  }
+  out.prim = prim
+  out.light = expand(light)
+  out.dark = expand(dark)
+  return out
 }
 
-/** 取某个 token 在指定配色模式下的最终声明（后者覆盖前者）。 */
+const OFFICIAL = loadOfficialPalette()
+
+/** 选择器特异性压成一个可比较的整数：id*1e4 + (类/属性/伪类)*1e2 + 元素。 */
+function specificity(selector) {
+  const expanded = selector.replace(/:not\(([^)]*)\)/g, ' $1 ')
+  const ids = (expanded.match(/#[\w-]+/g) ?? []).length
+  const classes = (expanded.match(/\.[\w-]+|\[[^\]]*\]|:(?!:)[\w-]+/g) ?? []).length
+  const types = (expanded.match(/(?:^|[\s>+~(,])([a-z][\w-]*)/gi) ?? []).length
+  return ids * 10000 + classes * 100 + types
+}
+
 /**
- * 判断一条规则是否只作用于暗色档。
- * 必须先把 `:not(…)` 里的内容剥掉再判断 —— 否则 `body:not([data-ds-dark-theme])`
- * 这条**浅色**规则会因为字符串里含 data-ds-dark-theme 而被误判成暗色。
- * （又是「检查的粒度 ≠ 契约的粒度」：这里契约是「选择器实际匹配的元素」。）
+ * 把选择器拆成顶层逗号分支。
+ * 必须拆：`body:not([data-ds-dark-theme]), body[data-ds-dark-theme]` 这种
+ * 「两档都声明」的写法，整串看会同时含有 data-ds-dark-theme 而被判成暗色专属，
+ * 于是亮色档整块被跳过 —— 又是「检查的粒度 ≠ 契约的粒度」：
+ * 契约是「列表里的每一个选择器」，检查却拿了整串。
  */
-function isDarkOnly(selector) {
-  return selector.replace(/:not\([^)]*\)/g, '').includes('data-ds-dark-theme')
+function selectorBranches(selector) {
+  return splitTopLevel(selector).map((one) => one.trim()).filter((one) => one !== '')
 }
 
-function tokenText(rules, name, dark) {
-  let found
-  for (const rule of rules) {
-    if (dark ? false : isDarkOnly(rule.selector)) continue
-    const match = rule.body.match(new RegExp(`(?:^|;)\\s*${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*:\\s*([^;]+)`))
-    if (match !== null) found = match[1].trim()
-  }
-  return found
+/** 单个选择器分支作用于哪个模式：'both' / 'light' / 'dark'。 */
+function branchMode(one) {
+  if (/data-ds-dark-theme/.test(one.replace(/:not\([^)]*\)/g, ''))) return 'dark'
+  if (/:not\([^)]*data-ds-dark-theme[^)]*\)/.test(one)) return 'light'
+  return 'both'
 }
 
-function substituteVars(text, lsVars) {
-  return String(text).replace(/var\(\s*(--[\w-]+)\s*(?:,\s*([^)]+))?\)/g, (_m, key, fallback) => {
-    const value = lsVars[key] ?? (fallback === undefined ? '' : fallback.trim())
-    return value
+/** 这条规则在该模式下是否生效（任一分支生效即生效）。 */
+function ruleApplies(selector, dark) {
+  return selectorBranches(selector).some((one) => {
+    const mode = branchMode(one)
+    return mode === 'both' || (mode === 'dark') === dark
   })
 }
 
-/**
- * 解算一个颜色表达式：字面量、var() 指向字面量、以及 color-mix(in srgb, …)。
- * calc() 与其它函数暂不解算 —— 解不出就返回 null，由调用方决定是跳过还是报错。
- */
-function evalColorExpr(text, lsVars) {
-  const substituted = substituteVars(text, lsVars).trim()
-  const direct = parseOpaqueColor(substituted)
-  if (direct !== null) return direct
-  const mix = substituted.match(/^color-mix\(in\s+srgb\s*,\s*(.+?)\s+([\d.]+)%\s*,\s*(.+?)(?:\s+([\d.]+)%)?\s*\)$/i)
-  if (mix === null) return null
-  const first = parseOpaqueColor(mix[1])
-  const second = parseOpaqueColor(mix[3])
-  if (first === null || second === null) return null
-  const weight = Number.parseFloat(mix[2]) / 100
-  return [0, 1, 2].map((i) => Math.round(first[i] * weight + second[i] * (1 - weight)))
+/** 这条规则在该模式下的有效特异性（取生效分支里最高的那个）。 */
+function ruleSpecificity(selector, dark) {
+  let best = -1
+  for (const one of selectorBranches(selector)) {
+    const mode = branchMode(one)
+    if (mode !== 'both' && (mode === 'dark') !== dark) continue
+    best = Math.max(best, specificity(one))
+  }
+  return best
 }
 
-function resolveColor(rules, name, lsVars, dark) {
-  const raw = tokenText(rules, name, dark)
-  if (raw === undefined) return null
-  return evalColorExpr(raw, lsVars)
+/**
+ * 按真实层叠取一条 token 的原始声明文本；皮肤没写就回落到官方值。
+ * 官方表先加载，所以同特异性时皮肤胜 —— 官方那条的顺序键记作 -1。
+ */
+function rawToken(rules, name, dark) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const pattern = new RegExp(`(?:^|;)\\s*${escaped}\\s*:\\s*([^;]+)`)
+  const official = OFFICIAL[dark ? 'dark' : 'light'][name]
+  let best = official
+  let bestKey = official === undefined ? -1 : specificity(dark ? 'body[data-ds-dark-theme]' : 'body') * 10000 - 1
+  rules.forEach((rule, index) => {
+    if (!ruleApplies(rule.selector, dark)) return
+    const match = rule.body.match(pattern)
+    if (match === null) return
+    const key = ruleSpecificity(rule.selector, dark) * 10000 + index
+    if (key > bestKey) { bestKey = key; best = match[1].trim() }
+  })
+  return best
+}
+
+/** 按顶层逗号切分（跳过括号内的逗号）。 */
+function splitTopLevel(text) {
+  const parts = []
+  let depth = 0
+  let start = 0
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i]
+    if (ch === '(') depth += 1
+    else if (ch === ')') depth -= 1
+    else if (ch === ',' && depth === 0) { parts.push(text.slice(start, i)); start = i + 1 }
+  }
+  parts.push(text.slice(start))
+  return parts
+}
+
+/** 返回 text 中 openIndex 处那个 '(' 的括号内文本。 */
+function balancedInner(text, openIndex) {
+  let depth = 0
+  for (let i = openIndex; i < text.length; i += 1) {
+    if (text[i] === '(') depth += 1
+    else if (text[i] === ')') { depth -= 1; if (depth === 0) return text.slice(openIndex + 1, i) }
+  }
+  return null
+}
+
+/** 反复展开 var()，直到不再变化。 */
+function substituteVars(text, vars) {
+  let out = String(text)
+  for (let pass = 0; pass < 6; pass += 1) {
+    const next = out.replace(/var\(\s*(--[\w-]+)\s*(?:,([\s\S]*?))?\)/g, (_m, key, fallback) => {
+      const value = vars[key]
+      if (typeof value === 'string' && value !== '') return value
+      return fallback === undefined ? '' : fallback.trim()
+    })
+    if (next === out) return out
+    out = next
+  }
+  return out
+}
+
+/** 求值一个数值表达式（数字、百分比、calc、四则运算），失败返回 null。 */
+function evalNumber(expr, vars) {
+  let text = substituteVars(expr, vars).trim()
+  text = text.replace(/calc\(/gi, '(')
+  const percent = /^([\d.]+)%$/.exec(text)
+  if (percent !== null) return Number.parseFloat(percent[1]) / 100
+  text = text.replace(/\s+/g, '')
+  if (text === '' || !/^[-+*/().\d]+$/.test(text)) return null
+  try {
+    // 上面已把字符集限死在数字与四则运算，这里才敢求值。
+    const value = Function(`"use strict";return (${text})`)()
+    return typeof value === 'number' && Number.isFinite(value) ? value : null
+  } catch {
+    return null
+  }
+}
+
+/** 解析一个颜色（支持 calc 的 alpha 通道），失败返回 null。 */
+function parseColor(text, vars) {
+  const trimmed = String(text ?? '').trim()
+  const hex = /^#([0-9a-f]{3,8})$/i.exec(trimmed)
+  if (hex !== null) {
+    const raw = hex[1].length <= 4 ? [...hex[1]].map((c) => c + c).join('') : hex[1]
+    if (raw.length !== 6 && raw.length !== 8) return null
+    return [
+      parseInt(raw.slice(0, 2), 16), parseInt(raw.slice(2, 4), 16), parseInt(raw.slice(4, 6), 16),
+      raw.length === 8 ? parseInt(raw.slice(6, 8), 16) / 255 : 1
+    ]
+  }
+  const fn = /^(rgba?)\(/i.exec(trimmed)
+  if (fn === null) return null
+  const inner = balancedInner(trimmed, fn[0].length - 1)
+  if (inner === null) return null
+  let parts = splitTopLevel(inner)
+  if (parts.length < 3) parts = inner.split(/[\s/]+/).filter((x) => x !== '') // 空格分隔的现代写法
+  if (parts.length < 3 || parts.length > 4) return null
+  const channel = (piece) => {
+    const value = evalNumber(piece, vars)
+    return value === null ? null : Math.max(0, Math.min(255, Math.round(value)))
+  }
+  const rgb = [channel(parts[0]), channel(parts[1]), channel(parts[2])]
+  if (rgb.some((c) => c === null)) return null
+  let alpha = 1
+  if (parts.length === 4) {
+    const value = evalNumber(parts[3], vars)
+    if (value === null) return null
+    alpha = Math.max(0, Math.min(1, value))
+  }
+  return [rgb[0], rgb[1], rgb[2], alpha]
+}
+
+/** 把半透明色合成到一个不透明底上。 */
+function compositeOver(color, base) {
+  const alpha = color[3] ?? 1
+  if (alpha >= 0.999) return [color[0], color[1], color[2]]
+  return [0, 1, 2].map((i) => Math.round(color[i] * alpha + base[i] * (1 - alpha)))
+}
+
+/** 从一段渐变参数里取出第一个颜色记号（含括号平衡）。 */
+function firstColorToken(piece) {
+  const hit = /rgba?\(|#|color-mix\(/i.exec(piece)
+  if (hit === null) return null
+  if (piece[hit.index] === '#') return (/^#[0-9a-f]{3,8}/i.exec(piece.slice(hit.index)) ?? [null])[0]
+  const inner = balancedInner(piece, hit.index + hit[0].length - 1)
+  return inner === null ? null : `${hit[0]}${inner})`
+}
+
+/**
+ * 解算出一个颜色表达式的**候选色**：平面色给 1 个，渐变给每个能解出的色标各 1 个
+ * （对比度取其中最差的一个）。半透明保留 alpha，由调用方合成。
+ */
+function evalColorCandidates(text, vars) {
+  const substituted = substituteVars(text, vars).trim()
+  const direct = parseColor(substituted, vars)
+  if (direct !== null) return [direct]
+  const mix = substituted.match(/^color-mix\(in\s+srgb\s*,\s*(.+?)\s+([\d.]+)%\s*,\s*(.+?)(?:\s+([\d.]+)%)?\s*\)$/i)
+  if (mix !== null) {
+    const first = parseColor(mix[1], vars)
+    const second = parseColor(mix[3], vars)
+    if (first === null || second === null) return []
+    const weight = Number.parseFloat(mix[2]) / 100
+    const rgb = [0, 1, 2].map((i) => Math.round(first[i] * weight + second[i] * (1 - weight)))
+    return [[rgb[0], rgb[1], rgb[2], first[3] * weight + second[3] * (1 - weight)]]
+  }
+  const gradient = substituted.match(/^(?:repeating-)?(?:linear|radial|conic)-gradient\(([\s\S]*)\)$/i)
+  if (gradient === null) return []
+  const stops = []
+  for (const piece of splitTopLevel(gradient[1])) {
+    const token = firstColorToken(piece)
+    if (token === null) continue
+    const parsed = parseColor(token, vars)
+    if (parsed !== null) stops.push(parsed)
+  }
+  return stops
+}
+
+/**
+ * 一个模式下完整的自定义属性环境，按 (特异性, 顺序) 决出每个名字的胜者：
+ *   官方原语 --dsw-static-*  →  官方 token（顺序键 -1，即先加载）
+ *   →  皮肤声明的 token 与派生量  →  运行时的参数内联值（最高）
+ * 然后把 var() 引用迭代展开（派生的派生也要能解开）。
+ *
+ * 少了官方那一层，基线里的 `var(--dsw-static-*)` 就解不开，探针会成片报
+ * 「解不出颜色」—— 那不是皮肤的问题，是检查器缺了一层。
+ */
+function buildVars(rules, dark, lsVars) {
+  const winners = new Map()
+  const offer = (name, value, key) => {
+    const previous = winners.get(name)
+    if (previous === undefined || key > previous.key) winners.set(name, { key, value })
+  }
+  for (const [name, value] of Object.entries(OFFICIAL.prim)) offer(name, value, -1)
+  const officialKey = specificity(dark ? 'body[data-ds-dark-theme]' : 'body') * 10000 - 1
+  for (const [name, value] of Object.entries(OFFICIAL[dark ? 'dark' : 'light'])) offer(name, value, officialKey)
+  rules.forEach((rule, index) => {
+    if (!ruleApplies(rule.selector, dark)) return
+    const key = ruleSpecificity(rule.selector, dark) * 10000 + index
+    for (const match of rule.body.matchAll(/(--[\w-]+)\s*:\s*([^;]+)/g)) offer(match[1], match[2].trim(), key)
+  })
+  const env = {}
+  for (const [name, entry] of winners) env[name] = entry.value
+  // 参数值是运行时写在 html 上的内联自定义属性，压过任何规则。
+  for (const [name, value] of Object.entries(lsVars)) env[name] = value
+  for (let pass = 0; pass < 8; pass += 1) {
+    let changed = false
+    for (const name of Object.keys(env)) {
+      const next = substituteVars(env[name], env)
+      if (next !== env[name]) { env[name] = next; changed = true }
+    }
+    if (!changed) break
+  }
+  return env
+}
+
+/**
+ * 皮肤给 body 画的底色。组件都浮在它上面，所以合成基准要用它 ——
+ * 不能用「亮色档兜底白」：像柴油朋克那样把 body 画成不透明 #3a3e40 的家族，
+ * 用白兜底会凭空把半透明表面算亮，制造出一堆假阳性。
+ */
+function bodyBackdrop(rules, dark, vars) {
+  const pattern = /(?:^|;)\s*background-color\s*:\s*([^;]+)/
+  let best = null
+  let bestKey = -1
+  rules.forEach((rule, index) => {
+    if (!ruleApplies(rule.selector, dark)) return
+    // 只有「主体正好是 body」的规则才算页面底色。必须排除伪元素与后代：
+    // `body::after` 的 background-color 是一层贴图，`body ::selection` 是选中高亮，
+    // 它们特异性更高，会被误当成页面底色，然后把一批半透明表面算亮，制造假阳性。
+    const bare = rule.selector.replace(/:not\([^)]*\)/g, '')
+    const isBodySubject = selectorBranches(bare).some((one) => {
+      const last = one.trim().split(/\s+/).pop() ?? ''
+      return /^body(\[[^\]]*\])?$/.test(last)
+    })
+    if (!isBodySubject) return
+    const match = rule.body.match(pattern)
+    if (match === null) return
+    const key = ruleSpecificity(rule.selector, dark) * 10000 + index
+    if (key > bestKey) { bestKey = key; best = match[1].trim() }
+  })
+  if (best === null) return null
+  const parsed = evalColorCandidates(best, vars)
+  return parsed.length === 0 ? null : parsed[0]
+}
+
+/**
+ * 取一个 token 在该模式下的最终候选色，已合成到该模式的页面底色上。
+ * 半透明表面合成到 --dsw-alias-bg-base 上；bg-base 自己也半透明时，
+ * 最外层按黑（暗色档）/ 白（亮色档）兜底。
+ */
+/**
+ * 该模式下**页面最终呈现的不透明底色**：皮肤给 body 画的底色优先，
+ * 其次页面 token，最后按模式兜底黑/白。
+ * 探针名 `@body` 用它 —— 「正文压在实际页面上」是用户最先看到的那一层，
+ * 只看 --dsw-alias-bg-base 会漏掉「token 是暗的、但皮肤没给 body 画暗底」这种情况。
+ */
+function pageBackdrop(rules, dark, vars) {
+  const modeDefault = dark ? [8, 8, 8] : [255, 255, 255]
+  const backdrop = bodyBackdrop(rules, dark, vars)
+  if (backdrop !== null) return compositeOver(backdrop, modeDefault)
+  const baseRaw = rawToken(rules, '--dsw-alias-bg-base', dark)
+  const base = baseRaw === undefined ? null : evalColorCandidates(baseRaw, vars)[0] ?? null
+  return base === null ? modeDefault : compositeOver(base, modeDefault)
+}
+
+function resolveColors(rules, name, vars, dark, depth = 0) {
+  const raw = rawToken(rules, name, dark)
+  if (raw === undefined) return []
+  const candidates = evalColorCandidates(raw, vars)
+  if (candidates.length === 0 || depth > 1) return candidates.map((c) => compositeOver(c, dark ? [8, 8, 8] : [255, 255, 255]))
+  const flatBase = pageBackdrop(rules, dark, vars)
+  return candidates.map((c) => compositeOver(c, flatBase))
 }
 
 function contrastRatio(a, b) {
@@ -736,43 +1067,128 @@ function contrastRatio(a, b) {
   return (hi + 0.05) / (lo + 0.05)
 }
 
+/** 官方调色板读不到时 C4 会静默退化成空转 —— 先钉死这个前提。 */
+check('C4 前置 · 官方调色板可读', () => {
+  assert.ok(OFFICIAL.source !== null, '读不到已安装的 @deepseek-ai/dsh-client-ui-theme')
+  assert.ok(Object.keys(OFFICIAL.light).length >= 80, `官方亮色 token 只读到 ${Object.keys(OFFICIAL.light).length} 个`)
+  assert.ok(Object.keys(OFFICIAL.dark).length >= 80, `官方暗色 token 只读到 ${Object.keys(OFFICIAL.dark).length} 个`)
+})
+
+// 前景/底色的**消费对**。最后一项 required=true 表示必须解算出来 ——
+// 解不出来说明解析器与皮肤写法脱节，本身就是失败，而不是跳过。
+// 这些不是「随手挑两个变量碰一碰」，每一条都对应界面上真实叠在一起的两层。
 const CONTRAST_PROBES = [
+  // 填充按钮上的文字（底色是强调色，最容易被写得太浅）
   ['--dsw-alias-label-primary-foreground', '--dsw-alias-button-primary-fill', 4.5, true],
-  ['--dsw-alias-label-primary-foreground', '--dsw-alias-button-primary-hover', 4.5, false],
+  ['--dsw-alias-label-primary-foreground', '--dsw-alias-button-primary-hover', 4.5, true],
   ['--dsw-alias-label-primary-foreground', '--dsw-alias-button-info-fill', 4.5, false],
-  ['--dsw-alias-label-primary', '--dsw-alias-bg-overlay', 7, false],
-  ['--dsw-alias-label-primary', '--dsw-alias-bg-layer-3', 7, false]
+  // 页面本身：正文就压在它上面。`@body` 指皮肤给 body 画的真实底色，
+  // 与 --dsw-alias-bg-base 不是一回事 —— 组件可能用暗 token，而 body 还画着亮底。
+  ['--dsw-alias-label-primary', '@body', 4.5, true],
+  ['--dsw-alias-label-secondary', '@body', 3, false],
+  // 链接是正文，暗底上直接用品牌色经常不够
+  ['--dsw-alias-link', '@body', 4.5, false],
+  ['--dsw-alias-link', '--dsw-specific-bubble', 4.5, false],
+  ['--dsw-alias-label-primary', '--dsw-alias-bg-base', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-bg-layer-3', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-bg-overlay', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-bg-module-platform', 4.5, true],
+  // 输入框 / 列表选项 / 高亮 / 代码 —— 用户实际看到「亮底浅字」的那几处
+  ['--dsw-alias-label-primary', '--dsw-specific-input-major', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-bg-multi-select', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-specific-selector', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-specific-bubble-highlight', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-markdown-code-block', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-markdown-inline-code', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-markdown-code-block-banner', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-markdown-citation', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-specific-tip', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-specific-sidebar-fill', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-specific-sidebar-nav-item-hover', 4.5, false],
+  ['--dsw-alias-label-primary', '--dsw-specific-sidebar-nav-item-active', 4.5, false],
+  // 次级按钮与浮层
+  ['--dsw-alias-label-primary', '--dsw-alias-button-elevated-fill', 4.5, true],
+  ['--dsw-alias-label-primary', '--dsw-alias-button-floating-fill', 4.5, false],
+  ['--dsw-alias-label-primary', '--dsw-alias-button-ghost-active-fill', 4.5, false],
+  ['--dsw-alias-label-primary', '--dsw-alias-button-primary-dimmed', 4.5, false],
+  // 指针悬停/按下时文字就压在这两个底色上
+  ['--dsw-alias-label-primary', '--dsw-alias-interactive-bg-hover', 4.5, false],
+  ['--dsw-alias-label-primary', '--dsw-alias-interactive-bg-active', 4.5, false],
+  // 次要文字所在的面（门槛略低，但仍必须看得见）
+  ['--dsw-alias-label-secondary', '--dsw-alias-bg-layer-1', 3, false]
 ]
 
-check('C4 · 能静态解出的前景/底色对，对比度必须达标', () => {
+/**
+ * 诊断口：LIVESKIN_DUMP=<family>/<variant> node run.mjs
+ * 把该 variant 在两个模式下、每条探针的「原始声明 → 解出的颜色 → 比值」打出来。
+ * 对比度报红时靠它判断到底是哪一层的值赢了，而不是靠猜。
+ */
+if (process.env.LIVESKIN_DUMP !== undefined) {
+  const want = process.env.LIVESKIN_DUMP
+  for (const { family, variant } of allVariants) {
+    if (`${family.id}/${variant.id}` !== want) continue
+    const rules = cssRules(composedCssOf(family, variant))
+    const lsVars = {}
+    for (const param of variant.params) for (const [n, v] of clientModule.paramVars(param, variant.defaults[param.key])) lsVars[n] = v
+    for (const dark of [false, true]) {
+      const vars = buildVars(rules, dark, lsVars)
+      console.log(`\n=== ${want} ${dark ? '暗色' : '亮色'}`)
+      for (const [fgName, bgName, min] of CONTRAST_PROBES) {
+        const fgs = resolveColors(rules, fgName, vars, dark)
+        const bgs = bgName === '@body' ? [pageBackdrop(rules, dark, vars)] : resolveColors(rules, bgName, vars, dark)
+        if (fgs.length === 0 || bgs.length === 0) continue
+        let worst = Infinity
+        for (const fg of fgs) for (const bg of bgs) worst = Math.min(worst, contrastRatio(fg, bg))
+        const flag = worst + 1e-9 < min ? '  ✗' : ''
+        console.log(`  ${worst.toFixed(2).padStart(6)}:1  ${fgName} on ${bgName}${flag}`)
+        if (worst + 1e-9 < min) {
+          console.log(`          fg raw=${String(rawToken(rules, fgName, dark)).slice(0, 60)} → ${JSON.stringify(fgs)}`)
+          console.log(`          bg raw=${String(rawToken(rules, bgName, dark)).slice(0, 60)} → ${JSON.stringify(bgs)}`)
+        }
+      }
+    }
+  }
+}
+
+check('C4 · 前景/底色消费对的对比度必须达标（含官方回落与特异性层叠）', () => {
   const problems = []
   let resolved = 0
+  let requiredPairs = 0
   for (const { family, variant } of allVariants) {
     const rules = cssRules(composedCssOf(family, variant))
     const lsVars = {}
     for (const param of variant.params) {
       for (const [name, literal] of clientModule.paramVars(param, variant.defaults[param.key])) lsVars[name] = literal
     }
-    for (const [fgName, bgName, min, required] of CONTRAST_PROBES) {
-      for (const dark of [false, true]) {
-        const fg = resolveColor(rules, fgName, lsVars, dark)
-        const bg = resolveColor(rules, bgName, lsVars, dark)
-        if (fg === null || bg === null) {
-          if (required && dark === false) {
-            problems.push(`${family.id}/${variant.id}: 关键对 ${fgName} on ${bgName} 无法静态解算（解析器与皮肤写法脱节）`)
+    for (const dark of [false, true]) {
+      const vars = buildVars(rules, dark, lsVars)
+      for (const [fgName, bgName, min, required] of CONTRAST_PROBES) {
+        const fgs = resolveColors(rules, fgName, vars, dark)
+        const bgs = bgName === '@body' ? [pageBackdrop(rules, dark, vars)] : resolveColors(rules, bgName, vars, dark)
+        if (fgs.length === 0 || bgs.length === 0) {
+          if (required) {
+            const which = fgs.length === 0 ? fgName : bgName
+            problems.push(`${family.id}/${variant.id}${dark ? ' (暗)' : ''}: ${which} 解不出颜色，无法判定对比度`)
           }
           continue
         }
+        if (required) requiredPairs += 1
+        // 前景可能是渐变；底色也可能是渐变 —— 取最差的那个组合。
+        let worst = Infinity
+        for (const fg of fgs) for (const bg of bgs) worst = Math.min(worst, contrastRatio(fg, bg))
         resolved += 1
-        const ratio = contrastRatio(fg, bg)
-        if (ratio + 1e-9 < min) {
-          problems.push(`${family.id}/${variant.id}${dark ? ' (暗)' : ''}: ${fgName} on ${bgName} = ${ratio.toFixed(2)}:1，低于 ${min}:1`)
+        if (worst + 1e-9 < min) {
+          problems.push(`${family.id}/${variant.id}${dark ? ' (暗)' : ''}: ${fgName} on ${bgName} = ${worst.toFixed(2)}:1，低于 ${min}:1`)
         }
       }
     }
   }
   assert.deepEqual(problems, [], problems.join('\n'))
-  assert.ok(resolved >= allVariants.length, `只解算出 ${resolved} 对，检查形同虚设`)
+  // 解算数必须覆盖每个 variant 的两个模式 × 全部 required 探针 ——
+  // 少一条就说明有 surface 被静默跳过，检查在退化。
+  const expected = allVariants.length * 2 * CONTRAST_PROBES.filter((p) => p[3]).length
+  assert.ok(requiredPairs >= expected, `必须解算的对比度对只解出 ${requiredPairs} / ${expected}，检查形同虚设`)
+  assert.ok(resolved >= expected, `全部解算 ${resolved} 对，少于应解的 ${expected} 对`)
 })
 
 // ---------------------------------------------------------------------------
@@ -1012,18 +1428,77 @@ const noopClientCtx = {
 
 console.log('\n[7c] 面板样式纪律')
 
+/**
+ * 解析面板自己的样式表。
+ * **必须先剥注释**：规则前面写一段多行注释是很自然的事，但如果选择器里带上注释文本，
+ * 分组就会错开、两条规则永远配不到一起 —— 检查会**静默失效**却仍然显示绿色。
+ * （这不是假设：加了注释之后，下面那条组合态检查真的就不再报警了，靠证伪才发现。）
+ */
+function panelRules() {
+  return [...clientModule.panelCss.replace(/\/\*[\s\S]*?\*\//g, '')
+    .matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .map((match, index) => ({
+      selector: match[1].replace(/\s+/g, ' ').trim().replace(/^\[data-live-skin-panel\]\s*/, ''),
+      body: match[2],
+      index
+    }))
+}
+
 check('面板里任何 hover 改背景的规则，都必须同时钉住文字色', () => {
   // 「浮上去变白」的成因：hover 把背景换成表面染色（浅色模式下接近白），
   // 而填充按钮的文字是白的 —— 白底白字。凡改背景必钉文字色，就不可能发生。
   const problems = []
-  for (const match of clientModule.panelCss.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-    const selector = match[1].replace(/\s+/g, ' ').trim()
-    if (!selector.includes(':hover')) continue
-    const body = match[2]
-    if (!/\bbackground(-color)?\s*:/.test(body)) continue
-    if (!/(^|;)\s*color\s*:/.test(body)) problems.push(selector)
+  for (const rule of panelRules()) {
+    if (!rule.selector.includes(':hover')) continue
+    if (!/(^|;)\s*background(-color)?\s*:/.test(rule.body)) continue
+    if (!/(^|;)\s*color\s*:/.test(rule.body)) problems.push(rule.selector)
   }
   assert.deepEqual(problems, [], `这些 hover 规则改了背景却没钉文字色：\n${problems.join('\n')}`)
+})
+
+check('面板里同特异性的状态规则不得「只改文字色、不跟着改底色」', () => {
+  // 「浮上去变白」的通用形态：一条状态规则把文字色钉成白（配它自己的深底），
+  // 另一条**同特异性但源码在后**的状态规则又把文字色改成深墨色、却没有跟着改底色
+  // ——于是深底压深字。家族按钮上就撞到过：`[data-on]` 与 `[data-applied]` 同特异性，
+  // 后者的 color 把前者的白字盖掉，而底色仍是后者的强调色填充。
+  //
+  // 旧版检查只看 `:hover`，所以这条完全不在它的射程内 ——
+  // 契约是「任何会改背景的状态组合」，检查却只看了其中一种状态。
+  const specific = (selector) => {
+    const ids = (selector.match(/#[\w-]+/g) ?? []).length
+    const classes = (selector.match(/\.[\w-]+|\[[^\]]*\]|:(?!:)[\w-]+/g) ?? []).length
+    const types = (selector.match(/(?:^|[\s>+~,])([a-z][\w-]*)/gi) ?? []).length
+    return ids * 10000 + classes * 100 + types
+  }
+  const markers = (selector) => [...selector.matchAll(/\[data-[\w-]+="[^"]*"\]|:(?:hover|focus|active|disabled|focus-visible)/g)].map((m) => m[0])
+  const coApplicable = (a, b) => !markers(a).some((x) => markers(b).some((y) => x.split('=')[0] === y.split('=')[0] && x !== y))
+  const setsColor = (body) => /(^|;)\s*color\s*:/.test(body)
+  const setsBackground = (body) => /(^|;)\s*background(-color)?\s*:/.test(body)
+
+  const rules = panelRules()
+  const groups = new Map()
+  for (const rule of rules) {
+    const base = rule.selector.split(/[[:]/)[0].trim()
+    if (base === '') continue
+    if (!groups.has(base)) groups.set(base, [])
+    groups.get(base).push(rule)
+  }
+  const problems = []
+  for (const [base, list] of groups) {
+    for (const earlier of list) {
+      if (!setsBackground(earlier.body) || !setsColor(earlier.body)) continue
+      if (markers(earlier.selector).length === 0) continue
+      for (const later of list) {
+        if (later.index <= earlier.index) continue
+        if (specific(later.selector) !== specific(earlier.selector)) continue
+        if (!setsColor(later.body) || setsBackground(later.body)) continue
+        if (markers(later.selector).length === 0) continue
+        if (!coApplicable(earlier.selector, later.selector)) continue
+        problems.push(`${base}：${later.selector} 覆盖了 ${earlier.selector} 的文字色却没跟着改底色`)
+      }
+    }
+  }
+  assert.deepEqual([...new Set(problems)], [], problems.join('\n'))
 })
 
 check('填充态按钮必须有属于自己的 hover 填充色', () => {
@@ -1192,10 +1667,27 @@ function makePanelRenderer(react) {
 const panelRenderer = makePanelRenderer(fakeReact)
 
 /** 挂载一个全新面板实例，返回它渲染出的可见文本。 */
-async function mountPanelText(component) {
+async function mountPanelTree(component) {
   const instance = panelRenderer.mount(component)
-  const tree = await panelRenderer.render(instance, {})
-  return treeText(tree)
+  return panelRenderer.render(instance, {})
+}
+
+async function mountPanelText(component) {
+  return treeText(await mountPanelTree(component))
+}
+
+/** 收集渲染树里带某个属性的节点（用来断言标记落在哪几张卡片上）。 */
+function treeWith(node, key) {
+  const out = []
+  const walk = (n) => {
+    if (n === null || n === undefined || typeof n === 'boolean') return
+    if (typeof n === 'string' || typeof n === 'number') return
+    if (Array.isArray(n)) { n.forEach(walk); return }
+    if (n.props !== undefined && n.props[key] !== undefined) out.push(n)
+    walk(n.children)
+  }
+  walk(node)
+  return out
 }
 
 await checkAsync('重新打开设置面板时，显示的是最新应用过的皮肤', async () => {
@@ -1226,10 +1718,36 @@ await checkAsync('重新打开设置面板时，显示的是最新应用过的�
     await fetch(`${base}/state`, { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ active: second, skin: second }) })
 
     // 3) 重新打开面板：必须反映 second，而不是启动时的 first
-    const text = await mountPanelText(panel)
-    assert.ok(text.includes(`当前生效：${second}`),
-      `面板显示的是启动快照而不是最新状态。\n  期望包含：当前生效：${second}\n  实际：${text.slice(0, 200)}`)
-    assert.ok(!text.includes(`当前生效：${first}`), '面板仍在显示插件启动时的旧皮肤')
+    const tree = await mountPanelTree(panel)
+    const text = treeText(tree)
+    // 状态栏用友好名字，而不是 Family/Variant 这样的原始 key —— 用户靠它认皮肤。
+    assert.ok(text.includes('当前生效：') && text.includes('Frutiger Aero 家族') && text.includes('AeroGlass'),
+      `面板显示的是启动快照而不是最新状态。\n  实际：${text.slice(0, 240)}`)
+    // 「使用中」必须落在正好一个家族 chip 和一张卡片上，否则用户切走之后找不回来。
+    // 迷你渲染器不展开子组件，所以这里看的是**传给组件的 props**，
+    // 正好也是「接线接对了没有」的那一层。
+    const chips = treeWith(tree, 'applied')
+    const cards = treeWith(tree, 'data-applied').filter((node) => node.props['data-applied'] === 'true')
+    assert.equal(chips.filter((node) => node.props.applied === true).length, 1,
+      `家族 chip 的「使用中」标记应正好 1 个，实际 ${chips.filter((n) => n.props.applied === true).length} 个`)
+    assert.equal(cards.length, 1, `卡片的「使用中」标记应正好 1 个，实际 ${cards.length} 个`)
+    assert.ok(text.includes('使用中'), '面板上没有「使用中」字样')
+    // 标记要落在 second 上：卡片的子树文本里应当有 AeroGlass 而不是 DarkAero。
+    // 注意 DarkAero 作为一张普通卡片本来就在家族列表里，所以不能拿整屏文本判断。
+    assert.ok(treeText(cards[0]).includes('AeroGlass'), '「使用中」没有落在最新应用的那张卡片上')
+
+    // 档位徽章：每个小类一个，且不能有「档位未知」
+    const badges = treeWith(tree, 'appearance')
+    assert.ok(badges.length >= 4, `档位徽章只有 ${badges.length} 个`)
+    assert.ok(badges.every((node) => node.props.appearance !== null
+      && node.props.appearance.light !== null && node.props.appearance.dark !== null),
+    '有皮肤推导不出档位（面板会显示「档位未知」）')
+    const appliedVariant = lintCatalog.families
+      .find((entry) => entry.id === 'FrutigerAeroFamily')
+      .variants.find((item) => item.id === 'AeroGlass')
+    const expected = appliedVariant.appearance.followsSystem ? 'both' : appliedVariant.appearance.light
+    assert.ok(badges.some((node) => (node.props.appearance.followsSystem ? 'both' : node.props.appearance.light) === expected),
+      `没有任何徽章标出 ${expected} 档位`)
   } finally {
     globalThis.document = priorDoc
     restoreFetch()
@@ -1368,9 +1886,22 @@ if (!liveUp) {
       `线上 bundle 尾部出现了预期外的内容：${JSON.stringify(trailer)}`)
   })
 
-  await checkAsync('线上宿主路由的版本与磁盘上的 lib/index.js 一致', async () => {
+  await checkAsync('线上宿主与磁盘上的 lib/index.js 是同一版（否则需要重启 DSH）', async () => {
     const health = await (await fetch(`${LIVE}/api/live-skin/v1/health`)).json()
     assert.equal(health.name, 'dsh-live-skin')
+
+    // 判据一（通用）：宿主报告它在**加载那一刻**读到的自身 mtime。它与磁盘现值不一致，
+    // 就说明宿主是旧的。不能只靠「某个历史版本才有的行为」去猜 —— 那种探针在下一版
+    // 就失效了，而且它真的漏报过一次（host 已经旧到不认识 appearance，它还是绿的）。
+    const onDisk = statSync(join(PKG, 'lib', 'index.js')).mtimeMs
+    assert.ok(typeof health.loadedMtime === 'number',
+      '线上宿主没有上报 loadedMtime —— 宿主半边是旧的，需要重启 DSH 才能看到本次改动')
+    assert.ok(Math.abs(health.loadedMtime - onDisk) < 1,
+      `线上宿主加载的是 mtime=${new Date(health.loadedMtime).toISOString()} 的版本，`
+      + `磁盘上已是 ${new Date(onDisk).toISOString()} —— 需要重启 DSH 才能生效`)
+
+    // 判据二（行为）：非法颜色回落到参数默认值，而不是早先的 #888888。
+    // 这两条互补：前者查「是不是同一份文件」，后者查「关键行为在不在」。
     // 宿主代码是否最新，用一个只有新实现才有的行为判定
     const response = await fetch(`${LIVE}/api/live-skin/v1/state`, {
       method: 'POST',
