@@ -321,6 +321,24 @@ check('每套皮肤都能推导出「亮/暗两档分别是什么样」，且与
   assert.deepEqual(wrong, [], wrong.join('\n'))
 })
 
+check('每个家族都归入一个已知分类，三类都在册', () => {
+  // 分类决定面板里家族落在哪一行。漏了或写错就会混进别的行，
+  // 所以这里既查「都归了类」，也查「分类集合与宿主声明的完全一致」。
+  const known = new Set(plugin.CATEGORIES)
+  const bad = lintCatalog.families.filter((family) => !known.has(family.category))
+  assert.deepEqual(bad.map((family) => `${family.id}:${JSON.stringify(family.category)}`), [],
+    '有家族没有归入已知分类')
+  const counts = new Map()
+  for (const family of lintCatalog.families) {
+    counts.set(family.category, (counts.get(family.category) ?? 0) + 1)
+  }
+  assert.deepEqual([...counts.keys()].sort(), [...known].sort(),
+    `目录册里的分类是 ${[...counts.keys()]}，宿主声明的是 ${[...known]}`)
+  assert.equal(counts.get('朋克美学'), 7)
+  assert.equal(counts.get('千禧年美学'), 1)
+  assert.equal(counts.get('星际争霸'), 3)
+})
+
 check('三个小类都在册，且整个目录册零诊断', () => {
   const ids = lintCatalog.families
     .find((family) => family.id === 'FrutigerAeroFamily')
@@ -1799,6 +1817,16 @@ await checkAsync('重新打开设置面板时，显示的是最新应用过的�
       `家族 chip 的「使用中」标记应正好 1 个，实际 ${chips.filter((n) => n.props.applied === true).length} 个`)
     assert.equal(cards.length, 1, `卡片的「使用中」标记应正好 1 个，实际 ${cards.length} 个`)
     assert.ok(text.includes('使用中'), '面板上没有「使用中」字样')
+
+    // 家族按分类分行：三类各一行，标签是分类名而不是家族名。
+    const rows = treeWith(tree, 'className').filter((node) => node.props.className === 'ls-cat-row')
+    assert.equal(rows.length, 3, `分类行应有 3 行，实际 ${rows.length} 行`)
+    for (const name of ['朋克美学', '千禧年美学', '星际争霸']) {
+      assert.ok(text.includes(name), `面板上没有分类「${name}」`)
+    }
+    const punkRow = rows.find((node) => treeText(node).includes('朋克美学'))
+    assert.equal(treeWith(punkRow, 'applied').length, 7,
+      '朋克美学那一行应有 7 个家族 chip')
     // 标记要落在 second 上：卡片的子树文本里应当有 AeroGlass 而不是 DarkAero。
     // 注意 DarkAero 作为一张普通卡片本来就在家族列表里，所以不能拿整屏文本判断。
     assert.ok(treeText(cards[0]).includes('AeroGlass'), '「使用中」没有落在最新应用的那张卡片上')
