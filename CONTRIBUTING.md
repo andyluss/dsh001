@@ -190,13 +190,28 @@ git log --oneline -1                    # 4. 提交后回看
 <编号>-<名称>-v<主>.<次>.<修>        例如 002-liveskin-v1.0.0
 ```
 
-发布一次的动作固定为四步：
+发布一次的动作固定为五步：
 
 1. 把该实验 `CHANGELOG.md` 的 `[未发布]` 结为 `[<版本>] · <日期>`，并在最上面新开一个空的 `[未发布]`；
 2. 同步改实验自己的 `package.json` 版本号（有的话），并确认**版本在运行时可问**
    —— 否则「线上跑的是哪一版」只能靠 git tag 猜；
 3. 更新根 `README.md` 实验表里的状态列；
-4. 打**附注标签**（`git tag -a <标签> -m <说明>`）并 `git push origin <标签>`。
+4. 打**附注标签**并推送：`git tag -a <标签> -m <说明> && git push origin <标签>`；
+5. 用 `gh` 把标签转成 GitHub Release，发布说明**直接取该实验日志里这一版的小节**，
+   不要另写一份 —— 两份说明必然漂移：
+
+```sh
+VER=1.0.0
+LAB=lab/002-liveskin                      # 换成要发布的实验
+TAG=002-liveskin-v$VER                    # <编号>-<名称>-v<版本>
+
+awk -v v="## [$VER]" 'index($0,v)==1{f=1;next} /^## \[/{f=0} f' "$LAB/CHANGELOG.md" > /tmp/notes.md
+gh release create "$TAG" --title "LiveSkin $VER" --notes-file /tmp/notes.md
+```
+
+`gh` 需要先 `gh auth login`。若手边没有 `gh`，等价做法是调 REST API
+（`POST /repos/<owner>/<repo>/releases`，带 `tag_name` / `name` / `body`），
+凭据用 `git credential fill` 从系统钥匙串取 —— **不要把 token 放进命令行参数或日志**。
 
 标签只增不改：已推送的标签不删除、不重打；打错了就发下一个版本。
 仓库根不设版本号 —— 根 `CHANGELOG.md` 用日期里程碑。
