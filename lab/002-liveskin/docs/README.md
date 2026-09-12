@@ -39,18 +39,25 @@ LiveSkin 已经把「皮肤」做成了三级模型：**family（大类）/ vari
 
 ## 三、家族总表
 
-| 顺序 | 家族 id | 分支 | 依据来源 | variant 数 |
-| --- | --- | --- | --- | --- |
-| 1 ✅ | `SteampunkFamily` | 蒸汽朋克 | `doc/punks/steampunk/` | 4 · **已完成** |
-| 2 ✅ | `DieselpunkFamily` | 柴油朋克 | `doc/punks/dieselpunk/` | 4 · **已完成** |
-| 3 ✅ | `AtompunkFamily` | 原子朋克 | `doc/punks/atompunk/` | 4 · **已完成** |
-| 4 ✅ | `CyberpunkFamily` | 赛博朋克 | `doc/punks/cyberpunk/` | 4 · **已完成** |
-| 5 ✅ | `BiopunkFamily` | 生物朋克 | `doc/punks/biopunk/` | 4 · **已完成** |
-| 6 ✅ | `CassetteFuturismFamily` | 磁带未来主义 | cyberpunk 卷内 + 外部 | 4 · **已完成** |
-| 7 ✅ | `SolarpunkFamily` | 太阳朋克 | **仅外部** | 4 · **已完成** |
-| 8 ✅ | `TerranFamily` | 星际争霸 · 人族 | **仅外部** | 4 · **已完成** |
-| 9 ✅ | `ZergFamily` | 星际争霸 · 虫族 | **仅外部** | 4 · **已完成** |
-| 10 ✅ | `ProtossFamily` | 星际争霸 · 神族 | **仅外部** | 4 · **已完成** |
+| 分类 | 顺序 | 家族 id | 分支 | 依据来源 | variant 数 |
+| --- | --- | --- | --- | --- | --- |
+| 朋克美学 | 1 ✅ | `SteampunkFamily` | 蒸汽朋克 | `doc/punks/steampunk/` | 4 · **已完成** |
+| 朋克美学 | 2 ✅ | `DieselpunkFamily` | 柴油朋克 | `doc/punks/dieselpunk/` | 4 · **已完成** |
+| 朋克美学 | 3 ✅ | `AtompunkFamily` | 原子朋克 | `doc/punks/atompunk/` | 4 · **已完成** |
+| 朋克美学 | 4 ✅ | `CyberpunkFamily` | 赛博朋克 | `doc/punks/cyberpunk/` | 4 · **已完成** |
+| 朋克美学 | 5 ✅ | `BiopunkFamily` | 生物朋克 | `doc/punks/biopunk/` | 4 · **已完成** |
+| 朋克美学 | 6 ✅ | `CassetteFuturismFamily` | 磁带未来主义 | cyberpunk 卷内 + 外部 | 4 · **已完成** |
+| 朋克美学 | 7 ✅ | `SolarpunkFamily` | 太阳朋克 | **仅外部** | 4 · **已完成** |
+| 千禧年美学 | — ✅ | `FrutigerAeroFamily` | Frutiger Aero | **仅外部** | 3 · **已完成** |
+| 星际争霸 | 8 ✅ | `TerranFamily` | 星际争霸 · 人族 | **仅外部** | 4 · **已完成** |
+| 星际争霸 | 9 ✅ | `ZergFamily` | 星际争霸 · 虫族 | **仅外部** | 4 · **已完成** |
+| 星际争霸 | 10 ✅ | `ProtossFamily` | 星际争霸 · 神族 | **仅外部** | 4 · **已完成** |
+
+**分类就是面板里的行**。`family.json` 的 `category` 字段决定它落在哪一行，
+行序由宿主常量 `CATEGORIES` 给出（`朋克美学` → `千禧年美学` → `星际争霸`）：
+七个朋克家族组成时间轴，千禧年美学紧挨着它的右端（Aero 是这批可疑未来全部落空之后、
+企业给出的最后一次乐观），星际争霸三族不在轴上，单独一行。
+分类漏写或写错会被 linter 直接报错，不会悄悄混进别的行。
 
 **七个朋克家族合计 28 支，全部落地。** 顺序即实现顺序，也是面板里的家族排序。
 
