@@ -38,7 +38,7 @@ html[data-live-skin] body:not([data-ds-dark-theme]) {
   --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #0f7fc4);
   --dsw-alias-brand-text: #06344d;
   /* 链接是正文，必须 ≥4.5:1：亮底把强调色压深，暗底把它提亮。 */
-  --dsw-alias-link: color-mix(in srgb, var(--ls-accent, #0f7fc4) 42%, #0b1116);
+  --dsw-alias-link: color-mix(in srgb, var(--ls-accent, #0f7fc4) 34%, #0b1116);
   --dsw-alias-state-business-primary: var(--ls-accent, #0f7fc4);
   --dsw-alias-state-business-tertiary: rgba(178, 224, 250, .55);
   /* —— 按钮：Aero 玻璃按钮的纵向高光 —— */
@@ -76,7 +76,9 @@ html[data-live-skin] body:not([data-ds-dark-theme]) {
   --dsw-alias-label-primary-dimmed: #08283a;
   --dsw-alias-label-primary-foreground: #ffffff;
   --dsw-alias-label-primary-inverted: #ffffff;
-  --dsw-alias-label-secondary: #2d617a;
+  /* 壁纸的天空→草地渐变里有一段饱和绿（约 #5fb832），次要文字与链接要压在它上面
+     仍然达标。底色守氛围、文字层强制达标 —— 所以调的是文字，不是壁纸。 */
+  --dsw-alias-label-secondary: #1f4a5f;
   --dsw-alias-label-tertiary: #4a7f97;
   /* —— Markdown —— */
   --dsw-alias-markdown-citation: rgba(198, 234, 250, .7);

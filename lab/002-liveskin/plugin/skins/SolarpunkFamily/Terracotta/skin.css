@@ -5,17 +5,9 @@
    动效签名：窑火微光（底部赭石渐变以 10s 周期做极小幅度的明暗起伏）。 */
 
 html[data-live-skin] body {
+  
   --ls-fx-name: sp-kiln-glow;
   --ls-fx-duration: 10s;
-  background-image:
-    /* 明显的编织纹理：两层交叉的斜线，比家族层更密更实 */
-    repeating-linear-gradient(38deg, rgba(158, 74, 40, .12) 0 1px, rgba(158, 74, 40, 0) 1px 5px),
-    repeating-linear-gradient(-52deg, rgba(61, 90, 52, .09) 0 1px, rgba(61, 90, 52, 0) 1px 7px),
-    /* 底部一片赭石色的暖渐变 */
-    radial-gradient(120% 44% at 50% 112%, rgba(201, 162, 39, .3) 0%, rgba(201, 162, 39, 0) 72%),
-    linear-gradient(180deg, #f2e9dd 0%, #ece0cf 100%);
-  background-repeat: repeat, repeat, no-repeat, no-repeat;
-  background-attachment: fixed;
 }
 
 /* 窑火：底部一层更窄的暖光，与壁纸的宽渐变错开周期地起伏 */
@@ -40,4 +32,28 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     opacity: 1;
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 明显的编织纹理：两层交叉的斜线，比家族层更密更实 */
+    repeating-linear-gradient(38deg, rgba(158, 74, 40, .12) 0 1px, rgba(158, 74, 40, 0) 1px 5px),
+    repeating-linear-gradient(-52deg, rgba(61, 90, 52, .09) 0 1px, rgba(61, 90, 52, 0) 1px 7px),
+    /* 底部一片赭石色的暖渐变 */
+    radial-gradient(120% 44% at 50% 112%, rgba(201, 162, 39, .3) 0%, rgba(201, 162, 39, 0) 72%),
+    linear-gradient(180deg, #f2e9dd 0%, #ece0cf 100%);
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(242, 233, 221, .16) 0%, rgba(242, 233, 221, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

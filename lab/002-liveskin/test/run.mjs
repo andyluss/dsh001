@@ -1063,6 +1063,59 @@ function pageBackdrop(rules, dark, vars) {
   return base === null ? modeDefault : compositeOver(base, modeDefault)
 }
 
+/** 取 body 在该模式下生效的 background-image（壁纸），没有则返回 null。 */
+function bodyWallpaper(rules, dark) {
+  const pattern = /(?:^|;)\s*background-image\s*:\s*([^;]+)/
+  let best = null
+  let bestKey = -1
+  rules.forEach((rule, index) => {
+    if (!ruleApplies(rule.selector, dark)) return
+    const bare = rule.selector.replace(/:not\([^)]*\)/g, '')
+    const isBodySubject = selectorBranches(bare).some((one) => {
+      const last = one.trim().split(/\s+/).pop() ?? ''
+      return /^body(\[[^\]]*\])?$/.test(last)
+    })
+    if (!isBodySubject) return
+    const match = rule.body.match(pattern)
+    if (match === null) return
+    const key = ruleSpecificity(rule.selector, dark) * 10000 + index
+    if (key > bestKey) { bestKey = key; best = match[1].trim() }
+  })
+  return best
+}
+
+/**
+ * 该模式下**页面可能出现的全部颜色**：底色叠加壁纸各层得到的候选。
+ *
+ * 为什么不能只看 background-color：壁纸（`background-image`）可以是不透明的 ——
+ * 那时页面的实际颜色完全由它决定，而 `background-color` 只是个被盖住的底。
+ * 既有变体里就有 4 个在亮色档铺了暗壁纸，`background-color` 却是亮的，
+ * 只看底色就报绿。CSS 里 background-image 的层序是**先写的在上层**，
+ * 所以从最后一个往前叠。
+ */
+function pageCandidates(rules, dark, vars) {
+  const base = pageBackdrop(rules, dark, vars)
+  const wallpaper = bodyWallpaper(rules, dark)
+  if (wallpaper === null) return [base]
+  const out = [base]
+  let running = base
+  const layers = splitTopLevel(wallpaper).map((x) => x.trim()).filter((x) => x !== '')
+  for (const layer of [...layers].reverse()) {
+    const stops = evalColorCandidates(layer, vars)
+    if (stops.length === 0) continue
+    // 只有**不透明**的色标才算「页面颜色」：alpha 到 1 时那一块的颜色就由它完全决定，
+    // 与几何无关。半透明层只是染色 —— 页面到底偏成什么色取决于它盖在哪、盖多大，
+    // 静态解算看不出几何，把它当整页颜色会造出一堆假阳性
+    // （例如某个变体左上角 72×72 的 HUD 角标会让整页被判成琥珀色）。
+    for (const stop of stops) {
+      if ((stop[3] ?? 1) >= 0.95) out.push(compositeOver(stop, running))
+    }
+    const strongest = stops.reduce((a, b) => ((b[3] ?? 1) > (a[3] ?? 1) ? b : a))
+    running = compositeOver(strongest, running)
+  }
+  return out
+}
+
 function resolveColors(rules, name, vars, dark, depth = 0) {
   const raw = rawToken(rules, name, dark)
   if (raw === undefined) return []
@@ -1149,7 +1202,7 @@ if (process.env.LIVESKIN_DUMP !== undefined) {
       console.log(`\n=== ${want} ${dark ? '暗色' : '亮色'}`)
       for (const [fgName, bgName, min] of CONTRAST_PROBES) {
         const fgs = resolveColors(rules, fgName, vars, dark)
-        const bgs = bgName === '@body' ? [pageBackdrop(rules, dark, vars)] : resolveColors(rules, bgName, vars, dark)
+        const bgs = bgName === '@body' ? pageCandidates(rules, dark, vars) : resolveColors(rules, bgName, vars, dark)
         if (fgs.length === 0 || bgs.length === 0) continue
         let worst = Infinity
         for (const fg of fgs) for (const bg of bgs) worst = Math.min(worst, contrastRatio(fg, bg))
@@ -1178,7 +1231,7 @@ check('C4 · 前景/底色消费对的对比度必须达标（含官方回落与
       const vars = buildVars(rules, dark, lsVars)
       for (const [fgName, bgName, min, required] of CONTRAST_PROBES) {
         const fgs = resolveColors(rules, fgName, vars, dark)
-        const bgs = bgName === '@body' ? [pageBackdrop(rules, dark, vars)] : resolveColors(rules, bgName, vars, dark)
+        const bgs = bgName === '@body' ? pageCandidates(rules, dark, vars) : resolveColors(rules, bgName, vars, dark)
         if (fgs.length === 0 || bgs.length === 0) {
           if (required) {
             const which = fgs.length === 0 ? fgName : bgName

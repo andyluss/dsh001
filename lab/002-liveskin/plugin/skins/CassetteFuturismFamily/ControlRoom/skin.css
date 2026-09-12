@@ -7,17 +7,21 @@
 html[data-live-skin] body {
   --ls-fx-name: cf-indicator-scan;
   --ls-fx-duration: 3s;
-  background-image:
-    /* 指示灯阵列：两层错开亮度的等距点阵 */
-    radial-gradient(circle 1.6px at 14px 14px, rgba(139, 233, 253, .3) 0 60%, rgba(139, 233, 253, 0) 100%),
-    radial-gradient(circle 1.6px at 38px 14px, rgba(139, 233, 253, .12) 0 60%, rgba(139, 233, 253, 0) 100%),
-    /* 凹槽分隔：等距的横向暗线，像面板之间的接缝 */
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, .22) 0 1px, rgba(0, 0, 0, 0) 1px 56px),
-    linear-gradient(180deg, #24282c 0%, #1e2225 100%);
-  background-repeat: repeat, repeat, repeat, no-repeat;
-  background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100%;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「暗色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
+html[data-live-skin] body {
+}
+
 
 /* 一颗会跳的指示灯：单点、很亮、用 steps 跳而不是滑 */
 html[data-live-skin] body::after {
@@ -45,4 +49,22 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     transform: translateX(48px);
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(36, 40, 44, .16) 0%, rgba(36, 40, 44, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image: linear-gradient(180deg, rgba(36, 40, 44, .16) 0%, rgba(36, 40, 44, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

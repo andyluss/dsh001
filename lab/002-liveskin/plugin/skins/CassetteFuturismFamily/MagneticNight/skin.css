@@ -7,17 +7,21 @@
 html[data-live-skin] body {
   --ls-fx-name: cf-glow-breathe;
   --ls-fx-duration: 9s;
-  background-image:
-    /* 磁带噪声的视觉等价物：一层非常轻、非常均匀的噪点（不是颗粒，是信号） */
-    radial-gradient(circle 0.6px at 2px 3px, rgba(255, 255, 255, .05) 0 60%, rgba(255, 255, 255, 0) 100%),
-    radial-gradient(circle 0.6px at 5px 1px, rgba(0, 0, 0, .18) 0 60%, rgba(0, 0, 0, 0) 100%),
-    /* 顶部一片琥珀，来自屏幕的反射 —— 均匀、没有明确方向 */
-    linear-gradient(180deg, rgba(255, 184, 108, .07) 0%, rgba(255, 184, 108, 0) 30%),
-    linear-gradient(180deg, #1a1d21 0%, #15181b 100%);
-  background-repeat: repeat, repeat, no-repeat, no-repeat;
-  background-size: 7px 7px, 7px 7px, 100% 100%, 100% 100%;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「暗色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
+html[data-live-skin] body {
+}
+
 
 html[data-live-skin] body::after {
   background-image: linear-gradient(0deg, rgba(255, 184, 108, .1), rgba(255, 184, 108, .1));
@@ -31,4 +35,22 @@ html[data-live-skin] body::after {
   to {
     opacity: 1;
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(26, 29, 33, .16) 0%, rgba(26, 29, 33, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image: linear-gradient(180deg, rgba(26, 29, 33, .16) 0%, rgba(26, 29, 33, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

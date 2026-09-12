@@ -8,21 +8,21 @@
 html[data-live-skin] body {
   --ls-fx-name: atom-orbit-turn;
   --ls-fx-duration: 80s;
-  background-image:
-    /* 同心轨道环：三圈细椭圆，从中心偏左展开 */
-    radial-gradient(26% 18% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .22) 58.6%, rgba(46, 125, 184, 0) 59.4%),
-    radial-gradient(36% 25% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .16) 58.6%, rgba(46, 125, 184, 0) 59.4%),
-    radial-gradient(46% 32% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .11) 58.6%, rgba(46, 125, 184, 0) 59.4%),
-    /* 星：稀疏的白色点阵 */
-    radial-gradient(circle 1.1px at 18px 22px, rgba(255, 255, 255, .85) 0 60%, rgba(255, 255, 255, 0) 100%),
-    radial-gradient(circle 0.9px at 92px 64px, rgba(255, 255, 255, .6) 0 60%, rgba(255, 255, 255, 0) 100%),
-    /* 下方升起的深蓝渐隐（夜空），与上方的瓷釉白形成「地面—天空」的分界 */
-    linear-gradient(0deg, rgba(24, 52, 84, .5) 0%, rgba(24, 52, 84, .14) 26%, rgba(24, 52, 84, 0) 46%),
-    linear-gradient(180deg, #fbf7f0 0%, #f7f2e9 60%, #eee7da 100%);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 128px 128px, 128px 128px, 100% 100%, 100% 100%;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat, no-repeat;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「亮色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body {
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
 
 /* 轨道上的一个亮点：轨道环本身不转，转的是这一颗 */
 html[data-live-skin] body::after {
@@ -45,4 +45,33 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 同心轨道环：三圈细椭圆，从中心偏左展开 */
+    radial-gradient(26% 18% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .22) 58.6%, rgba(46, 125, 184, 0) 59.4%),
+    radial-gradient(36% 25% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .16) 58.6%, rgba(46, 125, 184, 0) 59.4%),
+    radial-gradient(46% 32% at 42% 40%, rgba(46, 125, 184, 0) 0 58%, rgba(46, 125, 184, .11) 58.6%, rgba(46, 125, 184, 0) 59.4%),
+    /* 星：稀疏的白色点阵 */
+    radial-gradient(circle 1.1px at 18px 22px, rgba(255, 255, 255, .85) 0 60%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle 0.9px at 92px 64px, rgba(255, 255, 255, .6) 0 60%, rgba(255, 255, 255, 0) 100%),
+    /* 下方升起的深蓝渐隐（夜空），与上方的瓷釉白形成「地面—天空」的分界 */
+    linear-gradient(0deg, rgba(24, 52, 84, .5) 0%, rgba(24, 52, 84, .14) 26%, rgba(24, 52, 84, 0) 46%),
+    linear-gradient(180deg, #fbf7f0 0%, #f7f2e9 60%, #eee7da 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 128px 128px, 128px 128px, 100% 100%, 100% 100%;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(251, 247, 240, .16) 0%, rgba(251, 247, 240, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

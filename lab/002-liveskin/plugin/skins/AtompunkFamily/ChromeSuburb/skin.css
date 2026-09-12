@@ -6,15 +6,21 @@
 html[data-live-skin] body {
   --ls-fx-name: atom-chrome-sweep;
   --ls-fx-duration: 14s;
-  background-image:
-    /* 右上角一片薄荷绿柔光 */
-    radial-gradient(70% 52% at 84% 4%, rgba(168, 205, 187, .34) 0%, rgba(168, 205, 187, 0) 72%),
-    /* 底边一条贴地的暖白，托住画面 */
-    linear-gradient(0deg, rgba(255, 253, 248, .5) 0%, rgba(255, 253, 248, 0) 18%),
-    linear-gradient(180deg, #f6efe3 0%, #f3ebdd 52%, #ece3d2 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「亮色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body {
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
 
 /* 扫光：一条窄而硬的反光带，用 steps 模拟金属反射的跳跃而不是平滑过渡 */
 html[data-live-skin] body::after {
@@ -41,4 +47,27 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     transform: translateX(60%);
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 右上角一片薄荷绿柔光 */
+    radial-gradient(70% 52% at 84% 4%, rgba(168, 205, 187, .34) 0%, rgba(168, 205, 187, 0) 72%),
+    /* 底边一条贴地的暖白，托住画面 */
+    linear-gradient(0deg, rgba(255, 253, 248, .5) 0%, rgba(255, 253, 248, 0) 18%),
+    linear-gradient(180deg, #f6efe3 0%, #f3ebdd 52%, #ece3d2 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(246, 239, 227, .16) 0%, rgba(246, 239, 227, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

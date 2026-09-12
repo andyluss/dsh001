@@ -16,17 +16,21 @@
 html[data-live-skin] body {
   --ls-fx-name: atom-vertical-pulse;
   --ls-fx-duration: 6s;
-  background-image:
-    /* 顶部的暗红：是「印上去的红」，不发光、没有 bloom */
-    linear-gradient(180deg, rgba(179, 53, 44, .30) 0%, rgba(179, 53, 44, .08) 22%, rgba(179, 53, 44, 0) 40%),
-    /* 水平分层的拉丝金属：低对比、等距、无方向性高光 */
-    repeating-linear-gradient(180deg,
-      rgba(120, 116, 110, .07) 0 1px,
-      rgba(120, 116, 110, 0) 1px 5px),
-    linear-gradient(180deg, #d9d5ce 0%, #cdc8c0 100%);
-  background-repeat: no-repeat, repeat, no-repeat;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「亮色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body {
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
 
 /* 中轴的分层：一条哑光的垂直带（不是铬银亮线），加一圈塔尖式的收束 */
 html[data-live-skin] body::after {
@@ -73,4 +77,29 @@ html[data-live-skin] body::before {
   50% {
     opacity: 1;
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 顶部的暗红：是「印上去的红」，不发光、没有 bloom */
+    linear-gradient(180deg, rgba(179, 53, 44, .30) 0%, rgba(179, 53, 44, .08) 22%, rgba(179, 53, 44, 0) 40%),
+    /* 水平分层的拉丝金属：低对比、等距、无方向性高光 */
+    repeating-linear-gradient(180deg,
+      rgba(120, 116, 110, .07) 0 1px,
+      rgba(120, 116, 110, 0) 1px 5px),
+    linear-gradient(180deg, #d9d5ce 0%, #cdc8c0 100%);
+  background-repeat: no-repeat, repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(217, 213, 206, .16) 0%, rgba(217, 213, 206, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

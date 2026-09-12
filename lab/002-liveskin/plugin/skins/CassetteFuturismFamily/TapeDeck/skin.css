@@ -8,15 +8,21 @@
 html[data-live-skin] body {
   --ls-fx-name: cf-reel-turn;
   --ls-fx-duration: 4s;
-  background-image:
-    /* 拉丝铝：极细的横向纹理，低对比、无方向性高光 */
-    repeating-linear-gradient(0deg, rgba(200, 205, 210, .06) 0 1px, rgba(200, 205, 210, 0) 1px 3px),
-    /* 右下角一片橙色辉光：LED 数字显示洒出来的光 */
-    radial-gradient(38% 26% at 84% 88%, rgba(255, 122, 24, .16) 0%, rgba(255, 122, 24, 0) 74%),
-    linear-gradient(180deg, #26221f 0%, #1c1917 100%);
-  background-repeat: repeat, no-repeat, no-repeat;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「暗色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
+html[data-live-skin] body {
+}
+
 
 /* 卷带轮：一枚带辐条的轮子，圆心与 transform-origin 对齐在左下 */
 html[data-live-skin] body::after {
@@ -46,4 +52,22 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(38, 34, 31, .16) 0%, rgba(38, 34, 31, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image: linear-gradient(180deg, rgba(38, 34, 31, .16) 0%, rgba(38, 34, 31, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

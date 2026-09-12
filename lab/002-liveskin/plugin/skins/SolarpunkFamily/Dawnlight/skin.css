@@ -6,16 +6,9 @@
    动效签名：晨光渐亮（地平线暖白带以 180s 做一次几乎不可察觉的明暗循环）。 */
 
 html[data-live-skin] body {
+  
   --ls-fx-name: sp-dawn-brighten;
   --ls-fx-duration: 180s;
-  background-image:
-    /* 地平线：从底边升起的一条暖白带 */
-    linear-gradient(0deg, rgba(255, 244, 214, .6) 0%, rgba(255, 244, 214, .18) 12%, rgba(255, 244, 214, 0) 26%),
-    /* 极少的绿：只有底边一条细绿线 */
-    linear-gradient(0deg, rgba(107, 127, 74, .22) 0%, rgba(107, 127, 74, 0) 2%),
-    linear-gradient(180deg, #dce9f0 0%, #e8eef0 46%, #f4f2ea 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
 html[data-live-skin] body::after {
@@ -41,4 +34,27 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     opacity: 1;
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 地平线：从底边升起的一条暖白带 */
+    linear-gradient(0deg, rgba(255, 244, 214, .6) 0%, rgba(255, 244, 214, .18) 12%, rgba(255, 244, 214, 0) 26%),
+    /* 极少的绿：只有底边一条细绿线 */
+    linear-gradient(0deg, rgba(107, 127, 74, .22) 0%, rgba(107, 127, 74, 0) 2%),
+    linear-gradient(180deg, #dce9f0 0%, #e8eef0 46%, #f4f2ea 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(244, 242, 234, .16) 0%, rgba(244, 242, 234, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }

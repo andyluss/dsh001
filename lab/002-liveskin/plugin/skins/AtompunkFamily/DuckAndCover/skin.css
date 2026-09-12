@@ -17,17 +17,21 @@
 html[data-live-skin] body {
   --ls-fx-name: atom-doomsday-tick;
   --ls-fx-duration: 60s;
-  background-image:
-    /* 末日时钟的刻度环：一圈极淡的同心环，位于画面中心偏上。
-       它只是刻度，不是表盘 —— 不画指针图形，指针由动效层承担。 */
-    radial-gradient(30% 30% at 50% 34%, rgba(232, 185, 35, .07) 0 62%, rgba(232, 185, 35, 0) 63%),
-    radial-gradient(23% 23% at 50% 34%, rgba(232, 185, 35, .05) 0 61%, rgba(232, 185, 35, 0) 62%),
-    /* 顶部一片被压住的暖黄，像防空洞里唯一的一盏灯 */
-    linear-gradient(180deg, rgba(232, 185, 35, .10) 0%, rgba(232, 185, 35, 0) 26%),
-    linear-gradient(180deg, #1a1a1c 0%, #141416 62%, #0f0f11 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+
 }
+/* 壁纸按极性归到「亮色档」。
+   ==========================================================================
+   原来写在无档位的 `body` 上、而且用的是不透明色 —— 不透明壁纸会把**另一档**的
+   页面直接翻成相反的极性，而 token 是按档走的：亮色档拿到暗壁纸时，
+   深色正文压在暗页面上，对比度掉到 1.x:1。验收台的 `@body` 探针会读到壁纸的
+   不透明层，正是它把这里报出来的。
+   另一档给一层同色相的 alpha 淡洗，既保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body {
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+}
+
 
 /* 分针：一条细而硬的黄线，从刻度环中心指向外，用 steps 一格一格走 */
 html[data-live-skin] body::after {
@@ -55,4 +59,33 @@ html[data-live-skin] [data-dsh-surface='session-header'] {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 壁纸按**自身颜色的极性**归到对应的档。
+   ==========================================================================
+   原来写在无档位的 `body` 上、且用的是不透明色 —— 不透明壁纸会把**另一档**的页面
+   直接翻成相反极性，而 token 是按档走的：亮色档拿到暗壁纸时深色正文压在暗页面上，
+   对比度掉到 1.x:1。验收台的 `@body` 探针现在会读到壁纸的不透明层，是它把这里
+   报出来的。另一档给一层同色相的 alpha 淡洗：保留这一支的色调，又不可能翻转极性。 */
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    /* 末日时钟的刻度环：一圈极淡的同心环，位于画面中心偏上。
+       它只是刻度，不是表盘 —— 不画指针图形，指针由动效层承担。 */
+    radial-gradient(30% 30% at 50% 34%, rgba(232, 185, 35, .07) 0 62%, rgba(232, 185, 35, 0) 63%),
+    radial-gradient(23% 23% at 50% 34%, rgba(232, 185, 35, .05) 0 61%, rgba(232, 185, 35, 0) 62%),
+    /* 顶部一片被压住的暖黄，像防空洞里唯一的一盏灯 */
+    linear-gradient(180deg, rgba(232, 185, 35, .10) 0%, rgba(232, 185, 35, 0) 26%),
+    linear-gradient(180deg, #1a1a1c 0%, #141416 62%, #0f0f11 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image: linear-gradient(180deg, rgba(26, 26, 28, .16) 0%, rgba(26, 26, 28, 0) 58%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body {
+  background-image: linear-gradient(180deg, #1a1a1c 0%, #141416 100%);
 }
