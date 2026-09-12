@@ -308,6 +308,27 @@ window.__ModuleLoader__.load({
         color:var(--dsw-alias-label-primary); font:var(--dsw-font-s-14); }
       [data-live-skin-panel] .ls-card:hover { background:var(--dsw-alias-interactive-bg-hover); color:var(--dsw-alias-label-primary); }
       [data-live-skin-panel] .ls-card[data-on="true"] { border-color:var(--dsw-alias-brand-primary); box-shadow:0 0 0 1px var(--dsw-alias-brand-primary) inset; }
+      /* 正在使用的皮肤要一眼可辨：左侧强调条 + 「使用中」胶囊。
+         它与 [data-on]（正在查看）是两件事 —— 用户浏览别的皮肤时，
+         仍然需要知道哪一套在生效，好在切走之后找回来。 */
+      [data-live-skin-panel] .ls-card[data-applied="true"] { border-color:var(--dsw-alias-brand-primary);
+        box-shadow:inset 3px 0 0 0 var(--dsw-alias-brand-primary); background:var(--dsw-alias-bg-layer-2); }
+      [data-live-skin-panel] .ls-card[data-applied="true"][data-on="true"] { box-shadow:0 0 0 1px var(--dsw-alias-brand-primary) inset, inset 3px 0 0 0 var(--dsw-alias-brand-primary); }
+      [data-live-skin-panel] .ls-now { font:var(--dsw-font-xxxs-11); font-weight:600; flex:none;
+        background:var(--dsw-alias-button-primary-fill); color:var(--dsw-alias-label-primary-foreground);
+        border-radius:999px; padding:1px 7px; }
+      /* 「使用中」只加一圈描边，**不碰文字色**：选中态的底色是强调色填充，
+         文字色必须留给 [data-on] 那条规则钉住的白。两者同特异性，这里一旦写 color，
+         源码在后的它就会把白字盖成深墨色 —— 亮色档下深底压深字。
+         （验收台 [7c] 有专门一条守着这个形态。） */
+      [data-live-skin-panel] .ls-chip[data-applied="true"] { box-shadow:inset 0 0 0 1px var(--dsw-alias-brand-primary); }
+      [data-live-skin-panel] .ls-card-foot { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+      /* 档位徽章：亮/暗跟随系统 = 中性；只有一种观感 = 明确标出是哪一种 */
+      [data-live-skin-panel] .ls-mode { font:var(--dsw-font-xxxs-11); border-radius:4px; padding:0 5px; flex:none;
+        border:1px solid var(--dsw-alias-border-l2); color:var(--dsw-alias-label-tertiary); }
+      [data-live-skin-panel] .ls-mode[data-mode="light"] { border-color:var(--dsw-alias-border-l3); color:var(--dsw-alias-label-secondary); background:var(--dsw-alias-bg-layer-2); }
+      [data-live-skin-panel] .ls-mode[data-mode="dark"] { border-color:var(--dsw-alias-border-l3); color:var(--dsw-alias-label-secondary); background:var(--dsw-alias-bg-layer-3); }
+      [data-live-skin-panel] .ls-mode[data-mode="both"] { color:var(--dsw-alias-label-secondary); }
       [data-live-skin-panel] .ls-card-name { font-weight:600; display:flex; align-items:center; gap:6px; }
       [data-live-skin-panel] .ls-swatch { width:10px; height:10px; border-radius:50%; flex:none; border:1px solid var(--dsw-alias-border-l3); }
       [data-live-skin-panel] .ls-table { display:flex; flex-direction:column; border:1px solid var(--dsw-alias-border-l1); border-radius:12px;
@@ -341,7 +362,8 @@ window.__ModuleLoader__.load({
         color:var(--dsw-alias-label-primary-foreground); }
       [data-live-skin-panel] .ls-btn[data-primary="true"]:hover:not(:disabled) { background:var(--dsw-alias-button-primary-hover);
         color:var(--dsw-alias-label-primary-foreground); }
-      [data-live-skin-panel] .ls-status { display:flex; align-items:center; gap:8px; font:var(--dsw-font-xxs-12);
+      [data-live-skin-panel] .ls-btn-mini { padding:1px 8px; font:var(--dsw-font-xxxs-11); border-radius:999px; }
+      [data-live-skin-panel] .ls-status { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font:var(--dsw-font-xxs-12);
         color:var(--dsw-alias-label-secondary); }
       [data-live-skin-panel] .ls-dot { width:8px; height:8px; border-radius:50%; background:var(--dsw-alias-state-success-primary); flex:none; }
       [data-live-skin-panel] .ls-dot[data-idle="true"] { background:var(--dsw-alias-label-tertiary); }
@@ -374,8 +396,37 @@ window.__ModuleLoader__.load({
         type: 'button',
         className: 'ls-chip',
         'data-on': props.on ? 'true' : 'false',
+        'data-applied': props.applied ? 'true' : 'false',
         onClick: props.onClick
       }, props.children)
+    }
+
+    /**
+     * 皮肤的档位徽章。文案来自宿主侧的推导（读皮肤自己的 CSS），不是手写声明 ——
+     * 用户是拿这句话判断「切到暗色模式会不会变样」的，它不能跟皮肤实际做的事漂移。
+     */
+    function ModeBadge(props) {
+      const appearance = props.appearance
+      // 宿主可能比客户端旧（host 半边要重启才更新，客户端由 HMR 现取）。
+      // 那种情况下目录册里没有 appearance —— 什么都不标，而不是标一个会误导人的
+      // 「档位未知」：那个词是留给「推导不出来」的，不是留给「宿主太旧」的。
+      if (appearance === undefined || appearance === null) return null
+      if (appearance.light === null || appearance.dark === null) {
+        return h('span', { className: 'ls-mode', 'data-mode': 'unknown' }, '档位未知')
+      }
+      if (appearance.followsSystem) {
+        return h('span', {
+          className: 'ls-mode',
+          'data-mode': 'both',
+          title: '亮色模式下是亮色外观，暗色模式下是暗色外观'
+        }, '亮 / 暗 跟随系统')
+      }
+      const only = appearance.light
+      return h('span', {
+        className: 'ls-mode',
+        'data-mode': only,
+        title: '这一支两档都用同一套观感，不随系统切换'
+      }, only === 'dark' ? '仅暗色观感' : '仅亮色观感')
     }
 
     function ParamRow(props) {
@@ -669,6 +720,18 @@ window.__ModuleLoader__.load({
       const currentKey = family === null || variant === null ? null : skinKey(family.id, variant.id)
       const isApplied = currentKey !== null && currentKey === appliedKey
 
+      // 「正在使用的」与「正在查看的」不是一回事：浏览别的皮肤时，状态栏和卡片仍要能
+      // 指明哪一套在生效，并给一个一键回到它的入口。
+      let appliedFamily = null
+      let appliedVariant = null
+      if (appliedKey !== null) {
+        for (const entry of catalog.families) {
+          const hit = entry.variants.find((item) => skinKey(entry.id, item.id) === appliedKey)
+          if (hit !== undefined) { appliedFamily = entry; appliedVariant = hit; break }
+        }
+      }
+      const viewingOther = appliedKey !== null && currentKey !== appliedKey
+
       // 这一份就是运行时此刻写到 <html> 上的全部变量 —— 与 runtime.writeVars
       // 走同一个 paramVars，所以面板里看到的就是 DOM 里的。
       const varTable = {}
@@ -687,8 +750,19 @@ window.__ModuleLoader__.load({
 
         h('div', { className: 'ls-status' },
           h('span', { className: 'ls-dot', 'data-idle': appliedKey === null ? 'true' : 'false' }),
-          h('span', null, appliedKey === null ? '当前：官方外观（未启用任何皮肤）' : `当前生效：${appliedKey}`),
-          dirty ? h('span', { className: 'ls-muted' }, '· 预览中（未应用）') : null),
+          h('span', null, appliedVariant === null
+            ? '当前：官方外观（未启用任何皮肤）'
+            : `当前生效：${appliedFamily.name} · ${appliedVariant.name}`),
+          appliedVariant === null ? null : h(ModeBadge, { appearance: appliedVariant.appearance }),
+          dirty ? h('span', { className: 'ls-muted' }, '· 预览中（未应用）') : null,
+          viewingOther
+            ? h('button', {
+              type: 'button',
+              className: 'ls-btn ls-btn-mini',
+              title: '把编辑区切回正在生效的那一套',
+              onClick: () => { void select(appliedFamily.id, appliedVariant.id) }
+            }, '回到当前')
+            : null),
 
         conflict !== null && conflict !== undefined
           ? h('div', { className: 'ls-warn' },
@@ -703,6 +777,7 @@ window.__ModuleLoader__.load({
           h('div', { className: 'ls-chips' }, catalog.families.map((entry) => h(Chip, {
             key: entry.id,
             on: entry.id === familyId,
+            applied: appliedFamily !== null && entry.id === appliedFamily.id,
             onClick: () => {
               const first = entry.variants[0]
               if (first !== undefined) void select(entry.id, first.id)
@@ -722,13 +797,19 @@ window.__ModuleLoader__.load({
               type: 'button',
               className: 'ls-card',
               'data-on': entry.id === variantId ? 'true' : 'false',
+              'data-applied': appliedKey === skinKey(family.id, entry.id) ? 'true' : 'false',
               onClick: () => { void select(family.id, entry.id) }
             },
             h('span', { className: 'ls-card-name' },
               entry.accent.length > 0 ? h('span', { className: 'ls-swatch', style: { background: entry.accent } }) : null,
-              entry.name),
+              entry.name,
+              appliedKey === skinKey(family.id, entry.id)
+                ? h('span', { className: 'ls-now' }, '使用中')
+                : null),
             entry.description.length > 0 ? h('span', { className: 'ls-desc' }, entry.description) : null,
-            h('span', { className: 'ls-muted' }, appliedKey === skinKey(family.id, entry.id) ? '使用中' : `${String(entry.params.length)} 项可调`)))))
+            h('span', { className: 'ls-card-foot' },
+              h(ModeBadge, { appearance: entry.appearance }),
+              h('span', { className: 'ls-muted' }, `${String(entry.params.length)} 项可调`))))))
           : null,
 
         // 预设
