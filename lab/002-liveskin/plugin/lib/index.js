@@ -44,6 +44,19 @@ const STATE_FILE = 'state.json'
  * 把这两个值报给 /health，验收台就能判断「线上宿主是不是旧的」，而不是靠某个只有
  * 历史某一版才有的行为去猜 —— 那种探针在下一版就失效了（它曾经漏报过一次）。
  */
+/**
+ * 插件版本，取自 package.json。
+ * 发布之后要能在**运行时**被问出来：`/health` 与设置面板都会带上它 ——
+ * 否则「线上跑的是哪一版」只能靠 git tag 猜。
+ */
+const VERSION = (() => {
+  try {
+    return JSON.parse(readFileSync(join(PACKAGE_ROOT, 'package.json'), 'utf8')).version ?? null
+  } catch {
+    return null
+  }
+})()
+
 const LOADED_AT = Date.now()
 const LOADED_MTIME = (() => {
   try {
@@ -646,6 +659,8 @@ function projectCatalog(catalog, state) {
   return {
     ok: true,
     apiVersion: MANIFEST_VERSION,
+    // 面板标题上会显示它，用户一眼能对上是哪一版。
+    version: VERSION,
     active: state.active,
     families: catalog.families.filter((family) => !family.hidden).map((family) => ({
       id: family.id,
@@ -698,6 +713,7 @@ async function handle(req, res) {
       ok: true,
       name,
       apiVersion: MANIFEST_VERSION,
+      version: VERSION,
       builtinSkinsDir: BUILTIN_SKINS_DIR,
       userSkinsDir: userSkinsDir(),
       // 加载时刻 + 加载时读到的自身 mtime：验收台拿它判断「线上宿主是不是旧的」。

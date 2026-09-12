@@ -744,7 +744,8 @@ window.__ModuleLoader__.load({
 
       return h('div', { 'data-live-skin-panel': '' },
         h('div', { className: 'ls-head' },
-          h('span', { className: 'ls-title' }, 'LiveSkin'),
+          h('span', { className: 'ls-title' },
+            catalog.version === undefined || catalog.version === null ? 'LiveSkin' : `LiveSkin ${String(catalog.version)}`),
           h('span', { className: 'ls-muted' },
             catalog.families.length + ' 个皮肤家族 · ' + catalog.families.reduce((sum, entry) => sum + entry.variants.length, 0) + ' 套皮肤')),
 
