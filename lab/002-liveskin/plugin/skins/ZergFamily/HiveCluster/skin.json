@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "虫巢",
+  "nameEn": "Hive Cluster",
+  "description": "标准支 · 紫菌毯 + 骨白甲壳，最「在巢里」的一支",
+  "accent": "#7d3f9c",
+  "tags": [
+    "zerg",
+    "hivecluster"
+  ],
+  "defaults": {
+    "accent": "#7d3f9c",
+    "glass": 50,
+    "creep": 64,
+    "intensity": 64,
+    "grain": 58
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

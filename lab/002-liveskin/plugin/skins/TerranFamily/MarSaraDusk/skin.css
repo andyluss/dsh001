@@ -1,0 +1,37 @@
+/* 玛萨拉黄昏 Mar Sara Dusk —— 边疆 · 锈红棕 + 尘暴橙，全族最暖的一支；天空永远在落尘
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 尘暴把地平线以上全部染橙，越往上越薄 */
+    linear-gradient(180deg, rgba(194, 102, 42, .34) 0%, rgba(194, 102, 42, .10) 44%, rgba(194, 102, 42, 0) 68%),
+    radial-gradient(120% 60% at 78% 88%, rgba(120, 68, 40, .20) 0%, rgba(120, 68, 40, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    /* 夜里的尘暴：只剩地平线上一道余烬 */
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 52%, rgba(194, 102, 42, .18) 82%, rgba(194, 102, 42, .06) 100%),
+    radial-gradient(120% 50% at 74% 96%, rgba(120, 68, 40, .30) 0%, rgba(120, 68, 40, 0) 72%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: terran-dust-drift;
+  --ls-fx-duration: 52s;
+}
+
+@keyframes terran-dust-drift {
+  from { transform: translate3d(0, 0, 0); opacity: .75; }
+  50% { transform: translate3d(0, -8px, 0); opacity: 1; }
+  to { transform: translate3d(0, 0, 0); opacity: .75; }
+}

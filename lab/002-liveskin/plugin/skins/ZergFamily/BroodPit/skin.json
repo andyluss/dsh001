@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "育雏池",
+  "nameEn": "Brood Pit",
+  "description": "内脏 · 暗红棕肉膜；全族最沉重的一支",
+  "accent": "#9c3b3b",
+  "tags": [
+    "zerg",
+    "broodpit"
+  ],
+  "defaults": {
+    "accent": "#9c3b3b",
+    "glass": 40,
+    "creep": 72,
+    "intensity": 72,
+    "grain": 70
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

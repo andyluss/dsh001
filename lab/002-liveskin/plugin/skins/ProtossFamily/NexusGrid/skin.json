@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "枢纽网格",
+  "nameEn": "Nexus Grid",
+  "description": "能量 · 深蓝底上的青色网格；最「在运行」的一支",
+  "accent": "#2f9fb5",
+  "tags": [
+    "protoss",
+    "nexusgrid"
+  ],
+  "defaults": {
+    "accent": "#2f9fb5",
+    "glass": 48,
+    "psionic": 74,
+    "intensity": 66,
+    "grain": 52
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

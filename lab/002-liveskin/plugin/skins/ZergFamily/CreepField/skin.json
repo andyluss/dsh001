@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "菌毯",
+  "nameEn": "Creep Field",
+  "description": "地貌 · 胆汁绿为主；菌毯铺满整片，最平的一支",
+  "accent": "#6f9c2f",
+  "tags": [
+    "zerg",
+    "creepfield"
+  ],
+  "defaults": {
+    "accent": "#6f9c2f",
+    "glass": 54,
+    "creep": 84,
+    "intensity": 58,
+    "grain": 76
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

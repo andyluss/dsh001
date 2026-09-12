@@ -1,0 +1,36 @@
+/* 兵营甲板 Barracks Deck —— 内景 · 浅钢灰 + 安全黄；全族最亮的一支，像刚擦过地板的兵营
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 地脚的警戒黄斜纹，只占底部一条 */
+    repeating-linear-gradient(135deg, rgba(201, 162, 39, .22) 0 14px, rgba(201, 162, 39, 0) 14px 28px),
+    linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 40%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    repeating-linear-gradient(135deg, rgba(201, 162, 39, .16) 0 14px, rgba(201, 162, 39, 0) 14px 28px),
+    radial-gradient(120% 50% at 50% 0%, rgba(232, 200, 92, .12) 0%, rgba(232, 200, 92, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: terran-deck-pulse;
+  --ls-fx-duration: 16s;
+}
+
+@keyframes terran-deck-pulse {
+  from { transform: scale(1); opacity: .55; }
+  50% { transform: scale(1.03); opacity: 1; }
+  to { transform: scale(1); opacity: .55; }
+}

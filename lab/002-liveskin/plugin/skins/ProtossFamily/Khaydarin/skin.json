@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "凯达林水晶",
+  "nameEn": "Khaydarin",
+  "description": "水晶 · 青白自发光；全族最亮的一支，像一块还在充能的水晶",
+  "accent": "#3fb8c9",
+  "tags": [
+    "protoss",
+    "khaydarin"
+  ],
+  "defaults": {
+    "accent": "#3fb8c9",
+    "glass": 66,
+    "psionic": 66,
+    "intensity": 54,
+    "grain": 36
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "兵营甲板",
+  "nameEn": "Barracks Deck",
+  "description": "内景 · 浅钢灰 + 安全黄；全族最亮的一支，像刚擦过地板的兵营",
+  "accent": "#c9a227",
+  "tags": [
+    "terran",
+    "barracksdeck"
+  ],
+  "defaults": {
+    "accent": "#c9a227",
+    "glass": 62,
+    "scanner": 30,
+    "intensity": 50,
+    "grain": 40
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

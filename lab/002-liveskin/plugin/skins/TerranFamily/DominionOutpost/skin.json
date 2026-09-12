@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "帝国前哨",
+  "nameEn": "Dominion Outpost",
+  "description": "标准支 · 橄榄绿 + 炮铜 + 琥珀仪表光，最像「前线基地」的一支",
+  "accent": "#b8641f",
+  "tags": [
+    "terran",
+    "dominionoutpost"
+  ],
+  "defaults": {
+    "accent": "#b8641f",
+    "glass": 52,
+    "scanner": 62,
+    "intensity": 62,
+    "grain": 54
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

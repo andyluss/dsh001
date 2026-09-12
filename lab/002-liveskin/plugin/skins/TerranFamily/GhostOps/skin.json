@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "幽灵特工",
+  "nameEn": "Ghost Ops",
+  "description": "潜行 · 炭黑 + 琥珀 HUD；对比最强、装饰最少的一支",
+  "accent": "#d99a2b",
+  "tags": [
+    "terran",
+    "ghostops"
+  ],
+  "defaults": {
+    "accent": "#d99a2b",
+    "glass": 30,
+    "scanner": 78,
+    "intensity": 44,
+    "grain": 34
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

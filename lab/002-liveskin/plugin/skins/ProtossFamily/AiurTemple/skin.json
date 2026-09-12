@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "艾尔神殿",
+  "nameEn": "Aiur Temple",
+  "description": "标准支 · 大理石 + 金 + 深蓝，最庄重的一支",
+  "accent": "#b8891f",
+  "tags": [
+    "protoss",
+    "aiurtemple"
+  ],
+  "defaults": {
+    "accent": "#b8891f",
+    "glass": 56,
+    "psionic": 58,
+    "intensity": 58,
+    "grain": 48
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,38 @@
+/* 凯达林水晶 Khaydarin —— 水晶 · 青白自发光；全族最亮的一支，像一块还在充能的水晶
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 晶体的内部折射：三片互相倾斜的亮面 */
+    linear-gradient(100deg, rgba(63, 184, 201, 0) 30%, rgba(63, 184, 201, .20) 30.5%, rgba(63, 184, 201, 0) 31.2%),
+    linear-gradient(80deg, rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, .55) 62.4%, rgba(255, 255, 255, 0) 63%),
+    radial-gradient(80% 50% at 50% 24%, rgba(63, 184, 201, .20) 0%, rgba(63, 184, 201, 0) 68%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(100deg, rgba(79, 212, 232, 0) 30%, rgba(79, 212, 232, .26) 30.5%, rgba(79, 212, 232, 0) 31.2%),
+    linear-gradient(80deg, rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, .18) 62.4%, rgba(255, 255, 255, 0) 63%),
+    radial-gradient(80% 50% at 50% 24%, rgba(79, 212, 232, .26) 0%, rgba(79, 212, 232, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: protoss-crystal-charge;
+  --ls-fx-duration: 20s;
+}
+
+@keyframes protoss-crystal-charge {
+  from { transform: scale(1); opacity: .7; }
+  50% { transform: scale(1.04); opacity: 1; }
+  to { transform: scale(1); opacity: .7; }
+}

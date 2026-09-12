@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "虚空碎片",
+  "nameEn": "Void Shard",
+  "description": "虚空 · 暗紫黑 + 金；全族最暗的一支，光只从碎片里透出来",
+  "accent": "#c9a227",
+  "tags": [
+    "protoss",
+    "voidshard"
+  ],
+  "defaults": {
+    "accent": "#c9a227",
+    "glass": 34,
+    "psionic": 80,
+    "intensity": 50,
+    "grain": 42
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

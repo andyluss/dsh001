@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "玛萨拉黄昏",
+  "nameEn": "Mar Sara Dusk",
+  "description": "边疆 · 锈红棕 + 尘暴橙，全族最暖的一支；天空永远在落尘",
+  "accent": "#c2662a",
+  "tags": [
+    "terran",
+    "marsaradusk"
+  ],
+  "defaults": {
+    "accent": "#c2662a",
+    "glass": 46,
+    "scanner": 38,
+    "intensity": 66,
+    "grain": 64
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

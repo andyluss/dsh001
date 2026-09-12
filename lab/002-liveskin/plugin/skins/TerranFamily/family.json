@@ -1,0 +1,135 @@
+{
+  "manifestVersion": 1,
+  "name": "人族",
+  "nameEn": "Terran",
+  "description": "星际争霸 · 人族：被流放者用铆钉和胶带把旧联邦的破烂拼成能用的东西。冲压钢板、橄榄绿、琥珀色仪表背光；光是均匀的顶灯，不为戏剧性服务。",
+  "accent": "#b8641f",
+  "tags": [
+    "starcraft",
+    "terran",
+    "industrial",
+    "military"
+  ],
+  "styles": [
+    "base.css"
+  ],
+  "params": [
+    {
+      "key": "glass",
+      "type": "number",
+      "label": "玻璃通透度",
+      "description": "面板遮住底纹的程度，越大越透",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 52
+    },
+    {
+      "key": "blur",
+      "type": "number",
+      "label": "磨砂强度",
+      "description": "浮层背后的模糊半径",
+      "group": "材质",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "key": "scanner",
+      "type": "number",
+      "label": "仪表扫描线",
+      "description": "CRT 仪表盘的横向扫描线强度。0 = 干净的现代平板",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 55
+    },
+    {
+      "key": "intensity",
+      "type": "number",
+      "label": "整体强度",
+      "description": "所有材质层的统一倍率",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "key": "accent",
+      "type": "color",
+      "label": "强调色",
+      "description": "按钮、链接与描边的色相",
+      "group": "氛围",
+      "default": "#b8641f"
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "动效",
+      "description": "关闭后所有循环动画停止",
+      "group": "动效",
+      "default": true
+    },
+    {
+      "key": "vignette",
+      "type": "number",
+      "label": "暗角",
+      "description": "画面四周压暗的程度",
+      "group": "氛围",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 45
+    },
+    {
+      "key": "grain",
+      "type": "number",
+      "label": "底纹保留",
+      "description": "材质层的整体可见度，0 = 完全平坦",
+      "group": "材质",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "id": "restrained",
+      "name": "克制",
+      "description": "材质压到最低，接近纯色界面",
+      "values": {
+        "glass": 34,
+        "blur": 8,
+        "intensity": 30,
+        "motion": false,
+        "grain": 18,
+        "vignette": 40
+      }
+    },
+    {
+      "id": "standard",
+      "name": "标准",
+      "description": "默认档位",
+      "values": {}
+    },
+    {
+      "id": "cinematic",
+      "name": "电影感",
+      "description": "材质与动效拉满",
+      "values": {
+        "glass": 74,
+        "blur": 20,
+        "intensity": 92,
+        "motion": true,
+        "grain": 88,
+        "vignette": 62
+      }
+    }
+  ]
+}

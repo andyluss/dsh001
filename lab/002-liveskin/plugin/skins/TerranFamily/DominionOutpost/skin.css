@@ -1,0 +1,39 @@
+/* 帝国前哨 Dominion Outpost —— 标准支 · 橄榄绿 + 炮铜 + 琥珀仪表光，最像「前线基地」的一支
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 顶灯从上方压下来，底部有一道地平线 —— 前哨站的围墙 */
+    linear-gradient(180deg, rgba(184, 100, 31, .10) 0%, rgba(184, 100, 31, 0) 34%),
+    linear-gradient(180deg, rgba(107, 115, 80, .16) 0%, rgba(107, 115, 80, 0) 52%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 78%, rgba(35, 38, 42, .14) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    /* 甲板上的琥珀色仪表背光，只在顶部一小片 */
+    radial-gradient(140% 46% at 50% 0%, rgba(224, 138, 52, .16) 0%, rgba(224, 138, 52, 0) 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, .05) 0%, rgba(255, 255, 255, 0) 40%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, .32) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: terran-outpost-sweep;
+  --ls-fx-duration: 34s;
+}
+
+@keyframes terran-outpost-sweep {
+  from { transform: translate3d(-1.5%, 0, 0); }
+  50% { transform: translate3d(1.5%, 0, 0); }
+  to { transform: translate3d(-1.5%, 0, 0); }
+}

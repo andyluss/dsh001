@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "利维坦",
+  "nameEn": "Leviathan Hull",
+  "description": "深空生物 · 青绿生物荧光 + 紫黑；全族最冷的一支",
+  "accent": "#2f9c8f",
+  "tags": [
+    "zerg",
+    "leviathanhull"
+  ],
+  "defaults": {
+    "accent": "#2f9c8f",
+    "glass": 58,
+    "creep": 48,
+    "intensity": 56,
+    "grain": 44
+  },
+  "styles": [
+    "skin.css"
+  ]
+}
