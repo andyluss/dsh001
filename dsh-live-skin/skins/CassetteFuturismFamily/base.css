@@ -163,6 +163,12 @@ html[data-live-skin] body {
 /* —— 亮色档：外部的「Beige Terminal」，是一套一等一的配色而不是降级。
        Apple II / Commodore 64 的米白机箱 + 深色键帽。 —— */
 html[data-live-skin] body:not([data-ds-dark-theme]) {
+  /* 亮色档必须重画页面底色：默认块的 body 底色是 #1a1d21，
+     不重画的话亮色档就是「深色页面 + 浅色面板 + 深色正文」，页面上的字全看不见。
+     这两个组件表面同理 —— 它们只写在默认块里，亮色档会拿到深色值。 */
+  background-color: #f5f0e8;
+  --dsw-alias-button-primary-dimmed: rgba(255, 184, 108, .3);
+  --dsw-alias-markdown-citation: #e4dcd0;
   --dsw-alias-bg-base: rgba(245, 240, 232, var(--ls-glass-alpha));
   --dsw-alias-bg-layer-1: rgba(237, 232, 224, calc(var(--ls-glass-alpha) + .14));
   --dsw-alias-bg-layer-2: rgba(250, 248, 244, calc(var(--ls-glass-alpha) + .2));

@@ -19,7 +19,9 @@ html[data-live-skin] body {
 }
 
 /* 洁净侧的整体配色覆盖：这一支无论系统亮暗都是白房间 */
-html[data-live-skin] body,
+/* 强制单一观感的变体：两个档都要用 (0,2,2) 的选择器声明，
+   否则亮色档里 `body`(0,1,2) 会被大类的浅色块(0,2,2) 压掉。 */
+html[data-live-skin] body:not([data-ds-dark-theme]),
 html[data-live-skin] body[data-ds-dark-theme] {
   --dsw-alias-bg-base: rgba(239, 244, 242, calc(var(--ls-glass-alpha) + .34));
   --dsw-alias-bg-layer-1: rgba(250, 253, 252, calc(var(--ls-glass-alpha) + .4));
@@ -48,7 +50,24 @@ html[data-live-skin] body[data-ds-dark-theme] {
   --dsw-alias-border-l4: rgba(28, 148, 128, .34);
   --dsw-alias-toast-bg: rgba(28, 62, 56, .94);
   --dsw-alias-tooltip-bg: rgba(24, 54, 49, .95);
-}
+
+  /* 强制单一观感的变体还要重画 body 底色：大类的 body 底色是深色，
+     不重画就是「白面板浮在黑色页面上」，半透明表面全被衬暗。 */
+  background-color: #eff4f2;
+  /* 强制单一观感的变体必须把「组件表面」也覆盖掉：大类的暗色块会把这些 token 给成深色，
+     而这一支的文字是深色 —— 漏一个就是深底深字。 */
+  --dsw-alias-markdown-code-block: rgba(232, 240, 237, calc(var(--ls-glass-alpha) + .46));
+  --dsw-alias-markdown-code-block-banner: rgba(226, 236, 232, calc(var(--ls-glass-alpha) + .5));
+  --dsw-alias-markdown-inline-code: rgba(228, 238, 234, calc(var(--ls-glass-alpha) + .44));
+  --dsw-alias-markdown-citation: rgba(214, 232, 226, calc(var(--ls-glass-alpha) + .44));
+  --dsw-alias-button-elevated-fill: rgba(250, 253, 252, calc(var(--ls-glass-alpha) + .44));
+  --dsw-alias-button-floating-fill: rgba(252, 254, 253, calc(var(--ls-glass-alpha) + .46));
+  --dsw-alias-button-ghost-active-fill: rgba(230, 240, 236, calc(var(--ls-glass-alpha) + .44));
+  --dsw-alias-button-primary-dimmed: rgba(47, 191, 168, .22);
+  --dsw-specific-sidebar-nav-item-hover: rgba(228, 240, 237, calc(var(--ls-glass-alpha) + .4));
+  --dsw-specific-sidebar-nav-item-active: rgba(214, 234, 228, calc(var(--ls-glass-alpha) + .44));
+
+  --dsw-alias-link: color-mix(in srgb, var(--ls-dish) 40%, #0b1116);}
 
 /* 液体：一层极缓慢上下浮动的膜，是「液体」那一格 */
 html[data-live-skin] body::after {

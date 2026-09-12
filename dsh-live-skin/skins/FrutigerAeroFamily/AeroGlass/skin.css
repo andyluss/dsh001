@@ -27,12 +27,13 @@ html[data-live-skin] body::before {
 
 html[data-live-skin] body[data-ds-dark-theme]::before {
   background: linear-gradient(180deg, rgba(150, 235, 255, .1) 0px, rgba(150, 235, 255, 0) 120px);
+}html[data-live-skin] body {
+  /* 调色板已限定为亮色档（见下方 :not 规则）。 */
 }
-
-/* 平面化：这一支不需要立体投影，边框已经足够分层 */
-html[data-live-skin] body {
+html[data-live-skin] body:not([data-ds-dark-theme]) {
   --dsw-elevation-stroke-color: rgba(26, 138, 190, .28);
   --dsw-shadow-lv1: 0 1px 2px 0 rgba(14, 96, 138, .06);
   --dsw-shadow-lv2: 0 2px 6px 0 rgba(14, 96, 138, .07);
   --dsw-shadow-lv3: 0 1px 2px 0 rgba(10, 80, 120, .1), 0 6px 18px 0 rgba(12, 90, 130, .1);
 }
+

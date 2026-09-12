@@ -15,7 +15,11 @@ html[data-live-skin] body {
   background-attachment: fixed;
 }
 
-/* 系统处于深色时也维持米白 —— 这一支就是米白，不该被系统设置翻掉 */
+/* 这一支无论系统亮暗都是米白：两个档的选择器都要列上。
+   只写 body[data-ds-dark-theme] 的话，亮色档拿到的是一堆来自暗色默认块的深色 token。 */
+/* 强制单一观感的变体：两个档都要用 (0,2,2) 的选择器声明，
+   否则亮色档里 `body`(0,1,2) 会被大类的浅色块(0,2,2) 压掉。 */
+html[data-live-skin] body:not([data-ds-dark-theme]),
 html[data-live-skin] body[data-ds-dark-theme] {
   --dsw-alias-bg-base: rgba(245, 240, 232, calc(var(--ls-glass-alpha) + .4));
   --dsw-alias-bg-layer-1: rgba(237, 232, 224, calc(var(--ls-glass-alpha) + .46));
@@ -47,7 +51,25 @@ html[data-live-skin] body[data-ds-dark-theme] {
   --dsw-shadow-lv3: 0 0 0 1px rgba(150, 138, 122, .5), 0 8px 0 -4px rgba(120, 110, 96, .26);
   --dsw-alias-toast-bg: #3a342e;
   --dsw-alias-tooltip-bg: #332e29;
-}
+
+  /* 强制单一观感的变体还要重画 body 底色：大类的 body 底色是 #1a1d21，
+     不重画的话米白只是面板，页面还是黑的。 */
+  background-color: #f5f0e8;
+  /* 强制单一观感的变体必须把「组件表面」也覆盖掉：大类的暗色默认块会把这些 token 给成深色，
+     而这一支的文字是深色 —— 漏一个就是深底深字。 */
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-markdown-code-block: #efe9e1;
+  --dsw-alias-markdown-code-block-banner: #e8e0d6;
+  --dsw-alias-markdown-inline-code: #ece6dd;
+  --dsw-alias-markdown-citation: #e4dcd0;
+  --dsw-alias-button-elevated-fill: #faf8f4;
+  --dsw-alias-button-floating-fill: #fdfbf7;
+  --dsw-alias-button-ghost-active-fill: #e8e0d6;
+  --dsw-alias-button-primary-dimmed: rgba(255, 184, 108, .3);
+  --dsw-specific-sidebar-nav-item-hover: rgba(232, 224, 214, .72);
+  --dsw-specific-sidebar-nav-item-active: rgba(220, 210, 196, .82);
+
+  --dsw-alias-link: color-mix(in srgb, #8be9fd 34%, #0b1116);}
 
 /* 光标：右下角一小块单色方块。小到不会干扰阅读，大到能被认出来。 */
 html[data-live-skin] body::after {

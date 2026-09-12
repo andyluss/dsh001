@@ -66,7 +66,7 @@ html[data-live-skin] body {
   --dsw-alias-brand-primary-invert: #14100f;
   --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #5bff9e);
   --dsw-alias-brand-text: #e8f5f0;
-  --dsw-alias-link: var(--ls-dish);
+  --dsw-alias-link: color-mix(in srgb, var(--ls-dish) 58%, #ffffff);
   --dsw-alias-state-business-primary: var(--ls-dish);
   --dsw-alias-state-business-tertiary: rgba(127, 232, 216, .16);
 

@@ -65,7 +65,7 @@ html[data-live-skin] body {
   --dsw-alias-brand-primary-invert: #2e3133;
   --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #c8ccd0);
   --dsw-alias-brand-text: #eef0f1;
-  --dsw-alias-link: var(--ls-accent, #c8ccd0);
+  --dsw-alias-link: color-mix(in srgb, var(--ls-accent, #c8ccd0) 44%, #ffffff);
   --dsw-alias-state-business-primary: var(--ls-accent, #c8ccd0);
   --dsw-alias-state-business-tertiary: rgba(200, 204, 208, .2);
 
@@ -79,7 +79,7 @@ html[data-live-skin] body {
   --dsw-alias-button-ghost-active-hover: rgba(112, 116, 118, .84);
   --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #c8ccd0) 45%, #0b0d0e);
   --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #c8ccd0) 38%, #0b0d0e);
-  --dsw-alias-button-primary-dimmed: rgba(200, 204, 208, .3);
+  --dsw-alias-button-primary-dimmed: rgba(200, 204, 208, .24);
   --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #c8ccd0) 45%, #0b0d0e);
   --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #c8ccd0) 38%, #0b0d0e);
   --dsw-alias-button-tool-bar-fill: rgba(24, 27, 28, .64);

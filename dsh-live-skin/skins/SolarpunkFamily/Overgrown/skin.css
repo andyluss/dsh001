@@ -35,8 +35,13 @@ html[data-live-skin] body::after {
 /* 这一支的壁纸是深叶绿，而家族主调是浅色 —— 浅色外框会把深绿盖住。
    所以它明暗两档都用深色面板与浅色文字（与 Cleanroom 的做法相反、理由相同：
    变体可以覆盖整套表面 token，这是「变体只表达差异」的正当用法）。 */
-html[data-live-skin] body,
+/* 两个档都要用 (0,2,2) 的选择器：只写 `body`(0,1,2) 会在亮色档输给大类的浅色块，
+   于是「两档都用深色」这句话在亮色档根本不成立。 */
+html[data-live-skin] body:not([data-ds-dark-theme]),
 html[data-live-skin] body[data-ds-dark-theme] {
+  /* 页面底色也要重画：大类的 body 底色是米白，不重画就是「深绿壁纸 + 米白页面」，
+     正是这一支的注释说要避免的那件事。 */
+  background-color: #1e2419;
   --dsw-alias-bg-base: rgba(38, 50, 31, calc(var(--ls-glass-alpha) * .6));
   --dsw-alias-bg-layer-1: rgba(36, 44, 31, calc(var(--ls-glass-alpha) + .2));
   --dsw-alias-bg-layer-2: linear-gradient(180deg, rgba(42, 51, 36, calc(var(--ls-glass-alpha) + .26)), rgba(30, 37, 26, calc(var(--ls-glass-alpha) + .24)));
@@ -54,7 +59,87 @@ html[data-live-skin] body[data-ds-dark-theme] {
   --dsw-alias-border-l2: rgba(168, 207, 196, .26);
   --dsw-alias-border-l3: rgba(168, 207, 196, .22);
   --dsw-alias-border-l4: rgba(168, 207, 196, .34);
-}
+
+  /* 强制单一观感的变体必须把整套表面 token 都收进来（这一支两档都是深叶绿）：
+     漏掉的会从大类的**另一个档**取到相反极性的值。以下取自大类暗色块。 */
+  --dsw-alias-bg-multi-select: rgba(46, 56, 39, calc(var(--ls-glass-alpha) + .22));
+  --dsw-alias-toast-bg: rgba(24, 30, 20, .97);
+  --dsw-alias-tooltip-bg: rgba(21, 26, 18, .98);
+  --dsw-alias-bg-skeleton: rgba(107, 127, 74, .14);
+  --dsw-alias-bg-mask-1: rgba(0, 0, 0, .28);
+  --dsw-alias-bg-mask-2: rgba(0, 0, 0, .14);
+  --dsw-alias-bg-mask-3: rgba(28, 36, 22, .48);
+  --dsw-alias-bg-mask-drop: rgba(63, 79, 54, .7);
+  --dsw-alias-bg-mask-photo: rgba(22, 28, 18, .86);
+  --dsw-alias-border-inverted: rgba(255, 255, 255, .66);
+  --dsw-alias-border-inverted2: rgba(255, 255, 255, .44);
+  --dsw-alias-border-l2-darkmode-thin: rgba(107, 127, 74, .22);
+  --dsw-alias-brand-primary: var(--ls-accent, #c1663b);
+  --dsw-alias-brand-primary-invert: #1a2016;
+  --dsw-alias-brand-primary-new-colorprimary-new-color: var(--ls-accent, #c1663b);
+  --dsw-alias-brand-text: #eef3e6;
+  --dsw-alias-link: color-mix(in srgb, var(--ls-accent, #c1663b) 44%, #ffffff);
+  --dsw-alias-state-business-primary: var(--ls-accent, #c1663b);
+  --dsw-alias-state-business-tertiary: rgba(193, 102, 59, .14);
+  --dsw-alias-button-contrast-fill: #eef3e6;
+  --dsw-alias-button-elevated-fill: linear-gradient(180deg, #405037, #36442e);
+  --dsw-alias-button-floating-fill: linear-gradient(180deg, rgba(63, 79, 54, .99), rgba(52, 65, 44, .97));
+  --dsw-alias-button-floating-hover: linear-gradient(180deg, #405037, #394831);
+  --dsw-alias-button-ghost-active-fill: rgba(48, 60, 41, .92);
+  --dsw-alias-button-ghost-active-border: rgba(193, 102, 59, .42);
+  --dsw-alias-button-ghost-active-hover: rgba(42, 52, 35, .96);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #c1663b) 45%, #100c08);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #c1663b) 38%, #100c08);
+  --dsw-alias-button-primary-dimmed: rgba(193, 102, 59, .28);
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #c1663b) 45%, #100c08);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #c1663b) 38%, #100c08);
+  --dsw-alias-button-tool-bar-fill: rgba(238, 243, 230, .5);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(238, 243, 230, .28);
+  --dsw-alias-button-tool-bar-hover: rgba(238, 243, 230, .64);
+  --dsw-alias-interactive-bg-active: rgba(168, 207, 196, .34);
+  --dsw-alias-interactive-bg-hover: rgba(238, 241, 243, .1);
+  --dsw-alias-interactive-bg-hover-accent: rgba(168, 207, 196, .38);
+  --dsw-alias-interactive-bg-hover-danger: rgba(193, 102, 59, .12);
+  --dsw-alias-interactive-bg-hover-solid: linear-gradient(180deg, rgba(60, 75, 51, .98), rgba(50, 62, 43, .94));
+  --dsw-alias-label-primary-bluish: #a8cdd8;
+  --dsw-alias-label-primary-dimmed: #bec6b6;
+  --dsw-alias-label-primary-foreground: #ffffff;
+  --dsw-alias-markdown-citation: rgba(168, 207, 196, .3);
+  --dsw-alias-markdown-code-block: linear-gradient(180deg, rgba(54, 68, 46, calc(var(--ls-glass-alpha) + .24)), rgba(48, 60, 41, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-alias-markdown-code-block-banner: rgba(63, 79, 54, .86);
+  --dsw-alias-markdown-code-segment-selected: rgba(64, 80, 55, .95);
+  --dsw-alias-markdown-code-segment-unselected: rgba(48, 60, 41, .8);
+  --dsw-alias-markdown-inline-code: rgba(46, 58, 39, .7);
+  --dsw-alias-markdown-placeholder: rgba(47, 59, 40, .68);
+  --dsw-alias-markdown-tag: linear-gradient(180deg, rgba(52, 64, 44, .96), rgba(42, 53, 36, .92));
+  --dsw-alias-scrollbar-bg-l1: rgba(107, 127, 74, .28);
+  --dsw-alias-scrollbar-bg-l2: rgba(107, 127, 74, .32);
+  --dsw-alias-scrollbar-hover-l1: rgba(193, 102, 59, .42);
+  --dsw-alias-scrollbar-hover-l2: rgba(193, 102, 59, .48);
+  --dsw-alias-state-error-primary: #ff9678;
+  --dsw-alias-state-error-secondary: #e69678;
+  --dsw-alias-state-success-primary: #96c896;
+  --dsw-alias-state-success-secondary: #aad296;
+  --dsw-alias-state-success-tertiary: rgba(107, 127, 74, .2);
+  --dsw-alias-state-warn-label: #f0cd78;
+  --dsw-alias-state-warn-primary: #c9a227;
+  --dsw-alias-state-warn-secondary: #ddbe5c;
+  --dsw-alias-state-warn-tertiary: rgba(201, 162, 39, .2);
+  --dsw-specific-bubble: linear-gradient(180deg, rgba(63, 79, 54, calc(var(--ls-glass-alpha) + .22)), rgba(52, 66, 45, calc(var(--ls-glass-alpha) + .2)));
+  --dsw-specific-bubble-highlight: linear-gradient(180deg, rgba(48, 60, 41, calc(var(--ls-glass-alpha) + .26)), rgba(34, 43, 29, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-specific-input-major: linear-gradient(180deg, rgba(64, 80, 55, calc(var(--ls-glass-alpha) + .26)), rgba(54, 68, 46, calc(var(--ls-glass-alpha) + .24)));
+  --dsw-specific-login-input: rgba(63, 79, 54, .92);
+  --dsw-specific-menu: linear-gradient(180deg, rgba(64, 80, 55, calc(var(--ls-glass-alpha) + .3)), rgba(54, 68, 46, calc(var(--ls-glass-alpha) + .28)));
+  --dsw-specific-selector: linear-gradient(180deg, rgba(60, 75, 51, calc(var(--ls-glass-alpha) + .24)), rgba(48, 60, 41, calc(var(--ls-glass-alpha) + .22)));
+  --dsw-specific-sidebar-nav-item-active: rgba(48, 60, 41, .84);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(168, 207, 196, .5);
+  --dsw-specific-sidebar-nav-item-hover: rgba(53, 66, 45, .7);
+  --dsw-specific-tip: rgba(50, 62, 43, calc(var(--ls-glass-alpha) + .24));
+  --dsw-elevation-stroke-color: rgba(64, 80, 55, .8);
+  --dsw-shadow-lv1: 1px 2px 4px 0 rgba(0, 0, 0, .08);
+  --dsw-shadow-lv2: 2px 5px 12px 0 rgba(0, 0, 0, .1), 1px 2px 5px 0 rgba(0, 0, 0, .06);
+  --dsw-shadow-lv3: 0 0 1px 0 rgba(0, 0, 0, .22), 3px 12px 26px 0 rgba(0, 0, 0, .14);
+  --dsw-mask-blur: blur(var(--ls-blur, 12px)) saturate(1.1);}
 
 /* 绿意最重的一支：正文行加一层极淡的暗描边，保证在深叶绿底上仍可读 */
 html[data-live-skin] [data-dsh-part='message-row'] {
