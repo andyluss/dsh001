@@ -297,13 +297,20 @@ window.__ModuleLoader__.load({
       [data-live-skin-panel] .ls-group { display:flex; flex-direction:column; gap:8px; }
       [data-live-skin-panel] .ls-group-label { font:var(--dsw-font-xxs-strong-12); color:var(--dsw-alias-label-secondary); text-transform:none; }
       [data-live-skin-panel] .ls-chips { display:flex; flex-wrap:wrap; gap:6px; }
-      /* 分类行：左侧一个窄标签列，右侧是这一类的家族。
-         不用分割线 —— 标签本身已经足够分组，加线只会让面板更吵。 */
-      [data-live-skin-panel] .ls-cat-row { display:grid; grid-template-columns:88px 1fr; gap:8px; align-items:start; }
-      [data-live-skin-panel] .ls-cat-row + .ls-cat-row { margin-top:6px; }
-      [data-live-skin-panel] .ls-cat-label { font:var(--dsw-font-xxxs-11); color:var(--dsw-alias-label-tertiary);
-        padding-top:5px; text-align:right; }
-      [data-live-skin-panel] .ls-cat-row[data-plain="true"] { grid-template-columns:1fr; }
+      /* 分类行：所有行**共用一个网格**（行用 display:contents 参与外层网格），
+         所以标签列的宽度是全分类里最宽的那个，各行的家族 chip 左边缘是对齐的。
+         标签左对齐并贴着列首 —— 定宽右对齐会在短标签左侧留出一块空白。
+         不用分割线：标签本身已经足够分组，加线只会让面板更吵。 */
+      [data-live-skin-panel] .ls-cat-rows { display:grid; grid-template-columns:max-content 1fr;
+        column-gap:12px; row-gap:7px; align-items:start; }
+      [data-live-skin-panel] .ls-cat-row { display:contents; }
+      [data-live-skin-panel] .ls-cat-label { display:flex; align-items:baseline; gap:6px;
+        font:var(--dsw-font-xxxs-11); color:var(--dsw-alias-label-secondary);
+        padding-top:5px; text-align:left; white-space:nowrap; }
+      /* 排序依据：比分类名更弱一档，句首加一个中点作分隔 */
+      [data-live-skin-panel] .ls-cat-basis { color:var(--dsw-alias-label-tertiary); font-weight:400; }
+      [data-live-skin-panel] .ls-cat-basis::before { content:'·'; margin-right:3px; }
+      [data-live-skin-panel] .ls-cat-rows[data-plain="true"] { grid-template-columns:1fr; }
       [data-live-skin-panel] .ls-chip { border:1px solid var(--dsw-alias-border-l2); background:var(--dsw-alias-bg-layer-1);
         color:var(--dsw-alias-label-secondary); border-radius:999px; padding:4px 12px; cursor:pointer; font:var(--dsw-font-xxs-12); }
       [data-live-skin-panel] .ls-chip:hover { background:var(--dsw-alias-interactive-bg-hover); color:var(--dsw-alias-label-secondary); }
@@ -745,16 +752,19 @@ window.__ModuleLoader__.load({
       // 那时目录册里还没有 categories/category —— 退回「一排全部家族」，
       // 而不是渲染出一行没有标签、装着所有家族的东西。
       const hasCategories = Array.isArray(catalog.categories) && catalog.categories.length > 0
-      const categoryOrder = hasCategories ? catalog.categories : ['']
+      // 旧宿主只给分类名（字符串），新宿主给 { name, basis } —— 两种都吃。
+      const categoryOrder = hasCategories
+        ? catalog.categories.map((entry) => (typeof entry === 'string' ? { name: entry, basis: '' } : entry))
+        : [{ name: '', basis: '' }]
       const categoryRows = []
-      for (const name of categoryOrder) {
-        const families = catalog.families.filter((entry) => entry.category === name)
-        if (families.length > 0) categoryRows.push({ name, families })
+      for (const entry of categoryOrder) {
+        const families = catalog.families.filter((item) => item.category === entry.name)
+        if (families.length > 0) categoryRows.push({ name: entry.name, basis: entry.basis, families })
       }
       for (const entry of catalog.families) {
-        if (categoryOrder.includes(entry.category)) continue
+        if (categoryOrder.some((item) => item.name === entry.category)) continue
         const row = categoryRows.find((item) => item.name === entry.category)
-        if (row === undefined) categoryRows.push({ name: entry.category, families: [entry] })
+        if (row === undefined) categoryRows.push({ name: entry.category, basis: '', families: [entry] })
         else row.families.push(entry)
       }
       // 每个家族的分类都取不到时（旧宿主），就是上面那个单行 `''` —— 不显示标签。
@@ -803,18 +813,27 @@ window.__ModuleLoader__.load({
         // 面板不自己排 —— 那是数据不是显示。
         h('div', { className: 'ls-group' },
           h('span', { className: 'ls-group-label' }, '皮肤家族'),
-          categoryRows.map((row) => h('div', { key: row.name, className: 'ls-cat-row', 'data-plain': row.name === '' ? 'true' : 'false' },
-            row.name === '' ? null : h('span', { className: 'ls-cat-label' }, row.name),
-            h('div', { className: 'ls-chips' }, row.families.map((entry) => h(Chip, {
-              key: entry.id,
-              on: entry.id === familyId,
-              applied: appliedFamily !== null && entry.id === appliedFamily.id,
-              onClick: () => {
-                const first = entry.variants[0]
-                if (first !== undefined) void select(entry.id, first.id)
-              }
-            }, entry.name))))
-          )),
+          h('div', {
+            className: 'ls-cat-rows',
+            'data-plain': categoryRows.length === 1 && categoryRows[0].name === '' ? 'true' : 'false'
+          },
+            categoryRows.map((row) => h('div', { key: row.name, className: 'ls-cat-row', 'data-plain': row.name === '' ? 'true' : 'false' },
+              row.name === '' ? null : h('span', { className: 'ls-cat-label' },
+                h('span', null, row.name),
+                // 排序依据与分类名一样来自宿主：它是数据，不是面板文案。
+                typeof row.basis === 'string' && row.basis.length > 0
+                  ? h('span', { className: 'ls-cat-basis' }, row.basis)
+                  : null),
+              h('div', { className: 'ls-chips' }, row.families.map((entry) => h(Chip, {
+                key: entry.id,
+                on: entry.id === familyId,
+                applied: appliedFamily !== null && entry.id === appliedFamily.id,
+                onClick: () => {
+                  const first = entry.variants[0]
+                  if (first !== undefined) void select(entry.id, first.id)
+                }
+              }, entry.name))))
+            ))),
 
         family !== null && family.description.length > 0
           ? h('div', { className: 'ls-muted' }, family.description)

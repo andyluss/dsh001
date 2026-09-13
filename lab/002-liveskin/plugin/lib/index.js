@@ -43,7 +43,14 @@ export const API_PREFIX = '/api/live-skin/v1'
  * 右端（Aero 是这批可疑未来全部落空之后企业给出的最后一次乐观），
  * 星际争霸三族不在轴上，单独一行。
  */
-export const CATEGORIES = ['朋克美学', '千禧美学', '星际争霸']
+export const CATEGORIES = [
+  { name: '朋克美学', basis: '按光谱轴' },
+  { name: '千禧美学', basis: '按血缘与年代' },
+  { name: '星际争霸', basis: '按种族' }
+]
+
+/** 只有名字的视图，校验与排序用。 */
+export const CATEGORY_NAMES = CATEGORIES.map((entry) => entry.name)
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILTIN_SKINS_DIR = join(PACKAGE_ROOT, 'skins')
@@ -475,9 +482,9 @@ function loadFamily(familyDir, familyId, origin, problems) {
   }
   // 分类是面板分组与排序的依据：漏了或写错就会让家族混进别的行里，
   // 所以当作错误报出来，而不是让它悄悄落到「未分类」。
-  if (!CATEGORIES.includes(family.category)) {
+  if (!CATEGORY_NAMES.includes(family.category)) {
     problems.push(`${where}: 家族 "${familyId}" 的 category 是 ${JSON.stringify(family.category)}，`
-      + `必须是 ${CATEGORIES.map((c) => `"${c}"`).join(' / ')} 之一`)
+      + `必须是 ${CATEGORY_NAMES.map((c) => `"${c}"`).join(' / ')} 之一`)
   }
   if (!Number.isFinite(raw.order)) {
     problems.push(`${where}: 家族 "${familyId}" 缺 order（同一分类内的排序键）——`
@@ -506,7 +513,7 @@ export function loadCatalog() {
   // 类内顺序由每个家族的 order 给出（光谱轴序 / 血缘年代序 / 种族序），
   // id 只是最后用来消歧的。
   const ordered = [...families.values()].sort((left, right) => {
-    const byCategory = CATEGORIES.indexOf(left.category) - CATEGORIES.indexOf(right.category)
+    const byCategory = CATEGORY_NAMES.indexOf(left.category) - CATEGORY_NAMES.indexOf(right.category)
     if (byCategory !== 0) return byCategory
     if (left.order !== right.order) return left.order - right.order
     return left.id.localeCompare(right.id)
