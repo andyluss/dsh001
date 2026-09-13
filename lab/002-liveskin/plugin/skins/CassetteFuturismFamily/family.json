@@ -3,6 +3,7 @@
   "name": "磁带未来主义家族",
   "nameEn": "Cassette Futurism Family",
   "category": "朋克美学",
+  "order": 60,
   "description": "80 年代技术想象的另一面：不是霓虹雨夜的街头，而是机房日光灯下的工作台。它与赛博朋克共享同一批界面，器物却完全不同——米白塑料机箱、荧光绿单色终端、磁带与软驱。边界本质是布光与气氛的边界。",
   "accent": "#ffb86c",
   "tags": [

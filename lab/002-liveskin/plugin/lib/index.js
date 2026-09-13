@@ -43,7 +43,7 @@ export const API_PREFIX = '/api/live-skin/v1'
  * 右端（Aero 是这批可疑未来全部落空之后企业给出的最后一次乐观），
  * 星际争霸三族不在轴上，单独一行。
  */
-export const CATEGORIES = ['朋克美学', '千禧年美学', '星际争霸']
+export const CATEGORIES = ['朋克美学', '千禧美学', '星际争霸']
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILTIN_SKINS_DIR = join(PACKAGE_ROOT, 'skins')
@@ -452,6 +452,8 @@ function loadFamily(familyDir, familyId, origin, problems) {
     description: str(raw.description, ''),
     accent: str(raw.accent, ''),
     category: str(raw.category, ''),
+    // 同一个分类内的排序键。缺省给一个很大的值，让它落到该分类末尾而不是乱插。
+    order: Number.isFinite(raw.order) ? raw.order : Number.MAX_SAFE_INTEGER,
     tags: strArray(raw.tags),
     hidden: raw.hidden === true,
     params: normalizeParams(raw.params, where, problems),
@@ -477,6 +479,10 @@ function loadFamily(familyDir, familyId, origin, problems) {
     problems.push(`${where}: 家族 "${familyId}" 的 category 是 ${JSON.stringify(family.category)}，`
       + `必须是 ${CATEGORIES.map((c) => `"${c}"`).join(' / ')} 之一`)
   }
+  if (!Number.isFinite(raw.order)) {
+    problems.push(`${where}: 家族 "${familyId}" 缺 order（同一分类内的排序键）——`
+      + '没有它就只能落到该分类末尾，面板顺序会与设计不符')
+  }
   return family
 }
 
@@ -496,7 +502,15 @@ export function loadCatalog() {
     }
   }
 
-  const ordered = [...families.values()].sort((left, right) => left.id.localeCompare(right.id))
+  // 排序键是「分类 → 类内顺序 → id」：分类的行序由 CATEGORIES 给出，
+  // 类内顺序由每个家族的 order 给出（光谱轴序 / 血缘年代序 / 种族序），
+  // id 只是最后用来消歧的。
+  const ordered = [...families.values()].sort((left, right) => {
+    const byCategory = CATEGORIES.indexOf(left.category) - CATEGORIES.indexOf(right.category)
+    if (byCategory !== 0) return byCategory
+    if (left.order !== right.order) return left.order - right.order
+    return left.id.localeCompare(right.id)
+  })
 
   // 给每个小类标注它在亮/暗两档分别画出来的是亮色还是暗色。
   // 这是**推导**出来的（读它自己的 CSS），不是手写声明 —— 手写的「支持亮色/暗色」
@@ -702,6 +716,7 @@ function projectCatalog(catalog, state) {
       description: family.description,
       accent: family.accent,
       category: family.category,
+      order: family.order,
       tags: family.tags,
       params: family.params,
       variants: family.variants.filter((variant) => !variant.hidden).map((variant) => ({

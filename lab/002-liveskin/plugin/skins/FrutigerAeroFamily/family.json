@@ -2,7 +2,8 @@
   "manifestVersion": 1,
   "name": "Frutiger Aero 家族",
   "nameEn": "Frutiger Aero Family",
-  "category": "千禧年美学",
+  "category": "千禧美学",
+  "order": 140,
   "description": "2004–2013 的 Aero 时代美学：玻璃拟态面板、天空到草地的渐变壁纸、不断上浮的气泡。大类定义全部共享参数与整套调色板；小类只声明自己的差异。",
   "accent": "#0f7fc4",
   "tags": [

@@ -1,16 +1,16 @@
 {
   "manifestVersion": 1,
-  "name": "神族",
-  "nameEn": "Protoss",
-  "category": "星际争霸",
-  "order": 230,
-  "description": "星际争霸 · 神族：古老、精密、几乎不落地。抛光石材与金、灵能青辉；辉光没有一丝模糊，光也没有来源 —— 悬浮自发光。",
-  "accent": "#b8891f",
+  "name": "网页 1.0",
+  "nameEn": "Webcore",
+  "category": "千禧美学",
+  "order": 120,
+  "description": "千禧美学 · 网页 1.0：低保真个人主页。表格布局、星空背景、立体边框、像素装饰 ——全族唯一一支把「分辨率不够」当作设计意图。",
+  "accent": "#1a3fd0",
   "tags": [
-    "starcraft",
-    "protoss",
-    "psionic",
-    "crystalline"
+    "millennium",
+    "webcore",
+    "lowfi",
+    "geocities"
   ],
   "styles": [
     "base.css"
@@ -40,15 +40,15 @@
       "unit": "px"
     },
     {
-      "key": "psionic",
+      "key": "outset",
       "type": "number",
-      "label": "灵能辉光",
-      "description": "灵能导管的辉光强度。0 = 熄灭的古代装置",
+      "label": "立体边框感",
+      "description": "1px 双色立体边的强度。0 = 扁平边框",
       "group": "材质",
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 58
+      "default": 60
     },
     {
       "key": "intensity",
@@ -67,7 +67,7 @@
       "label": "强调色",
       "description": "按钮、链接与描边的色相",
       "group": "氛围",
-      "default": "#b8891f"
+      "default": "#1a3fd0"
     },
     {
       "key": "motion",

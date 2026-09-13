@@ -1,16 +1,16 @@
 {
   "manifestVersion": 1,
-  "name": "神族",
-  "nameEn": "Protoss",
-  "category": "星际争霸",
-  "order": 230,
-  "description": "星际争霸 · 神族：古老、精密、几乎不落地。抛光石材与金、灵能青辉；辉光没有一丝模糊，光也没有来源 —— 悬浮自发光。",
-  "accent": "#b8891f",
+  "name": "中文千禧",
+  "nameEn": "Chinese Millennium",
+  "category": "千禧美学",
+  "order": 160,
+  "description": "千禧美学 · 中文场景：网吧、QQ 空间、4399。卷 07 指出中文的千禧记忆**首先是物件与场所**，所以这一支做场景考古，不做 mood board。",
+  "accent": "#2f6fd0",
   "tags": [
-    "starcraft",
-    "protoss",
-    "psionic",
-    "crystalline"
+    "millennium",
+    "chinese",
+    "wangba",
+    "qzone"
   ],
   "styles": [
     "base.css"
@@ -40,15 +40,15 @@
       "unit": "px"
     },
     {
-      "key": "psionic",
+      "key": "scanline",
       "type": "number",
-      "label": "灵能辉光",
-      "description": "灵能导管的辉光强度。0 = 熄灭的古代装置",
+      "label": "CRT 扫描线",
+      "description": "显像管扫描线的强度。0 = 液晶屏",
       "group": "材质",
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 58
+      "default": 56
     },
     {
       "key": "intensity",
@@ -67,7 +67,7 @@
       "label": "强调色",
       "description": "按钮、链接与描边的色相",
       "group": "氛围",
-      "default": "#b8891f"
+      "default": "#2f6fd0"
     },
     {
       "key": "motion",

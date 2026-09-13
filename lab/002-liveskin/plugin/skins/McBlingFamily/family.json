@@ -1,16 +1,16 @@
 {
   "manifestVersion": 1,
-  "name": "神族",
-  "nameEn": "Protoss",
-  "category": "星际争霸",
-  "order": 230,
-  "description": "星际争霸 · 神族：古老、精密、几乎不落地。抛光石材与金、灵能青辉；辉光没有一丝模糊，光也没有来源 —— 悬浮自发光。",
-  "accent": "#b8891f",
+  "name": "McBling",
+  "nameEn": "McBling",
+  "category": "千禧美学",
+  "order": 150,
+  "description": "千禧美学 · McBling：粉彩、亮片、缎面。bling 是**颗粒反光**，不是玻璃透光 ——这是它与 Y2K 果冻的分界。",
+  "accent": "#e8559b",
   "tags": [
-    "starcraft",
-    "protoss",
-    "psionic",
-    "crystalline"
+    "millennium",
+    "mcbling",
+    "pastel",
+    "sequin"
   ],
   "styles": [
     "base.css"
@@ -40,15 +40,15 @@
       "unit": "px"
     },
     {
-      "key": "psionic",
+      "key": "sequin",
       "type": "number",
-      "label": "灵能辉光",
-      "description": "灵能导管的辉光强度。0 = 熄灭的古代装置",
+      "label": "亮片密度",
+      "description": "亮片颗粒的密度。0 = 光滑缎面",
       "group": "材质",
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 58
+      "default": 64
     },
     {
       "key": "intensity",
@@ -67,7 +67,7 @@
       "label": "强调色",
       "description": "按钮、链接与描边的色相",
       "group": "氛围",
-      "default": "#b8891f"
+      "default": "#e8559b"
     },
     {
       "key": "motion",

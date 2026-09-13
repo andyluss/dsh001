@@ -1,16 +1,16 @@
 {
   "manifestVersion": 1,
-  "name": "神族",
-  "nameEn": "Protoss",
-  "category": "星际争霸",
-  "order": 230,
-  "description": "星际争霸 · 神族：古老、精密、几乎不落地。抛光石材与金、灵能青辉；辉光没有一丝模糊，光也没有来源 —— 悬浮自发光。",
-  "accent": "#b8891f",
+  "name": "千禧 Y2K",
+  "nameEn": "Y2K",
+  "category": "千禧美学",
+  "order": 130,
+  "description": "千禧美学 · Y2K：镀铬与半透明果冻塑料。锐利的金属高光 + 果冻的内透光 ——与 Frutiger Aero 的分界就在这里：一个有棱角，一个没棱角。",
+  "accent": "#9bd324",
   "tags": [
-    "starcraft",
-    "protoss",
-    "psionic",
-    "crystalline"
+    "millennium",
+    "y2k",
+    "chrome",
+    "jelly"
   ],
   "styles": [
     "base.css"
@@ -40,15 +40,15 @@
       "unit": "px"
     },
     {
-      "key": "psionic",
+      "key": "chrome",
       "type": "number",
-      "label": "灵能辉光",
-      "description": "灵能导管的辉光强度。0 = 熄灭的古代装置",
+      "label": "镀铬高光",
+      "description": "硬边金属高光带的强度。0 = 哑光塑料",
       "group": "材质",
       "min": 0,
       "max": 100,
       "step": 1,
-      "default": 58
+      "default": 62
     },
     {
       "key": "intensity",
@@ -67,7 +67,7 @@
       "label": "强调色",
       "description": "按钮、链接与描边的色相",
       "group": "氛围",
-      "default": "#b8891f"
+      "default": "#9bd324"
     },
     {
       "key": "motion",

@@ -1,16 +1,16 @@
 {
   "manifestVersion": 1,
-  "name": "神族",
-  "nameEn": "Protoss",
-  "category": "星际争霸",
-  "order": 230,
-  "description": "星际争霸 · 神族：古老、精密、几乎不落地。抛光石材与金、灵能青辉；辉光没有一丝模糊，光也没有来源 —— 悬浮自发光。",
-  "accent": "#b8891f",
+  "name": "孟菲斯",
+  "nameEn": "Memphis",
+  "category": "千禧美学",
+  "order": 110,
+  "description": "千禧美学 · 孟菲斯：俗艳几何 + 塑料层板。图案是**印在板材上**的，不是光照出来的 ——全族唯一不是屏幕美学的一支。",
+  "accent": "#d94f3d",
   "tags": [
-    "starcraft",
-    "protoss",
-    "psionic",
-    "crystalline"
+    "millennium",
+    "memphis",
+    "geometry",
+    "laminate"
   ],
   "styles": [
     "base.css"
@@ -40,10 +40,10 @@
       "unit": "px"
     },
     {
-      "key": "psionic",
+      "key": "blocks",
       "type": "number",
-      "label": "灵能辉光",
-      "description": "灵能导管的辉光强度。0 = 熄灭的古代装置",
+      "label": "几何图案",
+      "description": "层板上的几何色块密度。0 = 空白板材",
       "group": "材质",
       "min": 0,
       "max": 100,
@@ -67,7 +67,7 @@
       "label": "强调色",
       "description": "按钮、链接与描边的色相",
       "group": "氛围",
-      "default": "#b8891f"
+      "default": "#d94f3d"
     },
     {
       "key": "motion",
