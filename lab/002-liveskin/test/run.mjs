@@ -344,7 +344,7 @@ check('每个家族都归入一个已知分类，三类都在册', () => {
   assert.equal(counts.get('朋克美学'), 7)
   assert.equal(counts.get('千禧美学'), 6)
   assert.equal(counts.get('星际争霸'), 3)
-  // 每个分类都要给出「排序依据」—— 面板会把它显示在分类名旁边，
+  // 每个分类都要给出「排序依据」—— 面板会把它显示在分类名下方，
   // 缺了用户就只看到一堆家族、不知道按什么排的。
   const noBasis = plugin.CATEGORIES.filter((entry) => typeof entry.basis !== 'string' || entry.basis === '')
   assert.deepEqual(noBasis.map((entry) => entry.name), [], '有分类没写排序依据')
@@ -1836,7 +1836,7 @@ await checkAsync('重新打开设置面板时，显示的是最新应用过的�
     for (const name of ['朋克美学', '千禧美学', '星际争霸']) {
       assert.ok(text.includes(name), `面板上没有分类「${name}」`)
     }
-    // 排序依据必须显示在分类名旁边：只写分类名，用户看不出是按什么排的。
+    // 排序依据必须显示在分类名下方：只写分类名，用户看不出是按什么排的。
     for (const entry of plugin.CATEGORIES) {
       assert.ok(text.includes(entry.basis), `面板上没有显示「${entry.name}」的排序依据「${entry.basis}」`)
     }
