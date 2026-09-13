@@ -9,7 +9,7 @@
 | 编号 | 实验 | 目录 | 状态 | 一句话 |
 | --- | --- | --- | --- | --- |
 | 001 | 知识卡片 | `lab/001-knowledge-cards/` | 可用 | 零依赖的知识卡片管理程序，原生单文件版 + React 版共享同一份本地数据（分类树、标签树、SM-2 间隔重复复习） |
-| 002 | LiveSkin 皮肤系统 | `lab/002-liveskin/` | 1.1.1 | DSH Web 的皮肤插件，用 family（大类）/ variant（小类）/ preset（档位）三级模型替代「一整块 CSS」 |
+| 002 | LiveSkin 皮肤系统 | `lab/002-liveskin/` | 1.2.0 | DSH Web 的皮肤插件，用 family（大类）/ variant（小类）/ preset（档位）三级模型替代「一整块 CSS」 |
 
 新增实验的约定：
 
