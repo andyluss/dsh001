@@ -331,7 +331,7 @@ check('每套皮肤都能推导出「亮/暗两档分别是什么样」，且与
 check('每个家族都归入一个已知分类，三类都在册', () => {
   // 分类决定面板里家族落在哪一行。漏了或写错就会混进别的行，
   // 所以这里既查「都归了类」，也查「分类集合与宿主声明的完全一致」。
-  const known = new Set(plugin.CATEGORIES)
+  const known = new Set(plugin.CATEGORY_NAMES)
   const bad = lintCatalog.families.filter((family) => !known.has(family.category))
   assert.deepEqual(bad.map((family) => `${family.id}:${JSON.stringify(family.category)}`), [],
     '有家族没有归入已知分类')
@@ -344,6 +344,10 @@ check('每个家族都归入一个已知分类，三类都在册', () => {
   assert.equal(counts.get('朋克美学'), 7)
   assert.equal(counts.get('千禧美学'), 6)
   assert.equal(counts.get('星际争霸'), 3)
+  // 每个分类都要给出「排序依据」—— 面板会把它显示在分类名旁边，
+  // 缺了用户就只看到一堆家族、不知道按什么排的。
+  const noBasis = plugin.CATEGORIES.filter((entry) => typeof entry.basis !== 'string' || entry.basis === '')
+  assert.deepEqual(noBasis.map((entry) => entry.name), [], '有分类没写排序依据')
 })
 
 check('三个小类都在册，且整个目录册零诊断', () => {
@@ -1831,6 +1835,10 @@ await checkAsync('重新打开设置面板时，显示的是最新应用过的�
     assert.equal(rows.length, 3, `分类行应有 3 行，实际 ${rows.length} 行`)
     for (const name of ['朋克美学', '千禧美学', '星际争霸']) {
       assert.ok(text.includes(name), `面板上没有分类「${name}」`)
+    }
+    // 排序依据必须显示在分类名旁边：只写分类名，用户看不出是按什么排的。
+    for (const entry of plugin.CATEGORIES) {
+      assert.ok(text.includes(entry.basis), `面板上没有显示「${entry.name}」的排序依据「${entry.basis}」`)
     }
     assert.ok(!text.includes('千禧年美学'), '面板上还留着旧分类名「千禧年美学」')
     // 每一行的家族数由目录册决定；这里只钉住「行与行之间没有串味」。
