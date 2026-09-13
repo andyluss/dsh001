@@ -304,12 +304,13 @@ window.__ModuleLoader__.load({
       [data-live-skin-panel] .ls-cat-rows { display:grid; grid-template-columns:max-content 1fr;
         column-gap:12px; row-gap:7px; align-items:start; }
       [data-live-skin-panel] .ls-cat-row { display:contents; }
-      [data-live-skin-panel] .ls-cat-label { display:flex; align-items:baseline; gap:6px;
+      /* 分类名在上、排序依据在下**换行**显示：并排会按最长的那一条撑宽标签列，
+         而依据只是注解，不该挤占横向空间。标签列因此只按分类名的宽度算。 */
+      [data-live-skin-panel] .ls-cat-label { display:flex; flex-direction:column; gap:1px;
         font:var(--dsw-font-xxxs-11); color:var(--dsw-alias-label-secondary);
         padding-top:5px; text-align:left; white-space:nowrap; }
-      /* 排序依据：比分类名更弱一档，句首加一个中点作分隔 */
+      /* 排序依据：比分类名更弱一档 */
       [data-live-skin-panel] .ls-cat-basis { color:var(--dsw-alias-label-tertiary); font-weight:400; }
-      [data-live-skin-panel] .ls-cat-basis::before { content:'·'; margin-right:3px; }
       [data-live-skin-panel] .ls-cat-rows[data-plain="true"] { grid-template-columns:1fr; }
       [data-live-skin-panel] .ls-chip { border:1px solid var(--dsw-alias-border-l2); background:var(--dsw-alias-bg-layer-1);
         color:var(--dsw-alias-label-secondary); border-radius:999px; padding:4px 12px; cursor:pointer; font:var(--dsw-font-xxs-12); }
