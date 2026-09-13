@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "亮片夜",
+  "nameEn": "Sequin Night",
+  "description": "夜场支 · 暗底配银亮片，bling 最闪的一支",
+  "accent": "#c8a8e0",
+  "tags": [
+    "mcbling",
+    "sequinnight"
+  ],
+  "defaults": {
+    "accent": "#c8a8e0",
+    "glass": 38,
+    "sequin": 92,
+    "intensity": 68,
+    "grain": 66
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

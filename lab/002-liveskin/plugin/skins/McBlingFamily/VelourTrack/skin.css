@@ -1,0 +1,34 @@
+/* 天鹅绒 Velour Track —— 材质支 · 天鹅绒运动服的缎面光泽，配金边
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    linear-gradient(112deg, rgba(232, 200, 90, .26) 34%, rgba(232, 200, 90, 0) 56%),
+    linear-gradient(0deg, rgba(232, 85, 155, .16) 0 22%, rgba(232, 85, 155, 0) 22%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(112deg, rgba(240, 220, 130, .24) 34%, rgba(240, 220, 130, 0) 58%),
+    linear-gradient(0deg, rgba(255, 140, 192, .14) 0 22%, rgba(255, 140, 192, 0) 22%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: mcbling-velour-sheen;
+  --ls-fx-duration: 20s;
+}
+
+@keyframes mcbling-velour-sheen {
+  from { transform: translate3d(-14%, 0, 0); }
+  to { transform: translate3d(14%, 0, 0); }
+}

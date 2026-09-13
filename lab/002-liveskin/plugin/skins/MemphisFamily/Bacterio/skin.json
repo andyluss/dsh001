@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "细菌纹",
+  "nameEn": "Bacterio",
+  "description": "图案支 · 疏密不均的黑点簇，孟菲斯最出名的印花",
+  "accent": "#2f8f8a",
+  "tags": [
+    "memphis",
+    "bacterio"
+  ],
+  "defaults": {
+    "accent": "#2f8f8a",
+    "glass": 44,
+    "blocks": 86,
+    "intensity": 58,
+    "grain": 66
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

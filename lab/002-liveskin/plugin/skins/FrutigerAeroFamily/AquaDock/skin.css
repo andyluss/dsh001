@@ -1,0 +1,38 @@
+/* ==========================================================================
+   水漾 Aqua Dock —— 小类层
+   Mac OS X Aqua · 细横条纹与玻璃滚动条 · 全族最「蓝」的一支
+
+   壁纸**只用带 alpha 的颜色**：不透明壁纸会把另一档的页面翻成相反极性，
+   而 token 是按档走的（1.1.1 修掉的那类缺陷）。
+   ========================================================================== */
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* Aqua 的细横条纹：4px 一道，极淡 —— 当年用来暗示「这是玻璃」 */
+    repeating-linear-gradient(180deg, rgba(47, 143, 232, .10) 0 1px, rgba(47, 143, 232, 0) 1px 4px),
+    linear-gradient(180deg, rgba(255, 255, 255, .48) 0%, rgba(255, 255, 255, 0) 30%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    repeating-linear-gradient(180deg, rgba(90, 170, 255, .12) 0 1px, rgba(90, 170, 255, 0) 1px 4px),
+    linear-gradient(180deg, rgba(30, 70, 120, .40) 0%, rgba(20, 40, 70, 0) 34%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 这一支独有的光：盖掉家族层的水面光泽 */
+html[data-live-skin] body::before {
+  background: radial-gradient(60% 26% at 50% 0%, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, 0) 68%);
+}
+
+html[data-live-skin] body[data-ds-dark-theme]::before {
+  background: radial-gradient(60% 26% at 50% 0%, rgba(90, 170, 255, .22) 0%, rgba(90, 170, 255, 0) 70%);
+}
+@keyframes aero-gel-sway {
+  from { transform: translate3d(-1%, 0, 0); }
+  50% { transform: translate3d(1%, 0, 0); }
+  to { transform: translate3d(-1%, 0, 0); }
+}

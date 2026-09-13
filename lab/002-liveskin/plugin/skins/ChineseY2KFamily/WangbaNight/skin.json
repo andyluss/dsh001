@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "网吧深夜",
+  "nameEn": "Wangba Night",
+  "description": "招牌支 · 冷白光管 + 显像管扫描线，最接近第一现场的一支",
+  "accent": "#2f6fd0",
+  "tags": [
+    "chinesey2k",
+    "wangbanight"
+  ],
+  "defaults": {
+    "accent": "#2f6fd0",
+    "glass": 36,
+    "scanline": 72,
+    "intensity": 64,
+    "grain": 58
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,37 @@
+/* 空间装扮 Qzone Decor —— 装扮支 · QQ 空间的挂件与黄钻皮肤：亮蓝配粉，装饰感最重
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    radial-gradient(20% 13% at 18% 22%, rgba(224, 80, 143, .26) 0 44%, rgba(224, 80, 143, 0) 78%),
+    radial-gradient(18% 12% at 80% 28%, rgba(240, 168, 40, .22) 0 44%, rgba(240, 168, 40, 0) 78%),
+    radial-gradient(22% 14% at 52% 80%, rgba(47, 111, 208, .24) 0 44%, rgba(47, 111, 208, 0) 80%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    radial-gradient(20% 13% at 18% 22%, rgba(255, 120, 170, .24) 0 44%, rgba(255, 120, 170, 0) 80%),
+    radial-gradient(18% 12% at 80% 28%, rgba(240, 180, 70, .20) 0 44%, rgba(240, 180, 70, 0) 80%),
+    radial-gradient(22% 14% at 52% 80%, rgba(111, 168, 255, .22) 0 44%, rgba(111, 168, 255, 0) 82%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: cn-qzone-float;
+  --ls-fx-duration: 16s;
+}
+
+@keyframes cn-qzone-float {
+  from { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}

@@ -1,0 +1,50 @@
+/* ==========================================================================
+   客厅频道 Wii Channel —— 小类层
+   Wii 客厅界面 · 白、圆、宽松 · 全族最「轻」的一支
+
+   壁纸**只用带 alpha 的颜色**：不透明壁纸会把另一档的页面翻成相反极性，
+   而 token 是按档走的（1.1.1 修掉的那类缺陷）。
+   ========================================================================== */
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 几乎全是白：只在上缘留一层极淡的蓝，其余交给大圆角与留白 */
+    linear-gradient(180deg, rgba(180, 224, 246, .30) 0%, rgba(255, 255, 255, 0) 38%),
+    radial-gradient(120% 60% at 50% 104%, rgba(200, 220, 235, .26) 0%, rgba(200, 220, 235, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(180deg, rgba(90, 140, 175, .30) 0%, rgba(60, 80, 100, 0) 40%),
+    radial-gradient(120% 60% at 50% 104%, rgba(70, 90, 110, .30) 0%, rgba(70, 90, 110, 0) 72%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 这一支独有的光：盖掉家族层的水面光泽 */
+html[data-live-skin] body::before {
+  background: radial-gradient(70% 40% at 50% 42%, rgba(255, 255, 255, .62) 0%, rgba(255, 255, 255, 0) 72%);
+}
+
+html[data-live-skin] body[data-ds-dark-theme]::before {
+  background: radial-gradient(70% 40% at 50% 42%, rgba(150, 200, 230, .14) 0%, rgba(150, 200, 230, 0) 74%);
+}
+@keyframes aero-channel-pulse {
+  from { transform: scale(1); opacity: .7; }
+  50% { transform: scale(1.02); opacity: 1; }
+  to { transform: scale(1); opacity: .7; }
+}
+
+/* 这一支的强调色偏浅，而家族的填充按钮是「强调色 80% + 深色」—— 浅强调色配白字只有 3.3:1。
+   这里把填充改成**混白**的亮底配深色文字：既保住 Aero 果冻按钮的亮，又把对比拉到 10:1 上下。
+   悬停要更亮（混白更多），才配得上深色文字 —— 家族的悬停是更暗的，那种方向只适合白字。 */
+html[data-live-skin] body:not([data-ds-dark-theme]),
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-label-primary-foreground: #0b1a22;
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #5fb8e0) 62%, #ffffff);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #5fb8e0) 74%, #ffffff);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #5fb8e0) 62%, #ffffff);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #5fb8e0) 74%, #ffffff);
+}

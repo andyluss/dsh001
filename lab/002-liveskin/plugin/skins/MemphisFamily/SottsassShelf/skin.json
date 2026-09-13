@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "层板",
+  "nameEn": "Sottsass Shelf",
+  "description": "结构支 · 横向层板被色带切开，最「家具」的一支",
+  "accent": "#e8b52a",
+  "tags": [
+    "memphis",
+    "sottsassshelf"
+  ],
+  "defaults": {
+    "accent": "#e8b52a",
+    "glass": 52,
+    "blocks": 54,
+    "intensity": 60,
+    "grain": 50
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "施工中",
+  "nameEn": "Under Construction",
+  "description": "符号支 · 黄黑斜纹与未完工感，网页 1.0 最著名的一个意象",
+  "accent": "#e8b52a",
+  "tags": [
+    "webcore",
+    "underconstruction"
+  ],
+  "defaults": {
+    "accent": "#e8b52a",
+    "glass": 56,
+    "outset": 80,
+    "intensity": 60,
+    "grain": 46
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

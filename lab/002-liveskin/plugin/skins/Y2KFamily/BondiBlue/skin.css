@@ -1,0 +1,35 @@
+/* 邦迪蓝 Bondi Blue —— 图腾支 · iMac G3 的半透明果冻外壳
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    radial-gradient(42% 26% at 30% 26%, rgba(47, 168, 200, .30) 0 40%, rgba(47, 168, 200, 0) 74%),
+    linear-gradient(180deg, rgba(255, 255, 255, .45) 0 8px, rgba(255, 255, 255, 0) 8px);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    radial-gradient(42% 26% at 30% 26%, rgba(90, 210, 240, .28) 0 40%, rgba(90, 210, 240, 0) 76%),
+    linear-gradient(180deg, rgba(255, 255, 255, .18) 0 8px, rgba(255, 255, 255, 0) 8px);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: y2k-jelly-shift;
+  --ls-fx-duration: 24s;
+}
+
+@keyframes y2k-jelly-shift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(2%, -1%, 0) scale(1.04); }
+  to { transform: translate3d(0, 0, 0) scale(1); }
+}

@@ -1,0 +1,24 @@
+{
+  "manifestVersion": 1,
+  "name": "Bliss 草原",
+  "nameEn": "Bliss Meadow",
+  "description": "极简蓝天草原 · 一代人的「默认桌面」 · 全族最安静的一支",
+  "accent": "#5a9e2f",
+  "tags": [
+    "bliss",
+    "xP",
+    "meadow",
+    "default"
+  ],
+  "defaults": {
+    "accent": "#5a9e2f",
+    "wallpaper": "plain",
+    "glass": 48,
+    "blur": 10,
+    "gloss": 38,
+    "bubbleAmount": 30
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

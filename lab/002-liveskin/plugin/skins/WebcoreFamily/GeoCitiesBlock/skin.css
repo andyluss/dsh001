@@ -1,0 +1,37 @@
+/* 街区 GeoCities Block —— 最花支 · 彩色分区块，像街区页上各家各户拼在一起
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    linear-gradient(90deg, rgba(184, 31, 95, .20) 0 25%, rgba(184, 31, 95, 0) 25%),
+    linear-gradient(270deg, rgba(26, 63, 208, .18) 0 25%, rgba(26, 63, 208, 0) 25%),
+    linear-gradient(0deg, rgba(224, 123, 26, .16) 0 30%, rgba(224, 123, 26, 0) 30%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(90deg, rgba(255, 110, 170, .18) 0 25%, rgba(255, 110, 170, 0) 25%),
+    linear-gradient(270deg, rgba(111, 140, 255, .16) 0 25%, rgba(111, 140, 255, 0) 25%),
+    linear-gradient(0deg, rgba(255, 168, 80, .14) 0 30%, rgba(255, 168, 80, 0) 30%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: webcore-block-scroll;
+  --ls-fx-duration: 36s;
+}
+
+@keyframes webcore-block-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -12px, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}

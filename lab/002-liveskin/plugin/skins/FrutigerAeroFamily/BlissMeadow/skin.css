@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Bliss 草原 Bliss Meadow —— 小类层
+   极简蓝天草原 · 一代人的「默认桌面」 · 全族最安静的一支
+
+   壁纸**只用带 alpha 的颜色**：不透明壁纸会把另一档的页面翻成相反极性，
+   而 token 是按档走的（1.1.1 修掉的那类缺陷）。
+   ========================================================================== */
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 地平线：上半蓝天、下半草地，中间只用一条软过渡 —— 不画云 */
+    linear-gradient(180deg, rgba(74, 158, 224, .34) 0%, rgba(126, 196, 240, .16) 46%, rgba(90, 158, 47, .26) 62%, rgba(90, 158, 47, .10) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(180deg, rgba(40, 96, 150, .40) 0%, rgba(52, 120, 170, .18) 48%, rgba(46, 100, 36, .30) 66%, rgba(30, 66, 26, .12) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 这一支独有的光：盖掉家族层的水面光泽 */
+html[data-live-skin] body::before {
+  background: radial-gradient(90% 34% at 50% 6%, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+html[data-live-skin] body[data-ds-dark-theme]::before {
+  background: radial-gradient(90% 34% at 50% 6%, rgba(150, 210, 255, .22) 0%, rgba(150, 210, 255, 0) 72%);
+}
+@keyframes aero-bliss-cloud {
+  from { transform: translate3d(-2%, 0, 0); }
+  to { transform: translate3d(2%, 0, 0); }
+}

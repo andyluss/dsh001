@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "小游戏大厅",
+  "nameEn": "Flash Arcade",
+  "description": "游戏支 · 4399 式的大厅：彩色方格与高饱和按钮",
+  "accent": "#f0a828",
+  "tags": [
+    "chinesey2k",
+    "flasharcade"
+  ],
+  "defaults": {
+    "accent": "#f0a828",
+    "glass": 48,
+    "scanline": 30,
+    "intensity": 66,
+    "grain": 52
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

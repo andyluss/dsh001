@@ -1,0 +1,40 @@
+/* 卡尔顿书架 Carlton —— 招牌支 · 斜置的格架与彩色几何块，最像索特萨斯那件书架
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 黑白格 + 彩色块：孟菲斯的图案是印上去的，所以边界一律是硬的 */
+    repeating-linear-gradient(90deg, rgba(34, 33, 42, .30) 0 2px, rgba(34, 33, 42, 0) 2px 46px),
+    repeating-linear-gradient(0deg, rgba(34, 33, 42, .22) 0 2px, rgba(34, 33, 42, 0) 2px 46px),
+    linear-gradient(0deg, rgba(217, 79, 61, .22) 0 72px, rgba(217, 79, 61, 0) 72px),
+    linear-gradient(0deg, rgba(47, 143, 138, .20) 0 48px, rgba(47, 143, 138, 0) 48px);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    repeating-linear-gradient(90deg, rgba(230, 228, 236, .22) 0 2px, rgba(230, 228, 236, 0) 2px 46px),
+    repeating-linear-gradient(0deg, rgba(230, 228, 236, .16) 0 2px, rgba(230, 228, 236, 0) 2px 46px),
+    linear-gradient(0deg, rgba(255, 122, 99, .18) 0 72px, rgba(255, 122, 99, 0) 72px),
+    linear-gradient(0deg, rgba(120, 196, 190, .16) 0 48px, rgba(120, 196, 190, 0) 48px);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: memphis-carlton-tilt;
+  --ls-fx-duration: 22s;
+}
+
+@keyframes memphis-carlton-tilt {
+  from { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-10px, 4px, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}

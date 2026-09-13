@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "果冻糖",
+  "nameEn": "Jelly Pop",
+  "description": "最软支 · 半透明果冻配玫粉，圆润无棱角",
+  "accent": "#ff4fa3",
+  "tags": [
+    "y2k",
+    "jellypop"
+  ],
+  "defaults": {
+    "accent": "#ff4fa3",
+    "glass": 72,
+    "chrome": 44,
+    "intensity": 54,
+    "grain": 36
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

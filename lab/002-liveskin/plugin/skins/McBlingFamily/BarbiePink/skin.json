@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "芭比粉",
+  "nameEn": "Barbie Pink",
+  "description": "招牌支 · 最正的那一支粉，亮片密度也最高",
+  "accent": "#e8559b",
+  "tags": [
+    "mcbling",
+    "barbiepink"
+  ],
+  "defaults": {
+    "accent": "#e8559b",
+    "glass": 54,
+    "sequin": 78,
+    "intensity": 62,
+    "grain": 60
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "卡尔顿书架",
+  "nameEn": "Carlton",
+  "description": "招牌支 · 斜置的格架与彩色几何块，最像索特萨斯那件书架",
+  "accent": "#d94f3d",
+  "tags": [
+    "memphis",
+    "carlton"
+  ],
+  "defaults": {
+    "accent": "#d94f3d",
+    "glass": 48,
+    "blocks": 72,
+    "intensity": 64,
+    "grain": 58
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

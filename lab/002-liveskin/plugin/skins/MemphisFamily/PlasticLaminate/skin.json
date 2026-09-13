@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "塑料层板",
+  "nameEn": "Plastic Laminate",
+  "description": "纯色支 · 大面积平涂 + 黑描边，最安静的一支",
+  "accent": "#7a4fd0",
+  "tags": [
+    "memphis",
+    "plasticlaminate"
+  ],
+  "defaults": {
+    "accent": "#7a4fd0",
+    "glass": 58,
+    "blocks": 34,
+    "intensity": 48,
+    "grain": 38
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

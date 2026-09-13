@@ -1,0 +1,24 @@
+{
+  "manifestVersion": 1,
+  "name": "极光玻璃",
+  "nameEn": "Vista Aurora",
+  "description": "Vista / 7 的极光壁纸 + Aero 玻璃 · 全族最「夜」的一支",
+  "accent": "#2fbfa8",
+  "tags": [
+    "vista",
+    "aurora",
+    "aero",
+    "glass"
+  ],
+  "defaults": {
+    "accent": "#2fbfa8",
+    "wallpaper": "plain",
+    "glass": 62,
+    "blur": 16,
+    "gloss": 70,
+    "bubbleAmount": 42
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "火星文",
+  "nameEn": "Mars Text",
+  "description": "装饰支 · 非主流时期的花哨边框与闪图装饰（只取视觉，不注入文字）",
+  "accent": "#b03fd0",
+  "tags": [
+    "chinesey2k",
+    "marstext"
+  ],
+  "defaults": {
+    "accent": "#b03fd0",
+    "glass": 44,
+    "scanline": 50,
+    "intensity": 72,
+    "grain": 62
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

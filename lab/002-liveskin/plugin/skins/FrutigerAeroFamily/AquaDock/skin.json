@@ -1,0 +1,24 @@
+{
+  "manifestVersion": 1,
+  "name": "水漾",
+  "nameEn": "Aqua Dock",
+  "description": "Mac OS X Aqua · 细横条纹与玻璃滚动条 · 全族最「蓝」的一支",
+  "accent": "#2f8fe8",
+  "tags": [
+    "aqua",
+    "mac-os-x",
+    "pinstripe",
+    "gel"
+  ],
+  "defaults": {
+    "accent": "#2f8fe8",
+    "wallpaper": "plain",
+    "glass": 58,
+    "blur": 13,
+    "gloss": 76,
+    "bubbleAmount": 48
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "婴儿粉",
+  "nameEn": "Baby Pink",
+  "description": "最淡支 · 粉白路线，亮片压到最低的一支",
+  "accent": "#f2a8c8",
+  "tags": [
+    "mcbling",
+    "babypink"
+  ],
+  "defaults": {
+    "accent": "#f2a8c8",
+    "glass": 66,
+    "sequin": 40,
+    "intensity": 44,
+    "grain": 34
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

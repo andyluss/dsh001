@@ -1,0 +1,36 @@
+/* 小游戏大厅 Flash Arcade —— 游戏支 · 4399 式的大厅：彩色方格与高饱和按钮
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    repeating-linear-gradient(90deg, rgba(240, 168, 40, .16) 0 1px, rgba(240, 168, 40, 0) 1px 72px),
+    repeating-linear-gradient(180deg, rgba(240, 168, 40, .16) 0 1px, rgba(240, 168, 40, 0) 1px 72px),
+    radial-gradient(60% 36% at 50% 0%, rgba(224, 80, 143, .16) 0 44%, rgba(224, 80, 143, 0) 78%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    repeating-linear-gradient(90deg, rgba(240, 180, 70, .14) 0 1px, rgba(240, 180, 70, 0) 1px 72px),
+    repeating-linear-gradient(180deg, rgba(240, 180, 70, .14) 0 1px, rgba(240, 180, 70, 0) 1px 72px),
+    radial-gradient(60% 36% at 50% 0%, rgba(255, 120, 170, .16) 0 44%, rgba(255, 120, 170, 0) 80%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: cn-arcade-grid;
+  --ls-fx-duration: 26s;
+}
+
+@keyframes cn-arcade-grid {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 72px, 0); }
+}

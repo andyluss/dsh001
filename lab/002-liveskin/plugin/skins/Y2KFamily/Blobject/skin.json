@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "圆润物",
+  "nameEn": "Blobject",
+  "description": "形状支 · 充气家具式的圆润体，一个棱角都没有",
+  "accent": "#ff8a2b",
+  "tags": [
+    "y2k",
+    "blobject"
+  ],
+  "defaults": {
+    "accent": "#ff8a2b",
+    "glass": 68,
+    "chrome": 38,
+    "intensity": 50,
+    "grain": 32
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

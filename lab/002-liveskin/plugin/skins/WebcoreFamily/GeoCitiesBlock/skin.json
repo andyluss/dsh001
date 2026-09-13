@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "街区",
+  "nameEn": "GeoCities Block",
+  "description": "最花支 · 彩色分区块，像街区页上各家各户拼在一起",
+  "accent": "#b81f5f",
+  "tags": [
+    "webcore",
+    "geocitiesblock"
+  ],
+  "defaults": {
+    "accent": "#b81f5f",
+    "glass": 50,
+    "outset": 58,
+    "intensity": 66,
+    "grain": 58
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

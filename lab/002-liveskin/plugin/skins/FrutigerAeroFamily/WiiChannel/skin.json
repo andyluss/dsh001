@@ -1,0 +1,24 @@
+{
+  "manifestVersion": 1,
+  "name": "客厅频道",
+  "nameEn": "Wii Channel",
+  "description": "Wii 客厅界面 · 白、圆、宽松 · 全族最「轻」的一支",
+  "accent": "#5fb8e0",
+  "tags": [
+    "wii",
+    "channel",
+    "soft",
+    "客厅"
+  ],
+  "defaults": {
+    "accent": "#5fb8e0",
+    "wallpaper": "plain",
+    "glass": 70,
+    "blur": 14,
+    "gloss": 52,
+    "bubbleAmount": 24
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

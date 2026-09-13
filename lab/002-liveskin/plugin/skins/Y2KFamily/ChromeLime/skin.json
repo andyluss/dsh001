@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "镀铬荧光",
+  "nameEn": "Chrome Lime",
+  "description": "最锐支 · 镀铬银配荧光绿，Y2K 的原教旨配色",
+  "accent": "#9bd324",
+  "tags": [
+    "y2k",
+    "chromelime"
+  ],
+  "defaults": {
+    "accent": "#9bd324",
+    "glass": 46,
+    "chrome": 80,
+    "intensity": 66,
+    "grain": 50
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

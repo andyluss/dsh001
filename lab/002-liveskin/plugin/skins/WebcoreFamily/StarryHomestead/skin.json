@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "星空主页",
+  "nameEn": "Starry Homestead",
+  "description": "招牌支 · 星空背景 + 计数器与留言板的那一代个人主页",
+  "accent": "#1a3fd0",
+  "tags": [
+    "webcore",
+    "starryhomestead"
+  ],
+  "defaults": {
+    "accent": "#1a3fd0",
+    "glass": 42,
+    "outset": 74,
+    "intensity": 56,
+    "grain": 52
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

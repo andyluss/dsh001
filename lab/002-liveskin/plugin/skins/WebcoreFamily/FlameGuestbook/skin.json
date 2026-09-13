@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "火焰留言板",
+  "nameEn": "Flame Guestbook",
+  "description": "最燥支 · 火焰渐变背景配霓虹字，当年最「狠」的装修",
+  "accent": "#e07b1a",
+  "tags": [
+    "webcore",
+    "flameguestbook"
+  ],
+  "defaults": {
+    "accent": "#e07b1a",
+    "glass": 40,
+    "outset": 62,
+    "intensity": 70,
+    "grain": 64
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

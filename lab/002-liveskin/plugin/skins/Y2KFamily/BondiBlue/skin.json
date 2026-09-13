@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "邦迪蓝",
+  "nameEn": "Bondi Blue",
+  "description": "图腾支 · iMac G3 的半透明果冻外壳",
+  "accent": "#2fa8c8",
+  "tags": [
+    "y2k",
+    "bondiblue"
+  ],
+  "defaults": {
+    "accent": "#2fa8c8",
+    "glass": 64,
+    "chrome": 58,
+    "intensity": 58,
+    "grain": 44
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

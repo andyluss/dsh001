@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "天鹅绒",
+  "nameEn": "Velour Track",
+  "description": "材质支 · 天鹅绒运动服的缎面光泽，配金边",
+  "accent": "#e8c85a",
+  "tags": [
+    "mcbling",
+    "velourtrack"
+  ],
+  "defaults": {
+    "accent": "#e8c85a",
+    "glass": 52,
+    "sequin": 52,
+    "intensity": 56,
+    "grain": 44
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

@@ -1,0 +1,34 @@
+/* 芭比粉 Barbie Pink —— 招牌支 · 最正的那一支粉，亮片密度也最高
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    radial-gradient(38% 24% at 30% 28%, rgba(232, 85, 155, .26) 0 42%, rgba(232, 85, 155, 0) 76%),
+    linear-gradient(104deg, rgba(255, 255, 255, .40) 40%, rgba(255, 255, 255, 0) 60%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    radial-gradient(38% 24% at 30% 28%, rgba(255, 140, 192, .24) 0 42%, rgba(255, 140, 192, 0) 78%),
+    linear-gradient(104deg, rgba(255, 255, 255, .14) 40%, rgba(255, 255, 255, 0) 60%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: mcbling-satin-sweep;
+  --ls-fx-duration: 18s;
+}
+
+@keyframes mcbling-satin-sweep {
+  from { transform: translate3d(-22%, 0, 0); }
+  to { transform: translate3d(22%, 0, 0); }
+}

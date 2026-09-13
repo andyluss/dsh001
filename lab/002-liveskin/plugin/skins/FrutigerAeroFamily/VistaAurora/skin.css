@@ -1,0 +1,51 @@
+/* ==========================================================================
+   极光玻璃 Vista Aurora —— 小类层
+   Vista / 7 的极光壁纸 + Aero 玻璃 · 全族最「夜」的一支
+
+   壁纸**只用带 alpha 的颜色**：不透明壁纸会把另一档的页面翻成相反极性，
+   而 token 是按档走的（1.1.1 修掉的那类缺陷）。
+   ========================================================================== */
+
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    /* 极光：几条斜向的青绿飘带，边界柔和 —— 玻璃窗框透过去的颜色 */
+    linear-gradient(112deg, rgba(47, 191, 168, 0) 22%, rgba(47, 191, 168, .26) 34%, rgba(47, 191, 168, 0) 48%),
+    linear-gradient(96deg, rgba(90, 150, 230, 0) 58%, rgba(90, 150, 230, .22) 70%, rgba(90, 150, 230, 0) 84%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(112deg, rgba(79, 226, 200, 0) 20%, rgba(79, 226, 200, .28) 34%, rgba(79, 226, 200, 0) 50%),
+    linear-gradient(96deg, rgba(120, 180, 255, 0) 56%, rgba(120, 180, 255, .24) 70%, rgba(120, 180, 255, 0) 86%),
+    radial-gradient(120% 60% at 50% 0%, rgba(20, 60, 90, .40) 0%, rgba(20, 60, 90, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 这一支独有的光：盖掉家族层的水面光泽 */
+html[data-live-skin] body::before {
+  background: radial-gradient(130% 50% at 50% -10%, rgba(255, 255, 255, .48) 0%, rgba(255, 255, 255, 0) 66%);
+}
+
+html[data-live-skin] body[data-ds-dark-theme]::before {
+  background: radial-gradient(130% 50% at 50% -10%, rgba(79, 226, 200, .16) 0%, rgba(79, 226, 200, 0) 68%);
+}
+@keyframes aero-aurora-drift {
+  from { transform: translate3d(0, 0, 0); opacity: .6; }
+  50% { transform: translate3d(-3%, 1%, 0); opacity: 1; }
+  to { transform: translate3d(0, 0, 0); opacity: .6; }
+}
+
+/* 这一支的强调色偏浅，而家族的填充按钮是「强调色 80% + 深色」—— 浅强调色配白字只有 3.3:1。
+   这里把填充改成**混白**的亮底配深色文字：既保住 Aero 果冻按钮的亮，又把对比拉到 10:1 上下。
+   悬停要更亮（混白更多），才配得上深色文字 —— 家族的悬停是更暗的，那种方向只适合白字。 */
+html[data-live-skin] body:not([data-ds-dark-theme]),
+html[data-live-skin] body[data-ds-dark-theme] {
+  --dsw-alias-label-primary-foreground: #0b1a22;
+  --dsw-alias-button-primary-fill: color-mix(in srgb, var(--ls-accent, #2fbfa8) 62%, #ffffff);
+  --dsw-alias-button-primary-hover: color-mix(in srgb, var(--ls-accent, #2fbfa8) 74%, #ffffff);
+  --dsw-alias-button-info-fill: color-mix(in srgb, var(--ls-accent, #2fbfa8) 62%, #ffffff);
+  --dsw-alias-button-info-hover: color-mix(in srgb, var(--ls-accent, #2fbfa8) 74%, #ffffff);
+}

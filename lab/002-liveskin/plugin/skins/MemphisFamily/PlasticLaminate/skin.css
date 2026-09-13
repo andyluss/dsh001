@@ -1,0 +1,35 @@
+/* 塑料层板 Plastic Laminate —— 纯色支 · 大面积平涂 + 黑描边，最安静的一支
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    linear-gradient(90deg, rgba(122, 79, 208, .18) 0 34%, rgba(122, 79, 208, 0) 34%),
+    linear-gradient(0deg, rgba(34, 33, 42, .10) 0 34%, rgba(34, 33, 42, 0) 34%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    linear-gradient(90deg, rgba(160, 120, 230, .16) 0 34%, rgba(160, 120, 230, 0) 34%),
+    linear-gradient(0deg, rgba(230, 228, 236, .08) 0 34%, rgba(230, 228, 236, 0) 34%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: memphis-laminate-shift;
+  --ls-fx-duration: 34s;
+}
+
+@keyframes memphis-laminate-shift {
+  from { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  to { transform: scale(1); }
+}

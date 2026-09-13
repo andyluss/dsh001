@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "name": "空间装扮",
+  "nameEn": "Qzone Decor",
+  "description": "装扮支 · QQ 空间的挂件与黄钻皮肤：亮蓝配粉，装饰感最重",
+  "accent": "#e0508f",
+  "tags": [
+    "chinesey2k",
+    "qzonedecor"
+  ],
+  "defaults": {
+    "accent": "#e0508f",
+    "glass": 58,
+    "scanline": 40,
+    "intensity": 58,
+    "grain": 50
+  },
+  "styles": [
+    "skin.css"
+  ]
+}

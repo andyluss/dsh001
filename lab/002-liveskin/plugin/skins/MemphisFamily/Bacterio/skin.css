@@ -1,0 +1,39 @@
+/* 细菌纹 Bacterio —— 图案支 · 疏密不均的黑点簇，孟菲斯最出名的印花
+   ==========================================================================
+   家族层提供调色板、token 与材质骨架；这一支只表达差异：
+   壁纸、动效签名、强调色与几个参数默认值。
+
+   壁纸**只用带 alpha 的颜色**（`rgba(…, .xx)`）。不透明色会把页面在某一档里
+   直接翻成另一种极性，而 token 是按档走的 —— 那正是「暗色档整页看不见」
+   和「亮色档拿到暗壁纸」的成因。 */
+html[data-live-skin] body:not([data-ds-dark-theme]) {
+  background-image:
+    radial-gradient(circle 4px at 22px 26px, rgba(34, 33, 42, .34) 0 58%, rgba(34, 33, 42, 0) 70%),
+    radial-gradient(circle 2px at 68px 12px, rgba(34, 33, 42, .26) 0 58%, rgba(34, 33, 42, 0) 70%),
+    radial-gradient(circle 3px at 106px 62px, rgba(34, 33, 42, .30) 0 58%, rgba(34, 33, 42, 0) 70%),
+    radial-gradient(circle 2px at 40px 84px, rgba(34, 33, 42, .22) 0 58%, rgba(34, 33, 42, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+html[data-live-skin] body[data-ds-dark-theme] {
+  background-image:
+    radial-gradient(circle 4px at 22px 26px, rgba(230, 228, 236, .26) 0 58%, rgba(230, 228, 236, 0) 70%),
+    radial-gradient(circle 2px at 68px 12px, rgba(230, 228, 236, .20) 0 58%, rgba(230, 228, 236, 0) 70%),
+    radial-gradient(circle 3px at 106px 62px, rgba(230, 228, 236, .22) 0 58%, rgba(230, 228, 236, 0) 70%),
+    radial-gradient(circle 2px at 40px 84px, rgba(230, 228, 236, .16) 0 58%, rgba(230, 228, 236, 0) 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 动效签名：家族层把它挂在 body::after 上，这里只换名字与周期。 */
+html[data-live-skin] body {
+  --ls-fx-name: memphis-bacterio-drift;
+  --ls-fx-duration: 30s;
+}
+
+@keyframes memphis-bacterio-drift {
+  from { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(6px, -6px, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
