@@ -117,10 +117,11 @@ check('内置家族被收录，且无诊断', () => {
   assert.ok(ids.includes('FrutigerAeroFamily'), `实际家族：${ids.join(', ')}`)
 })
 
-check('家族下挂着三个小类', () => {
+check('FrutigerAero 的七个小类都在册', () => {
   const family = catalog.families.find((entry) => entry.id === 'FrutigerAeroFamily')
   const variants = family.variants.map((variant) => variant.id).sort()
-  assert.deepEqual(variants, ['AeroGlass', 'DarkAero', 'FrutigerAero'])
+  assert.deepEqual(variants, ['AeroGlass', 'AquaDock', 'BlissMeadow', 'DarkAero',
+    'FrutigerAero', 'VistaAurora', 'WiiChannel'])
 })
 
 const family = catalog.families.find((entry) => entry.id === 'FrutigerAeroFamily')
@@ -311,6 +312,12 @@ check('每套皮肤都能推导出「亮/暗两档分别是什么样」，且与
     'ProtossFamily/NexusGrid': 'light/dark',
     'ProtossFamily/VoidShard': 'light/dark',
     'ProtossFamily/Khaydarin': 'light/dark',
+    // 千禧美学五族：同样每一支都要两档
+    'MemphisFamily/Carlton': 'light/dark',
+    'WebcoreFamily/StarryHomestead': 'light/dark',
+    'Y2KFamily/BondiBlue': 'light/dark',
+    'McBlingFamily/BarbiePink': 'light/dark',
+    'ChineseY2KFamily/WangbaNight': 'light/dark',
     // 暗色默认的家族：两档都是暗色
     'SteampunkFamily/Brassworks': '仅dark',
     'DieselpunkFamily/NoirRain': '仅dark',
@@ -335,7 +342,7 @@ check('每个家族都归入一个已知分类，三类都在册', () => {
   assert.deepEqual([...counts.keys()].sort(), [...known].sort(),
     `目录册里的分类是 ${[...counts.keys()]}，宿主声明的是 ${[...known]}`)
   assert.equal(counts.get('朋克美学'), 7)
-  assert.equal(counts.get('千禧年美学'), 1)
+  assert.equal(counts.get('千禧美学'), 6)
   assert.equal(counts.get('星际争霸'), 3)
 })
 
@@ -344,7 +351,8 @@ check('三个小类都在册，且整个目录册零诊断', () => {
     .find((family) => family.id === 'FrutigerAeroFamily')
     .variants.map((variant) => variant.id)
     .sort()
-  assert.deepEqual(ids, ['AeroGlass', 'DarkAero', 'FrutigerAero'])
+  assert.deepEqual(ids, ['AeroGlass', 'AquaDock', 'BlissMeadow', 'DarkAero',
+    'FrutigerAero', 'VistaAurora', 'WiiChannel'])
   assert.deepEqual(lintCatalog.diagnostics, [], `诊断：\n${lintCatalog.diagnostics.join('\n')}`)
 })
 
@@ -1821,12 +1829,17 @@ await checkAsync('重新打开设置面板时，显示的是最新应用过的�
     // 家族按分类分行：三类各一行，标签是分类名而不是家族名。
     const rows = treeWith(tree, 'className').filter((node) => node.props.className === 'ls-cat-row')
     assert.equal(rows.length, 3, `分类行应有 3 行，实际 ${rows.length} 行`)
-    for (const name of ['朋克美学', '千禧年美学', '星际争霸']) {
+    for (const name of ['朋克美学', '千禧美学', '星际争霸']) {
       assert.ok(text.includes(name), `面板上没有分类「${name}」`)
     }
-    const punkRow = rows.find((node) => treeText(node).includes('朋克美学'))
-    assert.equal(treeWith(punkRow, 'applied').length, 7,
-      '朋克美学那一行应有 7 个家族 chip')
+    assert.ok(!text.includes('千禧年美学'), '面板上还留着旧分类名「千禧年美学」')
+    // 每一行的家族数由目录册决定；这里只钉住「行与行之间没有串味」。
+    for (const [name, expected] of [['朋克美学', 7], ['千禧美学', 6], ['星际争霸', 3]]) {
+      const row = rows.find((node) => treeText(node).includes(name))
+      assert.ok(row !== undefined, `找不到分类行「${name}」`)
+      assert.equal(treeWith(row, 'applied').length, expected,
+        `${name} 那一行应有 ${expected} 个家族 chip`)
+    }
     // 标记要落在 second 上：卡片的子树文本里应当有 AeroGlass 而不是 DarkAero。
     // 注意 DarkAero 作为一张普通卡片本来就在家族列表里，所以不能拿整屏文本判断。
     assert.ok(treeText(cards[0]).includes('AeroGlass'), '「使用中」没有落在最新应用的那张卡片上')
